@@ -1,0 +1,76 @@
+/* 通用设置 */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9f6f2;
+  font-family: 'Noto Serif SC', serif;
+  color: #333;
+  line-height: 1.8;
+  padding: 1rem;
+}
+
+/* 标题样式 */
+h1 {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.subtitle {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+/* 主要内容 */
+main {
+  text-align: center;
+}
+
+.cover-img {
+  max-width: 90%;
+  height: auto;
+  margin: 1rem auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.intro {
+  font-size: 1.1rem;
+  margin: 1.5rem auto;
+  max-width: 600px;
+}
+
+/* 导航按钮 */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #a67c52;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-top: 1.2rem;
+}
+
+.btn:hover {
+  background-color: #8c6239;
+}
+
+/* 页脚导航 */
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+footer a {
+  color: #888;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+footer a:hover {
+  color: #555;
+}
