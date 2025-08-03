@@ -74,3 +74,39 @@ footer a {
 footer a:hover {
   color: #555;
 }
+
+.poem-list {
+  max-width: 700px;
+  margin: auto;
+  padding: 0;
+}
+
+.poem-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+.poem-list a {
+  color: #3c3c9c;
+  text-decoration: none;
+}
+
+.poem-list .tags {
+  font-size: 0.9rem;
+  color: #888;
+  margin-left: 1rem;
+}
+
+.poem-list .tags a {
+  color: #a67c52;
+  margin-right: 0.5rem;
+  text-decoration: none;
+}
+
+.poem-list .tags a:hover {
+  text-decoration: underline;
+}
