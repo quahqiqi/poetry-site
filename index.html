@@ -4,75 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>一个青年的天马行空</title>
-  <style>
-    body {
-      font-family: "霞鹜文楷", serif;
-      background-color: #f6f1e7;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      color: #333;
-    }
-
-    .cover-container {
-      padding: 20px;
-    }
-
-    .cover-image {
-      max-width: 100%;
-      max-height: 400px;
-      height: auto;
-      display: block;
-      margin: 0 auto 20px auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .cover-title {
-      font-size: 2.2rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .cover-subtitle {
-      font-size: 1.1rem;
-      color: #666;
-    }
-
-    @media screen and (max-width: 768px) {
-      .cover-title {
-        font-size: 1.7rem;
-      }
-
-      .cover-image {
-        max-height: 300px;
-      }
-    }
-
-    .enter-button {
-      margin-top: 30px;
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: #d9c5a0;
-      color: #333;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
-    }
-
-    .enter-button:hover {
-      background-color: #c8b18d;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
-  <div class="cover-container">
-    <img src="img/cover.jpg" alt="封面图" class="cover-image" />
-    <h1 class="cover-title">一个青年的天马行空</h1>
-    <p class="cover-subtitle">—— 成长、爱、孤独与思考的49首诗</p>
+  <header class="site-header">
+    <h1 class="site-title">一个青年的天马行空</h1>
+    <p class="subtitle">写给世界的五十首诗</p>
+  </header>
 
-    <a href="menu.html" class="enter-button">进入诗集</a>
-  </div>
+  <main class="main-content">
+    <section class="cover-image">
+      <img src="assets/img/cover.jpg" alt="诗集封面" />
+    </section>
+
+    <section class="introduction">
+      <p class="intro">
+        欢迎来到我的诗集网站。这里是一个青年学生的诗歌世界，收藏了他写下的每一段心灵独白、奇思妙想。
+      </p>
+      <a href="toc.html" class="btn">进入目录</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav>
+      <a href="index.html">首页</a> |
+      <a href="toc.html">目录</a> |
+      <a href="search.html">搜索</a> |
+      <a href="tags.html">分类</a> |
+      <a href="about.html">作者简介</a>
+    </nav>
+  </footer>
 </body>
 </html>
