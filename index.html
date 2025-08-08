@@ -16,6 +16,18 @@
   <main class="main-content">
     <section class="cover-image">
       <img src="assets/img/cover.jpg" alt="诗集封面" />
+      <img src="cover.jpg" id="cover">
+<script>
+let pressTimer;
+document.getElementById("cover").addEventListener("touchstart", function(){
+  pressTimer = setTimeout(() => {
+    window.location.href = "easter-egg.html";
+  }, 5000); // 长按 5 秒跳转
+});
+document.getElementById("cover").addEventListener("touchend", function(){
+  clearTimeout(pressTimer);
+});
+</script>
     </section>
 
     <section class="introduction">
