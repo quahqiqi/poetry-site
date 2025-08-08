@@ -1,20 +1,94 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-Hans">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1. 成长 - 一个青年的天马行空</title>
+  <title>成长 | 一个青年的天马行空</title>
   <link rel="stylesheet" href="../style.css" />
+  <style>
+    body {
+      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
+      background-color: #f5f0e6;
+      color: #333;
+      padding: 1.5em;
+      max-width: 700px;
+      margin: auto;
+    }
+    .poem-title {
+      font-size: 1.8em;
+      margin-bottom: 0.5em;
+    }
+    .poem-meta {
+      font-size: 0.9em;
+      color: #777;
+      margin-bottom: 1em;
+    }
+    .poem-body {
+      white-space: pre-wrap;
+      line-height: 1.8em;
+      margin-bottom: 2em;
+    }
+    .poem-image {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 1em 0;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: space-between;
+      margin: 2em 0;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #6b4e2e;
+      background-color: #e6dccb;
+      padding: 0.5em 1em;
+      border-radius: 6px;
+    }
+    .actions {
+      display: flex;
+      gap: 1em;
+      margin-bottom: 2em;
+    }
+    .comment-section {
+      border-top: 1px solid #ccc;
+      padding-top: 2em;
+    }
+    .comment-section h3 {
+      font-size: 1.2em;
+    }
+    .comment-form textarea,
+    .comment-form input {
+      width: 100%;
+      padding: 0.5em;
+      margin: 0.5em 0;
+      font-family: inherit;
+    }
+    .comment-form button {
+      background-color: #cbb89d;
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .featured-comments {
+      background-color: #f8f5f0;
+      padding: 1em;
+      border-left: 4px solid #b89c7a;
+      margin-bottom: 1em;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>成长</h1>
-    <p class="date">创作日期：2021年5月27日</p>
-  </header>
+  <h1 class="poem-title">成长</h1>
+  <div class="poem-meta">创作日期：2023年5月27日｜
 
-  <main>
-    <article>
-      <p>
+  <img src="../images/poem01.jpg" alt="配图" class="poem-image" />
+
+  <div class="poem-body">
 没有你的日子，
 我好像独自行走在炎热沙地上的骆驼；
 孤独且迷茫。
@@ -44,44 +118,32 @@
 你说我必须融入社会，
 褪去稚嫩，披上成熟，
 学着你的样子扛起家庭，
-或许是为了责任？谁知道呢。 
-      </p>
-    </article>
+或许是为了责任？谁知道呢。
+  </div>
 
-    <!-- 插图（可选） -->
-    <figure>
-      <img src="../images/poem01.jpg" alt="成长配图" style="width:100%; max-width:500px;">
-      <figcaption>摄影 / 插图说明（可选）</figcaption>
-    </figure>
+  <div class="actions">
+    <button onclick="alert('谢谢你的喜欢！')">👍 点赞</button>
+    <button onclick="navigator.share ? navigator.share({ title: '成长', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
+  </div>
 
-    <!-- 上一首 / 下一首按钮 -->
-    <nav class="poem-nav">
-      <a href="poem00.html">← 上一首</a>
-      <a href="poem02.html">下一首 →</a>
-    </nav>
+  <div class="nav-links">
+    <a href="poem49.html">← 上一首</a>
+    <a href="poem02.html">下一首 →</a>
+  </div>
 
-    <!-- 点赞、分享 -->
-    <section class="interact">
-      <button onclick="alert('感谢点赞！')">❤️ 喜欢</button>
-      <button onclick="navigator.clipboard.writeText(location.href); alert('链接已复制！')">🔗 分享</button>
-    </section>
-
-    <!-- 评论区 -->
-    <section class="comment-section">
-      <h2>留言评论</h2>
-      <div id="cusdis_thread"
-        data-host="https://cusdis.com"
-        data-app-id="b706817d-43e0-4d58-879c-12154673758b"
-        data-page-id="poem01"
-        data-page-url="https://quahqiqi.github.io/poetry-site//poems/poem01.html"
-        data-page-title="成长">
-      </div>
-      <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-    </section>
-  </main>
-
-  <footer>
-    <p><a href="../index.html">← 返回目录</a></p>
-  </footer>
+  <div class="comment-section">
+    <h3>精选留言</h3>
+    <div class="featured-comments">
+      “每一行都像是在说我自己。” —— 匿名读者
+    </div>
+      <!-- 评论系统（utterances） -->
+<script src="https://utteranc.es/client.js"
+        repo="your-quahqiqi/poetry-site"
+        issue-term="title"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+  </div>
 </body>
-</html>
+  </html>
