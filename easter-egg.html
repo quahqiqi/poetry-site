@@ -41,19 +41,18 @@
     white-space: nowrap;
     overflow: hidden;
     animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
-}
-
-.typing .name {
+  }
+  .typing .name {
     background: linear-gradient(90deg, #a67b5b, #d8a373); /* 咖啡-米色渐变 */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-.typing .note {
+  }
+  .typing .note {
     font-size: 0.8em; /* 致谢内容小一号 */
     font-style: italic;
     font-weight: normal;
     color: #5b4a3d;
-}
+  }
   @keyframes typing {
     from { width: 0 }
     to { width: 100% }
@@ -66,19 +65,19 @@
 </head>
 <body>
 
-<h1>🔥 欢迎光临</h1>
+<h1>哇塞你是怎么发现的</h1>
 
 <div class="poem">
-<b>隐藏的诗：</b>
+<b>作为奖励送你首🌙月光：</b>
 <br>
 夜色温柔  
 在风的指尖摇晃  
-有人把月光藏进口袋  
-只为等你路过  
+我把月光藏进口袋  
+只为照亮你的心房
 </div>
 
 <div class="credits">
-  <b>感谢名单：</b>
+  <b>特别感谢：</b>
   <div id="credit-list"></div>
 </div>
 
@@ -92,16 +91,12 @@ function typeLine(item, delay) {
   setTimeout(() => {
     let div = document.createElement("div");
     div.className = "typing";
-    div.innerHTML = `<span class="name">${
-tem.name}</span> <span class="note">—— ${item.note}</span>`;
+    div.innerHTML = `<span class="name">${item.name}</span> <span class="note">—— ${item.note}</span>`;
     document.getElementById("credit-list").appendChild(div);
   }, delay);
 }
 
 credits.forEach((item, i) => typeLine(item, i * 1500));
-}
-
-credits.forEach((line, i) => typeLine(line, i * 1500));
 </script>
 
 </body>
