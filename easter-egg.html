@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小天地</title>
+<style>
+  body {
+    background-color: #f6f0e7;
+    font-family: "KaiTi", "STKaiti", cursive;
+    margin: 0;
+    padding: 20px;
+    color: #4a3c31;
+    line-height: 1.8;
+  }
+  h1 {
+    font-size: 2em;
+    text-align: center;
+    animation: fadeIn 2s ease forwards;
+    opacity: 0;
+  }
+  @keyframes fadeIn {
+    to {opacity: 1;}
+  }
+  .poem {
+    max-width: 600px;
+    margin: 30px auto;
+    white-space: pre-line;
+    font-size: 1.1em;
+  }
+  .credits {
+    max-width: 600px;
+    margin: 50px auto;
+    border-top: 1px dashed #b8a08a;
+    padding-top: 20px;
+  }
+  .typing {
+    font-size: 1.4em; /* 名字更大 */
+    font-weight: bold;
+    border-right: .1em solid #4a3c31;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+.typing .name {
+    background: linear-gradient(90deg, #a67b5b, #d8a373); /* 咖啡-米色渐变 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.typing .note {
+    font-size: 0.8em; /* 致谢内容小一号 */
+    font-style: italic;
+    font-weight: normal;
+    color: #5b4a3d;
+}
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #4a3c31; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🔥 欢迎光临</h1>
+
+<div class="poem">
+<b>隐藏的诗：</b>
+<br>
+夜色温柔  
+在风的指尖摇晃  
+有人把月光藏进口袋  
+只为等你路过  
+</div>
+
+<div class="credits">
+  <b>感谢名单：</b>
+  <div id="credit-list"></div>
+</div>
+
+<script>
+const credits = [
+  {name: "感谢惠诗", note: "为诗集编排，整理"},
+  {name: "感谢正熙", note: "为诗集编排，整理"},
+];
+
+function typeLine(item, delay) {
+  setTimeout(() => {
+    let div = document.createElement("div");
+    div.className = "typing";
+    div.innerHTML = `<span class="name">${item.name}</span> <span class="note">—— ${item.note}</span>`;
+    document.getElementById("credit-list").appendChild(div);
+  }, delay);
+}
+
+credits.forEach((item, i) => typeLine(item, i * 1500));
+}
+
+credits.forEach((line, i) => typeLine(line, i * 1500));
+</script>
+
+</body>
+</html>
