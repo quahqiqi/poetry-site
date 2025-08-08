@@ -10,29 +10,31 @@
 <body>
   <header class="site-header">
     <h1 class="site-title">一个青年的天马行空</h1>
-    <p class="subtitle">我也想和这个世界说话</p>
+    <p class="subtitle">我也想对世界说的话</p>
   </header>
 
   <main class="main-content">
-    <section class="cover-image">
-      <img src="assets/img/cover.jpg" alt="诗集封面" />
-<script>
-let clickCount = 0; // 记录点击次数
-let resetTimer;
+  <section class="cover-image">
+    <img src="assets/img/cover.jpg" alt="诗集封面" id="cover" />
 
-document.getElementById("cover").addEventListener("click", function(){
-    clickCount++;
+    <script>
+    let clickCount = 0; // 记录点击次数
+    let resetTimer;
 
-    // 如果 3 秒内没有继续点，就重置计数
-    clearTimeout(resetTimer);
-    resetTimer = setTimeout(() => { clickCount = 0; }, 3000);
+    document.getElementById("cover").addEventListener("click", function(){
+        clickCount++;
 
-    if (clickCount === 10) {
-        window.location.href = "easter-egg.html"; // 跳转到彩蛋页
-    }
-});
-</script>
-    </section>
+        // 如果 3 秒内没有继续点，就重置计数
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { clickCount = 0; }, 3000);
+
+        if (clickCount === 10) {
+            window.location.href = "easter-egg.html"; // 跳转到彩蛋页
+        }
+    });
+    </script>
+  </section>
+  </main>
 
     <section class="introduction">
       <p class="intro">
