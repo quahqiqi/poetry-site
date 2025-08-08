@@ -13,45 +13,38 @@
     <p class="subtitle">我也想对世界说的话</p>
   </header>
 
-  <main class="main-content">
-  <section class="cover-image">
-    <img src="assets/img/cover.jpg" alt="诗集封面" id="cover" />
-
+<main class="main-content">  
+  <section class="cover-image">  
+    <img src="assets/img/cover.jpg" alt="诗集封面" id="cover" />  
     <script>
-    let clickCount = 0; // 记录点击次数
-    let resetTimer;
+      // 点击 10 次跳转彩蛋
+      let clickCount = 0;
+      let resetTimer;
+      const cover = document.getElementById("cover");
 
-    const cover = document.getElementById("cover");
+      function flashCover() {
+        cover.style.transition = "opacity 0.2s";
+        cover.style.opacity = "0.5";
+        setTimeout(() => { cover.style.opacity = "1"; }, 200);
+      }
 
-    // 定义闪烁动画
-    function flashCover() {
-      cover.style.transition = "opacity 0.2s";
-      cover.style.opacity = "0.5";
-      setTimeout(() => {
-        cover.style.opacity = "1";
-      }, 200);
-    }
-
-    cover.addEventListener("click", function(){
+      cover.addEventListener("click", function(){
         clickCount++;
-
-        // 如果 3 秒内没有继续点，就重置计数
         clearTimeout(resetTimer);
         resetTimer = setTimeout(() => { clickCount = 0; }, 3000);
-
-        // 当点击 7~9 次时闪烁提示
-        if (clickCount >= 7 && clickCount < 10) {
-            flashCover();
-        }
-
-        // 点击 10 次触发彩蛋
-        if (clickCount === 10) {
-            window.location.href = "easter-egg.html"; // 跳转到彩蛋页
-        }
-    });
+        if (clickCount >= 7 && clickCount < 10) flashCover();
+        if (clickCount === 10) window.location.href = "easter-egg.html";
+      });
     </script>
-  </section>
-  </main>
+  </section>  
+
+  <section class="introduction">  
+    <p class="intro">
+      欢迎来到我的诗集网站。这里收录了我的每一段心灵独白和奇思妙想，希望你们会喜欢！
+    </p>
+    <a href="toc.html" class="btn">进入目录</a>  
+  </section>  
+</main>
 
     <section class="introduction">
       <p class="intro">
