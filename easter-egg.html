@@ -12,22 +12,47 @@
     padding: 20px;
     color: #4a3c31;
     line-height: 1.8;
+    overflow-x: hidden;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    background-size: cover;
+    animation: bgMove 30s linear infinite;
   }
+  @keyframes bgMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+  }
+
   h1 {
     font-size: 2em;
     text-align: center;
     animation: fadeIn 2s ease forwards;
     opacity: 0;
   }
-  @keyframes fadeIn {
-    to {opacity: 1;}
+  @keyframes fadeIn { to {opacity: 1;} }
+
+  /* 飘落诗句 */
+  .falling-line {
+    position: fixed;
+    top: -50px;
+    font-size: 1em;
+    color: rgba(74, 60, 49, 0.7);
+    animation: fall 10s linear infinite;
+    white-space: nowrap;
   }
+  @keyframes fall {
+    to { transform: translateY(110vh); }
+  }
+
+  /* 诗内容 */
   .poem {
     max-width: 600px;
     margin: 30px auto;
     white-space: pre-line;
     font-size: 1.1em;
+    text-align: center;
   }
+
+  /* 感谢名单 */
   .credits {
     max-width: 600px;
     margin: 50px auto;
@@ -35,51 +60,60 @@
     padding-top: 20px;
   }
   .typing {
-    font-size: 1.4em; /* 名字更大 */
+    font-size: 1.4em;
     font-weight: bold;
-    border-right: .1em solid #4a3c31;
     white-space: nowrap;
     overflow: hidden;
     animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+    display: inline-block;
+    position: relative;
   }
   .typing .name {
-    background: linear-gradient(90deg, #a67b5b, #d8a373); /* 咖啡-米色渐变 */
+    background: linear-gradient(90deg, #a67b5b, #d8a373);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: floatName 4s ease-in-out infinite alternate;
   }
   .typing .note {
-    font-size: 0.8em; /* 致谢内容小一号 */
+    font-size: 0.8em;
     font-style: italic;
     font-weight: normal;
     color: #5b4a3d;
   }
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-  }
-  @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: #4a3c31; }
+  @keyframes typing { from { width: 0 } to { width: 100% } }
+  @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #4a3c31; } }
+  @keyframes floatName {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-5px); }
   }
 </style>
 </head>
 <body>
 
-<h1>哇塞你是怎么发现的</h1>
+<h1>🔥 欢迎光临</h1>
+
+<!-- 飘落诗句容器 -->
+<div id="falling-container"></div>
 
 <div class="poem">
-<b>作为奖励送你首🌙月光：</b>
+<b>隐藏的诗：</b>
 <br>
 夜色温柔  
 在风的指尖摇晃  
-我把月光藏进口袋  
-只为照亮你的心房
+有人把月光藏进口袋  
+只为等你路过  
 </div>
 
 <div class="credits">
-  <b>特别感谢：</b>
+  <b>感谢名单：</b>
   <div id="credit-list"></div>
 </div>
+
+<!-- 背景音乐 -->
+<audio id="bg-music" src="https://cdn.pixabay.com/download/audio/2021/10/26/audio_1f5c07c0d6.mp3" autoplay loop></audio>
+
+<!-- 音效 -->
+<audio id="type-sound" src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_b3998b98a4.mp3"></audio>
 
 <script>
 const credits = [
@@ -93,10 +127,30 @@ function typeLine(item, delay) {
     div.className = "typing";
     div.innerHTML = `<span class="name">${item.name}</span> <span class="note">—— ${item.note}</span>`;
     document.getElementById("credit-list").appendChild(div);
+    document.getElementById("type-sound").play();
   }, delay);
 }
 
-credits.forEach((item, i) => typeLine(item, i * 1500));
+credits.forEach((item, i) => typeLine(item, i * 2000));
+
+// 飘落诗句效果
+const lines = [
+  "夜色温柔",
+  "在风的指尖摇晃",
+  "我把月光藏进口袋",
+  "只为照亮你的心房"
+];
+function createFallingLine() {
+  const line = document.createElement("div");
+  line.className = "falling-line";
+  line.textContent = lines[Math.floor(Math.random() * lines.length)];
+  line.style.left = Math.random() * 100 + "vw";
+  line.style.fontSize = (Math.random() * 0.5 + 1) + "em";
+  document.body.appendChild(line);
+
+  setTimeout(() => { line.remove(); }, 10000);
+}
+setInterval(createFallingLine, 2000);
 </script>
 
 </body>
