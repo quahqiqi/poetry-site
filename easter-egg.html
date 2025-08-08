@@ -92,7 +92,8 @@ function typeLine(item, delay) {
   setTimeout(() => {
     let div = document.createElement("div");
     div.className = "typing";
-    div.innerHTML = `<span class="name">${item.name}</span> <span class="note">—— ${item.note}</span>`;
+    div.innerHTML = `<span class="name">${
+tem.name}</span> <span class="note">—— ${item.note}</span>`;
     document.getElementById("credit-list").appendChild(div);
   }, delay);
 }
