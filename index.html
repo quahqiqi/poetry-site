@@ -21,13 +21,30 @@
     let clickCount = 0; // 记录点击次数
     let resetTimer;
 
-    document.getElementById("cover").addEventListener("click", function(){
+    const cover = document.getElementById("cover");
+
+    // 定义闪烁动画
+    function flashCover() {
+      cover.style.transition = "opacity 0.2s";
+      cover.style.opacity = "0.5";
+      setTimeout(() => {
+        cover.style.opacity = "1";
+      }, 200);
+    }
+
+    cover.addEventListener("click", function(){
         clickCount++;
 
         // 如果 3 秒内没有继续点，就重置计数
         clearTimeout(resetTimer);
         resetTimer = setTimeout(() => { clickCount = 0; }, 3000);
 
+        // 当点击 7~9 次时闪烁提示
+        if (clickCount >= 7 && clickCount < 10) {
+            flashCover();
+        }
+
+        // 点击 10 次触发彩蛋
         if (clickCount === 10) {
             window.location.href = "easter-egg.html"; // 跳转到彩蛋页
         }
