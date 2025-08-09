@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索诗集</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    body { max-width: 800px; margin: auto; padding: 20px; font-family: 'Noto Serif SC', serif; }
+    input[type="text"] { width: 100%; padding: 10px; font-size: 1.1em; border: 1px solid #ccc; border-radius: 5px; }
+    .result { border-bottom: 1px solid #ddd; padding: 10px 0; }
+    .result a { font-size: 1.2em; font-weight: bold; color: #333; text-decoration: none; }
+    .result p { color: #555; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <h1>搜索诗集</h1>
+  <input type="text" id="searchBox" placeholder="输入关键词搜索..." autofocus>
+  <div id="results"></div>
+
+  <script>
+    let poems = [];
+
+    // 读取 poems.json
+    fetch('poems.json')
+      .then(response => response.json())
+      .then(data => { poems = data; });
+
+    // 监听输入
+    document.getElementById('searchBox').addEventListener('input', function() {
+      let keyword = this.value.trim().toLowerCase();
+      let resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      if (keyword.length === 0) return;
+
+      let filtered = poems.filter(poem =>
+        poem.title.toLowerCase().includes(keyword) ||
+        poem.content.toLowerCase().includes(keyword)
+      );
+
+      if (filtered.length === 0) {
+        resultsDiv.innerHTML = '<p>没有找到结果。</p>';
+        return;
+      }
+
+      filtered.forEach(poem => {
+        let div = document.createElement('div');
+        div.classList.add('result');
+        div.innerHTML = `
+          <a href="${poem.url}">${poem.title}</a>
+          <p>${poem.content.substring(0, 50)}...</p>
+        `;
+        resultsDiv.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
