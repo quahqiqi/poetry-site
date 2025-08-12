@@ -4,42 +4,222 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>关于作者 - 一个青年的天马行空</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+
   <style>
-  .author-photo {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-    margin: 1em auto 1em auto;
-    box-shadow: 0 0 6px rgba(0,0,0,0.1);
-    border-radius: 4px; /* 轻微圆角，文艺但不占空间 */
-  }
+    /* 主题色与字体 */
+    :root {
+      --bg: #f5efe4;
+      --card: #ffffff;
+      --accent: #b89c7a;
+      --muted: #6d5a44;
+      --max-width: 1100px;
+    }
+    body {
+      margin: 0;
+      font-family: 'Noto Serif SC', "思源宋体", serif;
+      background: linear-gradient(180deg, var(--bg), #f7f4ee);
+      color: #2d2d2d;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .author, .contact {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 0 1em;
-    line-height: 1.8;
-  }
+    /* 顶部导航栏 */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      background: rgba(228, 216, 196, 0.95);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .95rem;
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+    nav a:hover {
+      background: rgba(0,0,0,0.03);
+    }
 
-  .contact h2 {
-    margin-top: 2em;
-  }
+    /* 主要内容区域 */
+    main {
+      max-width: var(--max-width);
+      margin: 22px auto;
+      padding: 0 16px 40px;
+      flex: 1;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 2rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    header .subtitle {
+      text-align: center;
+      margin-top: 6px;
+      color: #55463a;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    /* 作者照片 */
+    .author-photo {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      margin: 1em auto;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      border-radius: 4px;
+    }
+
+    /* 作者介绍和联系方式 */
+    .author, .contact {
+      max-width: 600px;
+      margin: 0 auto 2em;
+      padding: 0 1em;
+      color: #5b4a3d;
+    }
+    .contact h2 {
+      margin-top: 0;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0.5em;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 6px;
+    }
+    .contact ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .contact li {
+      margin-bottom: 0.6em;
+      font-size: 1rem;
+    }
+    .contact a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .contact a:hover {
+      text-decoration: underline;
+    }
+    .contact img {
+      width: 20px;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    /* 返回首页按钮 */
+    .btn {
+      display: block;
+      max-width: 140px;
+      margin: 2em auto 0;
+      padding: 10px 14px;
+      text-align: center;
+      background-color: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #a67d56;
+    }
+
+    /* 页脚 */
+    footer {
+      max-width: var(--max-width);
+      margin: 0 auto 20px;
+      padding: 0 16px;
+      color: #6e5b4a;
+      font-size: 0.9rem;
+      text-align: center;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    footer nav a {
+      color: var(--muted);
+      margin: 0 6px;
+      font-weight: 600;
+    }
+    footer nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* 响应式 */
+    @media (max-width: 640px) {
+      .author-photo {
+        width: 140px;
+        height: 140px;
+      }
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .btn {
+        max-width: 120px;
+        padding: 8px 12px;
+      }
+    }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>关于作者</h1>
-    <p class="subtitle">启宏，其人其诗</p>
+    <div class="nav-left">
+      <a class="brand" href="index.html">
+        <img src="assets/img/logo.png" alt="logo" id="logo" />
+        一个青年的天马行空
+      </a>
+      <nav>
+        <a href="index.html">首页</a>
+        <a href="toc.html">目录</a>
+        <a href="about.html">简介</a>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <section class="author">
-      <!-- 这是照片 -->
-      <img src="assets/img/author.jpg" alt="作者启宏的照片" class="author-photo" />
+    <header>
+      <h1>关于作者</h1>
+      <p class="subtitle">启宏，其人其诗</p>
+    </header>
 
-      <!-- 作者简介文字 -->
+    <section class="author">
+      <img src="assets/img/author.jpg" alt="作者启宏的照片" class="author-photo" />
       <p>我是启宏，来自马来西亚雪兰莪。</p>
 
       <p>从小就喜欢思考，也总是对文字怀抱敬意。小时候，在一次偶然的阅读中遇见了新诗，那是我第一次发现，原来文字可以这样自由——不拘格律，却能直达心灵。那一刻起，我便爱上了它。</p>
@@ -48,19 +228,23 @@
 
       <p>我的作品也许还有许多不足，身边鲜有人可请教，于是我用了这样一种笨拙的方式——将诗放在这里，邀请你阅读，欢迎你批评指正。</p>
 
-      <p>你们的每一句意见，都是我诗路上的灯火。<br>
+      <p>你们的每一句意见，都是我诗路上的灯火。<br />
       在此，深深致谢。</p>
     </section>
 
     <section class="contact">
       <h2>联系方式</h2>
-<p>
-  <a href="https://www.instagram.com/galiambuqq/" target="_blank">
-    <img src="assets/img/instagram-icon.png" alt="Instagram图标" style="width: 20px; vertical-align: middle; margin-right: 6px;">
-    @galiambuqq
-  </a>
-</p>
-        <li>📧 邮箱<a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a></li>
+      <ul>
+        <li>
+          <a href="https://www.instagram.com/galiambuqq/" target="_blank" rel="noopener noreferrer">
+            <img src="assets/img/instagram-icon.png" alt="Instagram图标" />
+            @galiambuqq
+          </a>
+        </li>
+        <li>
+          📧 邮箱
+          <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a>
+        </li>
       </ul>
     </section>
 
@@ -74,5 +258,6 @@
       <a href="about.html">作者简介</a>
     </nav>
   </footer>
+
 </body>
 </html>
