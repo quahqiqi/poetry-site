@@ -258,7 +258,6 @@
             card.innerHTML = `
               <img class="poem-cover" src="${imgSrc}" alt="${escapeHtml(title)}">
               <div class="poem-body">
-              <script>
 fetch('poems.json')
   .then(response => response.json())
   .then(poems => {
