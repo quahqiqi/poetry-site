@@ -258,7 +258,7 @@
             card.innerHTML = `
               <img class="poem-cover" src="${imgSrc}" alt="${escapeHtml(title)}">
               <div class="poem-body">
-fetch('poems.json')
+              fetch('poems.json')
   .then(response => response.json())
   .then(poems => {
     const container = document.getElementById('poem-list');
@@ -269,6 +269,11 @@ fetch('poems.json')
       container.appendChild(link);
       container.appendChild(document.createElement('br'));
     });
+  })
+  .catch(error => {
+    console.error('无法加载诗歌列表:', error);
+  });
+       
   })
   .catch(error => {
     console.error('无法加载诗歌列表:', error);
