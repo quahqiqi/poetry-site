@@ -1,286 +1,157 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh">
 <head>
-  <!-- 你要求的 meta -->
   <meta charset="UTF-8" />
   <meta name="google-site-verification" content="Jmg21UHrR3PnnXpixUqiImr3md0w94_voZSFNLw_2Ls" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>一个青年的天马行空</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-  <!-- 思源宋体/近似字体：使用 Noto Serif SC 作为在线替代（若你有本地思源文件可改为 @font-face） -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <!-- favicon -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- 思源宋体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#f5efe4;
-      --card:#ffffff;
-      --accent:#b89c7a;
-      --muted:#6d5a44;
-      --max-width:1100px;
+    body {
+      font-family: 'Noto Serif SC', serif;
+      background-color: #f5f0e6;
+      margin: 0;
+      padding: 0;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: 'Noto Serif SC', "思源宋体", serif;
-      background: linear-gradient(180deg, var(--bg), #f7f4ee);
-      color:#2d2d2d;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #e6d8c3;
     }
-
-    /* header */
-    header{
-      position: sticky; top:0; z-index:1000;
-      backdrop-filter: blur(4px);
-      background: rgba(228,216,196,0.95);
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 16px;
-      transition: transform .25s ease;
+    .logo {
+      font-size: 1.5em;
+      font-weight: bold;
     }
-    .nav-left{display:flex; align-items:center; gap:12px}
-    .brand{
-      display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--muted)
+    .search-container {
+      position: relative;
     }
-    .brand img{width:44px; height:44px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,0.08)}
-    .brand h1{font-size:1rem; margin:0; font-weight:700}
-    nav a{
-      text-decoration:none; color:var(--muted); font-weight:600; font-size:.95rem;
-      padding:6px 8px; border-radius:6px;
+    .search-icon {
+      cursor: pointer;
+      font-size: 1.2em;
+      background: none;
+      border: none;
     }
-    nav a:hover{background:rgba(0,0,0,0.03)}
-
-    /* search icon and input */
-    .search-wrap{display:flex; align-items:center; gap:8px}
-    #searchInput{
-      display:inline-block;
-      width:0;
-      padding:6px 8px;
-      border-radius:6px;
-      border:1px solid rgba(0,0,0,0.08);
-      transition: width .25s ease, opacity .2s;
-      opacity:0;
-      font-family:inherit;
+    .search-bar {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 30px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      background: #fff;
     }
-    #searchInput.open{width:180px; opacity:1}
-    .icon-btn{
-      background:transparent; border:none; cursor:pointer; padding:6px; border-radius:6px;
-      display:inline-flex; align-items:center; justify-content:center;
+    .poem-list {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
     }
-
-    /* main layout */
-    main{max-width:var(--max-width); margin:22px auto; padding:0 16px;}
-    .intro{
-      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));
-      border-radius:12px; padding:18px; box-shadow:0 6px 18px rgba(20,20,20,0.04);
-      display:flex; gap:16px; align-items:center; margin-bottom:18px;
+    .poem-card {
+      background: #fff;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .intro .left{flex:1}
-    .intro h2{margin:0 0 8px 0; font-size:1.2rem}
-    .intro p{margin:0; color: #55463a}
-
-    /* poems grid */
-    .poems-grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:16px}
-    .poem-card{
-      background:var(--card); border-radius:10px; overflow:hidden;
-      box-shadow:0 6px 18px rgba(30,30,30,0.05); transition: transform .18s ease;
-      display:flex; flex-direction:column;
+    .poem-card img {
+      max-width: 100%;
+      border-radius: 8px;
     }
-    .poem-card:hover{transform:translateY(-6px)}
-    .poem-cover{width:100%; height:160px; object-fit:cover; background:#efe7da}
-    .poem-body{padding:12px 14px; flex:1; display:flex; flex-direction:column}
-    .poem-body h3{margin:0 0 8px 0; font-size:1.05rem; color:#333}
-    .poem-body p{margin:0; color:#5b4a3d; line-height:1.6; font-size:0.95rem}
-    .poem-meta{margin-top:10px; font-size:0.85rem; color:#8a7662}
-
-    footer{max-width:var(--max-width); margin:28px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem;}
-
-    /* responsive tweaks */
-    @media (max-width:640px){
-      header{padding:10px}
-      .brand h1{font-size:.95rem}
-      #searchInput.open{width:120px}
-      .poem-cover{height:140px}
+    .poem-card h2 {
+      margin: 10px 0 5px;
+    }
+    .poem-card p {
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <header id="siteHeader">
-    <div class="nav-left">
-      <a class="brand" href="index.html">
-        <!-- logo 占位：替换为 /images/logo.png -->
-        <img src="images/logo-128.png" alt="logo" id="logoImg">
-        <h1>一个青年的天马行空</h1>
-      </a>
-
-      <nav>
-        <a href="index.html">首页</a>
-        <a href="tog.html">目录</a>
-        <a href="about.html">作者</a>
-      </nav>
-    </div>
-
-    <div class="search-wrap">
-      <input id="searchInput" type="text" placeholder="搜索诗歌 / 标题 / 句子…" aria-label="搜索诗歌">
-      <button class="icon-btn" id="searchBtn" title="搜索（点击展开）" aria-label="搜索图标">
-        <!-- 放大镜 SVG -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 21l-4.35-4.35" stroke="#4a3c31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="10.5" cy="10.5" r="6" stroke="#4a3c31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+  <header>
+    <div class="logo">一个青年的天马行空</div>
+    <div class="search-container">
+      <button class="search-icon" onclick="toggleSearch()">🔍</button>
+      <input type="text" class="search-bar" placeholder="搜索诗歌..." oninput="searchPoems(this.value)">
     </div>
   </header>
 
-  <main>
-  <main class="container">
-    <section class="hero">
-      <h1>欢迎来到我的诗集网站</h1>
-      <p>这里收录了我的每一段心灵独白和奇思妙想，希望你们会喜欢！</p>
-      
-          <h2>最新发布</h2>
-    <div id="poemsGrid" class="grid" aria-live="polite">
-        <div id="latestBadge" style="font-weight:700; color:var(--accent); margin-top:6px">——</div>
-      </div>
-    </section>
-
-    <section id="poemsSection">
-      <div class="poems-grid" id="poemsGrid" aria-live="polite">
-        <!-- 自动填充最新诗卡 -->
-      </div>
-    </section>
+  <main class="poem-list" id="poemList">
+    <p>加载中...</p>
   </main>
 
-  <footer>
-    © <span id="year"></span>一个青年的天马行空 ·
-  </footer>
-
   <script>
-    // header 隐藏 on scroll up/down（简单实现）
-    (function(){
-      let lastScroll = 0;
-      const header = document.getElementById('siteHeader');
-      window.addEventListener('scroll', () => {
-        const sc = window.scrollY;
-        if (sc > lastScroll && sc > 80){
-          // 向下滚动，隐藏
-          header.style.transform = 'translateY(-94px)';
-        } else {
-          // 向上滚动，显示
-          header.style.transform = 'translateY(0)';
-        }
-        lastScroll = sc;
-      });
-    })();
-
-    // 搜索展开逻辑
-    const searchBtn = document.getElementById('searchBtn');
-    const searchInput = document.getElementById('searchInput');
-    searchBtn.addEventListener('click', () => {
-      if (!searchInput.classList.contains('open')) {
-        searchInput.classList.add('open'); searchInput.focus();
-      } else {
-        // 若已展开则清空并触发搜索
-        if (searchInput.value.trim() === '') {
-          searchInput.classList.remove('open');
-        } else {
-          filterCards(searchInput.value.trim());
-        }
-      }
-    });
-    searchInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') filterCards(searchInput.value.trim());
-      if (e.key === 'Escape') { searchInput.value=''; filterCards(''); searchInput.classList.remove('open'); }
-    });
-
-    function filterCards(q){
-      const ql = q.toLowerCase();
-      document.querySelectorAll('.poem-card').forEach(card=>{
-        const text = (card.innerText || '').toLowerCase();
-        card.style.display = text.includes(ql) ? '' : 'none';
-      });
+    // 搜索栏切换
+    function toggleSearch() {
+      const searchBar = document.querySelector('.search-bar');
+      searchBar.style.display = searchBar.style.display === 'block' ? 'none' : 'block';
+      if (searchBar.style.display === 'block') searchBar.focus();
     }
 
-    // 自动抓取 poems/ 目录下最新诗（取前 5）
-    async function loadLatestPoems(){
+    // 自动抓取 poems 文件夹里的诗歌
+    async function loadPoems() {
+      const listContainer = document.getElementById('poemList');
+      listContainer.innerHTML = '';
+
       try {
-        // 获取目录列表（GitHub Pages 直接目录索引可用时）
-        const listRes = await fetch('poems/');
-        const listText = await listRes.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(listText, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a'))
-          .map(a => a.getAttribute('href'))
-          .filter(h => h && h.match(/\.html$/i));
+        const response = await fetch('poems/');
+        const text = await response.text();
 
-        // 按数字/文件名降序（poem25.html -> latest）
-        links.sort((a,b)=> b.localeCompare(a, undefined, {numeric:true}));
+        // 从目录页面中提取 HTML 文件名
+        const poemFiles = [...text.matchAll(/href="(poem\d+\.html)"/g)].map(m => m[1]);
 
-        const latest = links.slice(0, 5);
-        const grid = document.getElementById('poemsGrid');
-        if (latest.length === 0){
-          grid.innerHTML = '<p style="color:#7a6450">未找到 poems 目录或其中没有 HTML 文件。</p>';
+        if (poemFiles.length === 0) {
+          listContainer.innerHTML = '<p>暂无诗歌</p>';
           return;
         }
 
-        // 显示最新标题在右上角
-        const latestName = latest[0] || '';
-        document.getElementById('latestBadge').innerText = latestName.replace('.html','');
+        // 最新的排在最前
+        poemFiles.sort((a, b) => b.localeCompare(a));
 
-        for (let href of latest){
-          try {
-            const resp = await fetch('poems/' + href);
-            const html = await resp.text();
-            const pDoc = parser.parseFromString(html, 'text/html');
+        for (const file of poemFiles) {
+          const res = await fetch('poems/' + file);
+          const html = await res.text();
 
-            // 尽量从 poem 页面抓取 h1 / 前几行 / 首张图片
-            const title = pDoc.querySelector('h1')?.innerText?.trim() || pDoc.querySelector('.poem-title')?.innerText?.trim() || href.replace('.html','');
-            // 优先查找 class poem-body 的文本，否则取第一个 <div> 或 <p>
-            let preview = '';
-            const bodyEl = pDoc.querySelector('.poem-body') || pDoc.querySelector('article') || pDoc.querySelector('div') || pDoc.querySelector('p');
-            if (bodyEl) {
-              preview = bodyEl.innerText.trim().replace(/\s+/g,' ').slice(0,120);
-              if (preview.length === 120) preview += '…';
-            }
-            // 找第一张图片做封面
-            let imgSrc = pDoc.querySelector('img')?.getAttribute('src') || null;
-            if (imgSrc && !imgSrc.startsWith('http')) {
-              // 转为相对 poems/ 路径
-              imgSrc = 'poems/' + imgSrc.replace(/^\.\//,'').replace(/^\/+/,'');
-            }
-            if (!imgSrc) imgSrc = 'images/default-cover.jpg'; // 站点根目录准备占位图
+          // 抓取标题
+          const titleMatch = html.match(/<h1.*?>(.*?)<\/h1>/);
+          const title = titleMatch ? titleMatch[1] : '无标题';
 
-            // 创建卡片
-            const card = document.createElement('article');
-            card.className = 'poem-card';
-            card.innerHTML = `
-              <img class="poem-cover" src="${imgSrc}" alt="${escapeHtml(title)}">
-              <div class="poem-body">
-                <h3><a href="poems/${href}" style="text-decoration:none;color:inherit">${escapeHtml(title)}</a></h3>
-                <p>${escapeHtml(preview)}</p>
-                <div class="poem-meta">${href.replace('.html','')}</div>
-              </div>
-            `;
-            grid.appendChild(card);
-          } catch (e) {
-            console.warn('加载单篇诗失败:', href, e);
-          }
+          // 抓取前几句
+          const contentMatch = html.match(/<p>(.*?)<\/p>/);
+          const excerpt = contentMatch ? contentMatch[1].slice(0, 40) + '...' : '';
+
+          // 抓取封面图
+          const imgMatch = html.match(/<img.*?src="(.*?)"/);
+          const imgSrc = imgMatch ? imgMatch[1] : '';
+
+          const card = document.createElement('div');
+          card.className = 'poem-card';
+          card.innerHTML = `
+            ${imgSrc ? `<img src="poems/${imgSrc}" alt="${title}">` : ''}
+            <h2><a href="poems/${file}">${title}</a></h2>
+            <p>${excerpt}</p>
+          `;
+          listContainer.appendChild(card);
         }
-
-      } catch (err){
-        console.error('加载 poems 目录失败', err);
-        document.getElementById('poemsGrid').innerHTML = '<p style="color:#7a6450">读取 poems 目录失败，请确认服务器允许目录索引或你已生成 poems/index.html。</p>';
+      } catch (e) {
+        listContainer.innerHTML = '<p>无法加载诗歌列表</p>';
       }
     }
 
-    // 小工具：防 XSS（只在这里简单转义插入字符串）
-    function escapeHtml(s=''){ return s.replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+    function searchPoems(query) {
+      const cards = document.querySelectorAll('.poem-card');
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(query.toLowerCase()) ? 'block' : 'none';
+      });
+    }
 
-    document.getElementById('year').innerText = new Date().getFullYear();
-    loadLatestPoems();
+    loadPoems();
   </script>
 </body>
 </html>
