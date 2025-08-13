@@ -157,117 +157,74 @@
     © <span id="2025"></span>  一个青年的天马行空
   </footer>
 
-  <script>
-    // header 隐藏 on scroll up/down（简单实现）
-    (function(){
-      let lastScroll = 0;
-      const header = document.getElementById('siteHeader');
-      window.addEventListener('scroll', () => {
-        const sc = window.scrollY;
-        if (sc > lastScroll && sc > 80){
-          // 向下滚动，隐藏
-          header.style.transform = 'translateY(-94px)';
-        } else {
-          // 向上滚动，显示
-          header.style.transform = 'translateY(0)';
-        }
-        lastScroll = sc;
-      });
-    })();
+    <script>
+// escapeHtml 函数
+function escapeHtml(text){
+  return text.replace(/[&<>"']/g, m=>({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[m]));
+}
 
-    // 搜索展开逻辑
-    const searchBtn = document.getElementById('searchBtn');
-    const searchInput = document.getElementById('searchInput');
-    searchBtn.addEventListener('click', () => {
-      if (!searchInput.classList.contains('open')) {
-        searchInput.classList.add('open'); searchInput.focus();
-      } else {
-        // 若已展开则清空并触发搜索
-        if (searchInput.value.trim() === '') {
-          searchInput.classList.remove('open');
-        } else {
-          filterCards(searchInput.value.trim());
-        }
-      }
-    });
-    searchInput.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') filterCards(searchInput.value.trim());
-      if (e.key === 'Escape') { searchInput.value=''; filterCards(''); searchInput.classList.remove('open'); }
-    });
-
-    function filterCards(q){
-      const ql = q.toLowerCase();
-      document.querySelectorAll('.poem-card').forEach(card=>{
-        const text = (card.innerText || '').toLowerCase();
-        card.style.display = text.includes(ql) ? '' : 'none';
-      });
+// 搜索逻辑
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.getElementById('searchInput');
+searchBtn.addEventListener('click', () => {
+  if (!searchInput.classList.contains('open')) {
+    searchInput.classList.add('open'); searchInput.focus();
+  } else {
+    if (searchInput.value.trim() === '') {
+      searchInput.classList.remove('open');
+    } else {
+      filterCards(searchInput.value.trim());
     }
+  }
+});
+searchInput.addEventListener('keyup', (e) => {
+  if (e.key === 'Enter') filterCards(searchInput.value.trim());
+  if (e.key === 'Escape') {
+    searchInput.value='';
+    filterCards('');
+    searchInput.classList.remove('open');
+  }
+});
 
-    // 自动抓取 poems/ 目录下最新诗（取前 5）
-    async function loadLatestPoems(){
-      try {
-        // 获取目录列表（GitHub Pages 直接目录索引可用时）
-        const listRes = await fetch('poems/');
-        const listText = await listRes.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(listText, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a'))
-          .map(a => a.getAttribute('href'))
-          .filter(h => h && h.match(/\.html$/i));
-
-        // 按数字/文件名降序（poem25.html -> latest）
-        links.sort((a,b)=> b.localeCompare(a, undefined, {numeric:true}));
-
-        const latest = links.slice(0, 5);
-        const grid = document.getElementById('poemsGrid');
-        if (latest.length === 0){
-          grid.innerHTML = '<p style="color:#7a6450">未找到 poems 目录或其中没有 HTML 文件。</p>';
-          return;
-        }
-
-        // 显示最新标题在右上角
-        const latestName = latest[0] || '';
-        document.getElementById('latestBadge').innerText = latestName.replace('.html','');
-
-        for (let href of latest){
-          try {
-            const resp = await fetch('poems/' + href);
-            const html = await resp.text();
-            const pDoc = parser.parseFromString(html, 'text/html');
-
-            // 尽量从 poem 页面抓取 h1 / 前几行 / 首张图片
-            const title = pDoc.querySelector('h1')?.innerText?.trim() || pDoc.querySelector('.poem-title')?.innerText?.trim() || href.replace('.html','');
-            // 优先查找 class poem-body 的文本，否则取第一个 <div> 或 <p>
-            let preview = '';
-            const bodyEl = pDoc.querySelector('.poem-body') || pDoc.querySelector('article') || pDoc.querySelector('div') || pDoc.querySelector('p');
-            if (bodyEl) {
-              preview = bodyEl.innerText.trim().replace(/\s+/g,' ').slice(0,120);
-              if (preview.length === 120) preview += '…';
-            }
-            // 找第一张图片做封面
-            let imgSrc = pDoc.querySelector('img')?.getAttribute('src') || null;
-            if (imgSrc && !imgSrc.startsWith('http')) {
-              // 转为相对 poems/ 路径
-              imgSrc = 'poems/' + imgSrc.replace(/^\.\//,'').replace(/^\/+/,'');
-            }
-            if (!imgSrc) imgSrc = 'images/default-cover.jpg'; // 站点根目录准备占位图
-
-            // 创建卡片
-            const card = document.createElement('article');
-            card.className = 'poem-card';
-            card.innerHTML = `
-              <img class="poem-cover" src="${imgSrc}" alt="${escapeHtml(title)}">
-              <div class="poem-body">
-   
-  })
-  .catch(error => {
-    console.error('无法加载诗歌列表:', error);
+function filterCards(q){
+  const ql = q.toLowerCase();
+  document.querySelectorAll('.poem-card').forEach(card=>{
+    const text = (card.innerText || '').toLowerCase();
+    card.style.display = text.includes(ql) ? '' : 'none';
   });
-       
-  })
-  .catch(error => {
-    console.error('无法加载诗歌列表:', error);
-  });
-</script>
+}
+
+// 加载 poems.json 并生成诗卡
+async function loadPoems(){
+  try {
+    const res = await fetch('poems/poems.json'); // 或 './poems.json'
+    const poems = await res.json();
+    const grid = document.getElementById('poemsGrid');
+    grid.innerHTML = '';
+
+    poems.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'poem-card';
+      card.innerHTML = `
+        <img class="poem-cover" src="${p.img}" alt="${escapeHtml(p.title)}">
+        <div class="poem-body">
+          <h3>${escapeHtml(p.title)}</h3>
+          <p>${escapeHtml(p.preview)}</p>
+          <div class="poem-meta"><a href="poems/${p.file}">阅读全文 →</a></div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  } catch(err){
+    console.error('加载诗歌失败:', err);
+    document.getElementById('poemsGrid').innerHTML = '<p style="color:#7a6450">无法加载诗歌列表。</p>';
+  }
+}
+
+// 初始化
+loadPoems();
+    </script>
 </body>
 </html>
