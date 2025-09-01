@@ -1,119 +1,111 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>unknown place</title>
-<style>
-  body {
-    background-color: #f6f0e7;
-    font-family: "KaiTi", "STKaiti", cursive;
-    margin: 0;
-    padding: 20px;
-    color: #4a3c31;
-    line-height: 1.8;
-    overflow-x: hidden;
-  }
-  h1 {
-    font-size: 2em;
-    text-align: center;
-    animation: fadeIn 2s ease forwards;
-    opacity: 0;
-  }
-  @keyframes fadeIn {
-    to {opacity: 1;}
-  }
-  .poem {
-    max-width: 600px;
-    margin: 30px auto;
-    white-space: pre-line;
-    font-size: 1.1em;
-  }
-  .credits {
-    max-width: 600px;
-    margin: 50px auto;
-    border-top: 1px dashed #b8a08a;
-    padding-top: 20px;
-  }
-  .typing {
-    font-size: 1.4em;
-    font-weight: bold;
-    border-right: .1em solid #4a3c31;
-    white-space: nowrap;
-    overflow: hidden;
-    animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
-  }
-  .typing .name {
-    background: linear-gradient(90deg, #a67b5b, #d8a373);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .typing .note {
-    font-size: 0.8em;
-    font-style: italic;
-    font-weight: normal;
-    color: #5b4a3d;
-  }
-  @keyframes typing { from { width: 0 } to { width: 100% } }
-  @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #4a3c31; } }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>彩蛋</title>
+  <style>
+    body {
+      font-family: "KaiTi", "STKaiti", "SimSun", serif;
+      background-color: #f7f3e9;
+      color: #3e2f1c;
+      text-align: center;
+      padding: 2em;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
 
-  .fire {
-    position: absolute;
-    color: red;
-    font-size: 20px;
-    pointer-events: none;
-    animation: fadeUp 2s ease forwards;
-  }
-  @keyframes fadeUp {
-    0% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-50px) scale(0.5); }
-  }
-</style>
+    h1 {
+      font-size: 2em;
+      margin-bottom: 1em;
+    }
+
+    .poem {
+      font-size: 1.1em;
+      margin-bottom: 2em;
+    }
+
+    .thanks {
+      font-family: "Courier New", monospace;
+      font-size: 1.1em;
+      white-space: pre-wrap;
+      margin-top: 2em;
+      border-left: 2px solid #3e2f1c;
+      padding-left: 1em;
+      text-align: left;
+      display: inline-block;
+    }
+
+    /* 星星 */
+    .star {
+      position: absolute;
+      color: gold;
+      pointer-events: none;
+      animation: fall 1.2s linear forwards;
+      font-size: 1.2em;
+    }
+
+    @keyframes fall {
+      from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(80px) scale(0.5);
+      }
+    }
+  </style>
 </head>
 <body>
+  <h1>🔥 欢迎光临</h1>
 
-<h1>🔥 欢迎光临</h1>
+  <div class="poem">
+    <b>征求志同道合的好友一起创建，维护和整理网站</b><br>
+    需求内容如下：<br>
+    不需要精通编程相关的知识<br>
+    需要一腔热血<br>
+    需要有责任心<br>
+    喜欢诗或各种文体<br>
+    吃饱没事做<br>
+    不以赚取任何外快为目标<br><br>
 
-<div class="poem">
-<b>征求志同道合的好友一起创建，维护和整理网站</b>
-需求内容如下：<br>
-不需要精通编程相关的知识（精通的话更加good）
-需要一腔热血
-有责任心
-喜欢诗或各种文体
-吃饱没事做
-不以赚取任何外快为目标
+    ps：真的超级超级需要一些好鹏友们的支持，静候各位的大驾光临！
+  </div>
 
-ps：真的超级超级需要一些好鹏友们的支持，静候各位的大驾光临！
-</div>
+  <div class="thanks" id="thanks"></div>
 
-<div id="credit-list" class="credits"></div>
-  
-<script> 
-const credits = [
-  {name: "感谢惠诗", note: "为诗集编排，整理"},
-  {name: "感谢正熙", note: "为诗集编排，整理"},
-];
-function typeLine(item, delay) {
-  setTimeout(() => {
-    let div = document.createElement("div");
-    div.className = "typing";
-    div.innerHTML = `<span class="name">${item.name}</span> <span class="note">—— ${item.note}</span>`;
-    document.getElementById("credit-list").appendChild(div);
-  }, delay);
-}
-credits.forEach((item, i) => typeLine(item, i * 1500));
+  <script>
+    // 点击任何地方都会出现星星
+    document.addEventListener("click", function(e) {
+      let star = document.createElement("div");
+      star.className = "star";
+      star.style.left = e.pageX + "px";
+      star.style.top = e.pageY + "px";
+      star.innerText = "✨";
+      document.body.appendChild(star);
 
-document.addEventListener("click", function(e) {
-  const star = document.createElement("div");
-  star.className = "star";
-  star.style.left = e.pageX + "px";
-  star.style.top = e.pageY + "px";
-  star.innerHTML = "🔥";
-  document.body.appendChild(fire);
-  setTimeout(() => fore.remove(), 1000);
-});
-</script>
+      setTimeout(() => {
+        star.remove();
+      }, 1200);
+    });
 
+    // 打字机效果 - 感谢名单
+    const thanksText = 
+`感谢名单：
+感谢惠诗 —— 为诗集编排，整理
+感谢正熙 —— 为诗集编排，整理`;
+
+    const thanksDiv = document.getElementById("thanks");
+    let i = 0;
+    function typeWriter() {
+      if (i < thanksText.length) {
+        thanksDiv.innerHTML += thanksText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 80); // 打字速度
+      }
+    }
+    window.onload = typeWriter;
+  </script>
 </body>
 </html>
