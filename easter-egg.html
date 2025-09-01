@@ -57,37 +57,13 @@
   @keyframes typing { from { width: 0 } to { width: 100% } }
   @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #4a3c31; } }
 
-  /* 感谢牌 */
-  .thank-you-card {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff7ec;
-    border: 2px solid #d8a373;
-    border-radius: 15px;
-    padding: 30px 40px;
-    text-align: center;
-    font-size: 1.2em;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    z-index: 999;
-    opacity: 0;
-    animation: fadeInCard 1s ease forwards;
-  }
-  @keyframes fadeInCard {
-    to { opacity: 1; }
-  }
-  @keyframes fadeOutCard {
-    to { opacity: 0; }
-  }
-
   /* 发光星星 */
-  .star {
+  .fire {
     position: absolute;
-    color: gold;
+    color: red;
     font-size: 20px;
     pointer-events: none;
-    animation: fadeUp 1s ease forwards;
+    animation: fadeUp 2s ease forwards;
   }
   @keyframes fadeUp {
     0% { opacity: 1; transform: translateY(0) scale(1); }
@@ -112,6 +88,8 @@
 ps：真的超级超级需要一些好鹏友们的支持，静候各位的大驾光临！
 </div>
 
+<div id="credit-list" class="credits"></div>
+  
 <script> 
 const credits = [
   {name: "感谢惠诗", note: "为诗集编排，整理"},
@@ -127,15 +105,14 @@ function typeLine(item, delay) {
 }
 credits.forEach((item, i) => typeLine(item, i * 1500));
 
-// ==== 点击发光星星 ====
 document.addEventListener("click", function(e) {
   const star = document.createElement("div");
   star.className = "star";
   star.style.left = e.pageX + "px";
   star.style.top = e.pageY + "px";
   star.innerHTML = "🔥";
-  document.body.appendChild(star);
-  setTimeout(() => star.remove(), 1000);
+  document.body.appendChild(fire);
+  setTimeout(() => fore.remove(), 1000);
 });
 </script>
 
