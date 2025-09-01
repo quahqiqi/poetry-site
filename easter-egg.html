@@ -100,12 +100,16 @@
 <h1>这都让你发现啦！</h1>
 
 <div class="poem">
-<b>送首小诗：</b>
-月光<br>
-夜色温柔  
-在风的指尖摇晃  
-有人把月光藏进口袋  
-只为照亮你打心房 
+<b>征求志同道合的好友一起创建，维护和整理网站</b>
+需求内容如下：<br>
+不需要精通编程相关的知识（精通的话更加good）
+需要一腔热血
+有责任心
+喜欢诗或各种文体
+吃饱没事做
+不以赚取任何外快为目标
+
+ps：真的超级超级需要一些好鹏友们的支持，静候各位的大驾光临！
 </div>
 
 <div class="credits">
@@ -117,14 +121,10 @@
 <div id="thankCard" class="thank-you-card"></div>
 
 <script>
-// ==== 访问次数 ====
-let visits = localStorage.getItem("visitCount") || 0;
-visits++;
-localStorage.setItem("visitCount", visits);
 
 // ==== 显示感谢牌 ====
 const thankCard = document.getElementById("thankCard");
-thankCard.innerHTML = `<p>感谢你光临小天地</p><p>这是你第 <b>${visits}</b> 次到访</p>`;
+thankCard.innerHTML = `<p>感谢你光临小天地</p><p>你是第10000 <b>${visits}</b> 次到访客人，喜可喜贺喜可喜贺</p>`;
 setTimeout(() => {
   thankCard.style.animation = "fadeOutCard 1s ease forwards";
 }, 3000);
