@@ -25,66 +25,66 @@
   },
   {
     "file": "poem47.html",
-    "title": "噩梦",
-    "preview": "我在噩梦里醒来，走不出那条没有尽头的走廊…",
+    "title": "听见你未说的话",
+    "preview": "昨晚，还能听见你的叹息，今早，就失去了你…",
     "img": "images/poem47-cover.jpg",
-    "excerpt": "我在噩梦里醒来，走不出那条没有尽头的走廊…",
+    "excerpt": "昨晚，还能听见你的叹息，今早，就失去了你…",
     "slug": "poem47"
   },
   {
     "file": "poem46.html",
-    "title": "落叶",
-    "preview": "风吹过庭院，落叶像黄昏的碎片飘落…",
+    "title": "香水",
+    "preview": "水汽氤氲，像洒下点点星辰，迎着缕缕春风，落在走廊，球场，心房…",
     "img": "images/poem46-cover.jpg",
-    "excerpt": "风吹过庭院，落叶像黄昏的碎片飘落…",
+    "excerpt": "水汽氤氲，像洒下点点星辰，迎着缕缕春风，落在走廊，球场，心房…",
     "slug": "poem46"
   },
   {
     "file": "poem45.html",
-    "title": "孤独",
-    "preview": "夜深人静的时候，我听见自己心跳的声音…",
+    "title": "请勿喂食疯子",
+    "preview": "夏天很热，热得像有什么东西在心口烧，一点风没有，脾气都被烧起来了…",
     "img": "images/poem45-cover.jpg",
-    "excerpt": "夜深人静的时候，我听见自己心跳的声音…",
+    "excerpt": "夏天很热，热得像有什么东西在心口烧，一点风没有，脾气都被烧起来了…",
     "slug": "poem45"
   },
   {
     "file": "poem44.html",
-    "title": "归途",
-    "preview": "火车缓缓驶过铁轨，带走远方的思念…",
+    "title": "诗非诗",
+    "preview": "今日闲来，翻翻旧诗，诗篇余十，句句俗气…",
     "img": "images/poem44-cover.jpg",
-    "excerpt": "火车缓缓驶过铁轨，带走远方的思念…",
+    "excerpt": "今日闲来，翻翻旧诗，诗篇余十，句句俗气…",
     "slug": "poem44"
   },
   {
     "file": "poem43.html",
-    "title": "镜子",
-    "preview": "镜子里的我，一直都沉默着看着我…",
+    "title": "大海",
+    "preview": "当，汹涌的海浪击打着礁石，像是在洗刷着什么…",
     "img": "images/poem43-cover.jpg",
-    "excerpt": "镜子里的我，一直都沉默着看着我…",
+    "excerpt": "当，汹涌的海浪击打着礁石，像是在洗刷着什么…",
     "slug": "poem43"
   },
   {
     "file": "poem42.html",
-    "title": "假面",
-    "preview": "人群中，我戴上假面，笑得若无其事…",
+    "title": "今日如是",
+    "preview": "今日如往常，闹钟尖啸却叫不醒灵魂，像漫步踩在虚空…",
     "img": "images/poem42-cover.jpg",
-    "excerpt": "人群中，我戴上假面，笑得若无其事…",
+    "excerpt": "今日如往常，闹钟尖啸却叫不醒灵魂，像漫步踩在虚空…",
     "slug": "poem42"
   },
   {
     "file": "poem41.html",
-    "title": "流浪者",
-    "preview": "我走过荒凉的街道，口袋里只有风的声音…",
+    "title": "梦醒时分",
+    "preview": "夜，沉寂如海，相似是一枚钩子，深深地陷进骨里…",
     "img": "images/poem41-cover.jpg",
-    "excerpt": "我走过荒凉的街道，口袋里只有风的声音…",
+    "excerpt": "夜，沉寂如海，相似是一枚钩子，深深地陷进骨里…",
     "slug": "poem41"
   },
   {
     "file": "poem40.html",
-    "title": "旧信",
-    "preview": "翻开抽屉，找到一封泛黄的信，字迹早已模糊…",
+    "title": "一碗汤面",
+    "preview": "当热汽扑面，雾气像一张脸，轻轻拂过脸颊…",
     "img": "images/poem40-cover.jpg",
-    "excerpt": "翻开抽屉，找到一封泛黄的信，字迹早已模糊…",
+    "excerpt": "当热汽扑面，雾气像一张脸，轻轻拂过脸颊…",
     "slug": "poem40"
   }
 ]
