@@ -1,230 +1,450 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <!-- 你要求的 meta -->
   <meta charset="UTF-8" />
   <meta name="google-site-verification" content="Jmg21UHrR3PnnXpixUqiImr3md0w94_voZSFNLw_2Ls" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>一个青年的天马行空</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" />
 
-  <!-- 思源宋体/近似字体：使用 Noto Serif SC 作为在线替代（若你有本地思源文件可改为 @font-face） -->
+  <!-- 思源/近似字体 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#f5efe4;
-      --card:#ffffff;
-      --accent:#b89c7a;
-      --muted:#6d5a44;
-      --max-width:1100px;
+      --bg: #fdf6e3;
+      --card: #fff;
+      --muted: #6d5850;
+      --accent: #b89c7a;
+      --border: #d7cdbd;
+      --bg-dark: #121212;
+      --card-dark: #1e1e1e;
+      --muted-dark: #d4d4d4;
+      --border-dark: #333;
+      --max-w: 1100px;
+      --sidebar-width: 280px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', "思源宋体", serif; -webkit-font-smoothing:antialiased;}
     body{
-      margin:0;
-      font-family: 'Noto Serif SC', "思源宋体", serif;
-      background: linear-gradient(180deg, var(--bg), #f7f4ee);
-      color:#2d2d2d;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      background:var(--bg);
+      color:#222;
+      transition: background .25s, color .25s;
+    }
+    body.dark{
+      background:var(--bg-dark);
+      color:var(--muted-dark);
     }
 
     /* header */
     header{
-      position: sticky; top:0; z-index:1000;
+      position:sticky; top:0; z-index:1200;
+      display:flex; align-items:center; justify-content:center;
+      padding:12px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
+      border-bottom:1px solid var(--border);
       backdrop-filter: blur(4px);
-      background: rgba(228,216,196,0.95);
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 16px;
-      transition: transform .25s ease;
     }
-    .nav-left{display:flex; align-items:center; gap:12px}
-    .brand{
-      display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--muted)
+    body.dark header{
+      background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95));
+      border-color:var(--border-dark);
     }
-    .brand img{width:44px; height:44px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,0.08)}
-    .brand h1{font-size:1rem; margin:0; font-weight:700}
-    nav a{
-      text-decoration:none; color:var(--muted); font-weight:600; font-size:.95rem;
-      padding:6px 8px; border-radius:6px;
-    }
-    nav a:hover{background:rgba(0,0,0,0.03)}
 
-    /* search icon and input */
-    .search-wrap{display:flex; align-items:center; gap:8px}
-    #searchInput{
-      display:inline-block;
-      width:0;
-      padding:6px 8px;
-      border-radius:6px;
-      border:1px solid rgba(0,0,0,0.08);
-      transition: width .25s ease, opacity .2s;
-      opacity:0;
-      font-family:inherit;
-    }
-    #searchInput.open{width:180px; opacity:1}
+    /* icon buttons (absolute so center logo stays centered) */
     .icon-btn{
-      background:transparent; border:none; cursor:pointer; padding:6px; border-radius:6px;
-      display:inline-flex; align-items:center; justify-content:center;
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:transparent; border:none; padding:6px; border-radius:8px; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center; color:inherit;
     }
+    .icon-btn:focus{ outline:2px solid rgba(0,0,0,0.08); outline-offset:2px; }
+    .menu-btn{ left:16px; }
+    .search-btn{ right:16px; }
 
-    /* main layout */
-    main{max-width:var(--max-width); margin:22px auto; padding:0 16px;}
+    /* logo/title centered */
+    .logo-title{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      max-width:var(--max-w); width:100%;
+    }
+    .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
+    body.dark .logo-title h1{ color:var(--muted-dark); }
+
+    /* search dropdown (below header so no overlap) */
+    .search-panel{
+      position:absolute; top:100%; right:16px; margin-top:10px;
+      width:320px; max-width:calc(100% - 40px);
+      background:var(--card); border:1px solid var(--border); padding:8px; border-radius:8px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.12); display:none; z-index:1300;
+    }
+    body.dark .search-panel{ background:var(--card-dark); border-color:var(--border-dark); box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+    .search-panel input{
+      width:100%; padding:8px 10px; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;
+      background:transparent; color:inherit;
+    }
+    body.dark .search-panel input{ border-color:var(--border-dark); }
+
+    /* side bar */
+    .sidebar{
+      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
+    }
+    body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
+    .sidebar.active{ left:0; }
+    .sidebar .nav-group{ margin-bottom:12px; }
+    .sidebar a, .sidebar button{
+      display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px; margin:6px 0;
+      border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
+      font-size:1rem;
+    }
+    .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
+    .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); }
+    body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.03); }
+
+    /* backdrop */
+    .backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240;
+    }
+    .backdrop.show{ display:block; }
+
+    /* main content */
+    main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
     .intro{
-      background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));
-      border-radius:12px; padding:18px; box-shadow:0 6px 18px rgba(20,20,20,0.04);
-      display:flex; gap:16px; align-items:center; margin-bottom:18px;
+      display:flex; gap:16px; align-items:center; justify-content:space-between;
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+      padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(20,20,20,0.04);
     }
-    .intro .left{flex:1}
-    .intro h2{margin:0 0 8px 0; font-size:1.2rem}
-    .intro p{margin:0; color: #55463a}
+    body.dark .intro{ background: linear-gradient(180deg, rgba(30,30,30,0.6), rgba(30,30,30,0.5)); }
 
-    /* poems grid */
-    .poems-grid{display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:16px}
-    .poem-card{
-      background:var(--card); border-radius:10px; overflow:hidden;
-      box-shadow:0 6px 18px rgba(30,30,30,0.05); transition: transform .18s ease;
-      display:flex; flex-direction:column;
-    }
-    .poem-card:hover{transform:translateY(-6px)}
-    .poem-cover{width:100%; height:160px; object-fit:cover; background:#efe7da}
-    .poem-body{padding:12px 14px; flex:1; display:flex; flex-direction:column}
-    .poem-body h3{margin:0 0 8px 0; font-size:1.05rem; color:#333}
-    .poem-body p{margin:0; color:#5b4a3d; line-height:1.6; font-size:0.95rem}
-    .poem-meta{margin-top:10px; font-size:0.85rem; color:#8a7662}
+    .intro h2{ margin:0; font-size:1.1rem }
+    .intro p{ margin:0; color:var(--muted) }
+    body.dark .intro p{ color:var(--muted-dark) }
 
-    footer{max-width:var(--max-width); margin:28px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem;}
+    .intro-right { text-align:right; min-width:160px; }
+    .latest-label { font-size:0.85rem; color:var(--muted); }
+    .latest-badge { font-weight:700; color:var(--accent); margin-top:6px; display:block; }
 
-    /* responsive tweaks */
+    /* grid */
+    #poemsGrid{ margin-top:18px; display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .poem-card{ background:var(--card); border-radius:10px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.04); transition:transform .16s; }
+    .poem-card:hover{ transform:translateY(-6px); }
+    body.dark .poem-card{ background:var(--card-dark); box-shadow:none; }
+
+    .poem-cover{ width:100%; height:150px; object-fit:cover; background:#efe7da; display:block; }
+    .poem-body{ padding:12px 14px; }
+    .poem-body h3{ margin:0 0 8px; font-size:1rem; color:inherit; }
+    .poem-body p{ margin:0; color:#5b4a3d; line-height:1.5; font-size:0.95rem; }
+    body.dark .poem-body p{ color:#bdbdbd; }
+    .poem-meta{ margin-top:10px; font-size:0.85rem; color:#8a7662; }
+
+    footer{ max-width:var(--max-w); margin:28px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; }
+
+    /* small screens */
     @media (max-width:640px){
-      header{padding:10px}
-      .brand h1{font-size:.95rem}
-      #searchInput.open{width:120px}
-      .poem-cover{height:140px}
+      .logo-title h1{ font-size:1rem }
+      .search-panel{ right:10px; width:calc(100% - 40px); }
+      .poem-cover{ height:140px; }
+      .intro{ flex-direction:column; align-items:flex-start; }
+      .intro-right{ text-align:left; width:100%; margin-top:8px; }
     }
   </style>
 </head>
 <body>
-  <header id="siteHeader">
-    <div class="nav-left">
-      <a class="brand" href="index.html">
-        <!-- logo 占位：替换为 /images/logo.png -->
-        <img src="assets/img/logo.png" alt="logo" id="logo">
-      </a>
+  <header>
+    <!-- 左：汉堡（svg 三条线） -->
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单" title="菜单">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
 
-      <nav>
-        <a href="index.html">一个青年的天马行空</h1>
-        <a href="toc.html">目录</a>
-        <a href="about.html">简介</a>
-      </nav>
+    <!-- 居中 logo + 标题 -->
+    <div class="logo-title" role="banner">
+      <img src="images/logo-128.png" alt="logo" id="siteLogo">
+      <h1>一个青年的天马行空</h1>
     </div>
 
-    <div class="search-wrap">
-      <input id="searchInput" type="text" placeholder="搜索诗歌 / 标题 / 句子…" aria-label="搜索诗歌">
-      <button class="icon-btn" id="searchBtn" title="搜索（点击展开）" aria-label="搜索图标">
-        <!-- 放大镜 SVG -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 21l-4.35-4.35" stroke="#4a3c31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="10.5" cy="10.5" r="6" stroke="#4a3c31" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
+    <!-- 右：搜索按钮 -->
+    <button class="icon-btn search-btn" id="searchBtn" aria-label="搜索" title="搜索">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </button>
+
+    <!-- 搜索面板（header下方，不覆盖标题） -->
+    <div class="search-panel" id="searchPanel" role="search" aria-hidden="true">
+      <input id="searchInput" type="text" placeholder="搜索诗歌 / 标题 / 句子（回车搜索 / Esc 关闭）" />
     </div>
   </header>
 
+  <!-- 侧边栏 + 遮罩 -->
+  <aside class="sidebar" id="sidebar" aria-hidden="true" role="navigation">
+    <div class="nav-group">
+      <!-- 每个链接内部包含 SVG 图标（已按你要求把链接“加进 SVG 里”的意图体现为：内联 SVG 图标与链接同体） -->
+      <a href="index.html" title="首页">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
+        首页
+      </a>
+
+      <a href="log.html" title="目录">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        目录
+      </a>
+
+      <a href="about.html" title="作者简介">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
+        作者简介
+      </a>
+    </div>
+
+    <hr />
+
+    <div class="nav-group">
+      <button id="toggleDarkMode" type="button" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        夜间模式
+      </button>
+
+      <button id="randomPoemBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
+        随机一首
+      </button>
+    </div>
+  </aside>
+
+  <div class="backdrop" id="backdrop" tabindex="-1" aria-hidden="true"></div>
+
   <main>
-  <main class="container">
-    <section class="hero">
-      <h1>欢迎来到我的诗集网站</h1>
-      <p>这里收录了我的每一段心灵独白和奇思妙想，希望你们会喜欢！</p>
-      
-          <h2>最新发布</h2>
-    <div id="poemsGrid" class="grid" aria-live="polite">
-        <div id="latestBadge" style="font-weight:700; color:var(--accent); margin-top:6px">——</div>
+    <section class="intro" aria-labelledby="introTitle">
+      <div>
+        <h2 id="introTitle">欢迎来到我的诗集网站</h2>
+        <p>这里收录了我的每一段心灵独白和奇思妙想，希望你们会喜欢！</p>
+      </div>
+      <div class="intro-right">
+        <div class="latest-label">最新发布</div>
+        <div id="latestBadge" class="latest-badge">——</div>
       </div>
     </section>
 
-    <section id="poemsSection">
-      <div class="poems-grid" id="poemsGrid" aria-live="polite">
-        <!-- 自动填充最新诗卡 -->
-      </div>
-    </section>
+    <!-- 诗歌网格（首页只显示最新 10 首） -->
+    <section id="poemsGrid" aria-live="polite" style="margin-top:18px;"></section>
   </main>
 
-  <footer> 
-    © <span id="year"></span>一个青年的天马行空
+  <footer>
+    © <span id="year"></span> 一个青年的天马行空
   </footer>
 
-    <script>
-// escapeHtml 函数
-function escapeHtml(text){
-  return text.replace(/[&<>"']/g, m=>({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  }[m]));
-}
+  <script>
+    // --- 元素引用 ---
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('backdrop');
+    const menuBtn = document.getElementById('menuBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchPanel = document.getElementById('searchPanel');
+    const searchInput = document.getElementById('searchInput');
+    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
+    const randomPoemBtn = document.getElementById('randomPoemBtn');
+    const poemsGrid = document.getElementById('poemsGrid');
+    const latestBadge = document.getElementById('latestBadge');
 
-// 搜索逻辑
-const searchBtn = document.getElementById('searchBtn');
-const searchInput = document.getElementById('searchInput');
-searchBtn.addEventListener('click', () => {
-  if (!searchInput.classList.contains('open')) {
-    searchInput.classList.add('open'); searchInput.focus();
-  } else {
-    if (searchInput.value.trim() === '') {
-      searchInput.classList.remove('open');
-    } else {
-      filterCards(searchInput.value.trim());
+    let poemsList = []; // will hold loaded poems JSON
+
+    // ------- 小工具 -------
+    function escapeHtml(s=''){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]); }
+    function persistDarkMode(enabled){ try { localStorage.setItem('site-dark', enabled ? '1' : '0'); } catch(e){} }
+    function loadDarkMode(){ try { const stored = localStorage.getItem('site-dark'); if(stored === '1') document.body.classList.add('dark'); } catch(e){} }
+
+    // ------- 侧栏控制 -------
+    function openSidebar(){
+      sidebar.classList.add('active');
+      backdrop.classList.add('show');
+      sidebar.setAttribute('aria-hidden','false');
+      backdrop.setAttribute('aria-hidden','false');
+      const first = sidebar.querySelector('a, button');
+      if(first) first.focus();
     }
-  }
-});
-searchInput.addEventListener('keyup', (e) => {
-  if (e.key === 'Enter') filterCards(searchInput.value.trim());
-  if (e.key === 'Escape') {
-    searchInput.value='';
-    filterCards('');
-    searchInput.classList.remove('open');
-  }
-});
+    function closeSidebar(){
+      sidebar.classList.remove('active');
+      backdrop.classList.remove('show');
+      sidebar.setAttribute('aria-hidden','true');
+      backdrop.setAttribute('aria-hidden','true');
+      menuBtn && menuBtn.focus();
+    }
+    function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
 
-function filterCards(q){
-  const ql = q.toLowerCase();
-  document.querySelectorAll('.poem-card').forEach(card=>{
-    const text = (card.innerText || '').toLowerCase();
-    card.style.display = text.includes(ql) ? '' : 'none';
-  });
-}
+    // ------- 搜索面板控制 -------
+    function openSearch(){ searchPanel.style.display = 'block'; searchPanel.setAttribute('aria-hidden','false'); setTimeout(()=>searchInput.focus(),60); }
+    function closeSearch(){ searchPanel.style.display = 'none'; searchPanel.setAttribute('aria-hidden','true'); searchInput.value=''; filterPoemCards(''); searchBtn && searchBtn.focus(); }
+    function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
 
-// 加载 poems.json 并生成诗卡
-async function loadPoems(){
-  try {
-    const res = await fetch('poems/poems.json'); // 或 './poems.json'
-    const poems = await res.json();
-    const grid = document.getElementById('poemsGrid');
-    grid.innerHTML = '';
+    // ------- 事件绑定 -------
+    // 菜单按钮（汉堡）
+    document.getElementById('menuBtn').addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
 
-    poems.forEach(p => {
-      const card = document.createElement('article');
-      card.className = 'poem-card';
-      card.innerHTML = `
-        <img class="poem-cover" src="${p.img}" alt="${escapeHtml(p.title)}">
-        <div class="poem-body">
-          <h3>${escapeHtml(p.title)}</h3>
-          <p>${escapeHtml(p.preview)}</p>
-          <div class="poem-meta"><a href="poems/${p.file}">阅读全文 →</a></div>
-        </div>
-      `;
-      grid.appendChild(card);
+    // 点击遮罩收起
+    backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
+
+    // 页面任意处点击：若侧栏打开且点在外面则收起（兼容触屏）
+    document.addEventListener('click', (e)=>{
+      if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !menuBtn.contains(e.target)){
+        closeSidebar();
+      }
     });
-  } catch(err){
-    console.error('加载诗歌失败:', err);
-    document.getElementById('poemsGrid').innerHTML = '<p style="color:#7a6450">无法加载诗歌列表。</p>';
-  }
-}
 
-// 初始化
-loadPoems();
-    </script>
+    // 搜索按钮
+    searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
+
+    // 键盘：Esc 关闭；Ctrl+K 或 / 打开搜索
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        if(searchPanel.style.display === 'block') closeSearch();
+        if(sidebar.classList.contains('active')) closeSidebar();
+      }
+      if((e.ctrlKey && e.key.toLowerCase()==='k') || e.key === '/'){
+        e.preventDefault();
+        openSearch();
+      }
+    });
+
+    // 夜间模式
+    toggleDarkModeBtn.addEventListener('click', ()=>{
+      const enabled = document.body.classList.toggle('dark');
+      persistDarkMode(enabled);
+      toggleDarkModeBtn.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+    });
+
+    // 随机诗：若已加载 poemsList 用其中随机一项，否则回退到按序猜测的文件名
+    randomPoemBtn.addEventListener('click', ()=>{
+      if(Array.isArray(poemsList) && poemsList.length>0){
+        const idx = Math.floor(Math.random()*poemsList.length);
+        const file = poemsList[idx].file;
+        if(file) window.location.href = 'poems/' + file;
+        else alert('未能定位诗歌文件。');
+      } else {
+        // fallback：猜测总数 49（可调整）
+        const total = 49;
+        const i = Math.floor(Math.random()*total)+1;
+        const filename = 'poem' + String(i).padStart(2,'0') + '.html';
+        window.location.href = 'poems/' + filename;
+      }
+    });
+
+    // 搜索输入回车触发
+    searchInput.addEventListener('keyup', (e)=>{
+      if(e.key === 'Enter'){ filterPoemCards(searchInput.value.trim()); }
+      if(e.key === 'Escape'){ closeSearch(); }
+    });
+
+    function filterPoemCards(q){
+      const ql = (q||'').toLowerCase();
+      document.querySelectorAll('.poem-card').forEach(card=>{
+        const text = (card.innerText || '').toLowerCase();
+        card.style.display = text.includes(ql) ? '' : 'none';
+      });
+    }
+
+    // ------- 加载 poems.json（优先）或抓取 poems/ 目录（回退） -------
+    async function loadPoemsJson(){
+      try {
+        const res = await fetch('poems/poems.json', {cache:'no-store'});
+        if(!res.ok) throw new Error('poems.json 不存在或读取失败');
+        const poems = await res.json();
+        if(!Array.isArray(poems)) throw new Error('poems.json 不是数组');
+        poemsList = poems;
+        // 取前 10 首（假设 poems.json 已按时间/新到旧排序）
+        const latest10 = poems.slice(0, 10);
+        if(latest10.length>0){
+          latestBadge.innerText = latest10[0].title || latest10[0].file || '—';
+        }
+        renderPoemsGrid(latest10);
+      } catch(err){
+        console.warn('读取 poems.json 失败，尝试抓取 poems/ 目录：', err);
+        // 回退：尝试请求目录列表（前提是服务器允许目录索引）
+        try {
+          const listRes = await fetch('poems/');
+          if(!listRes.ok) throw new Error('目录索引不可用');
+          const listHtml = await listRes.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(listHtml, 'text/html');
+          const anchors = Array.from(doc.querySelectorAll('a'))
+            .map(a=>a.getAttribute('href'))
+            .filter(h => h && h.match(/\.html$/i));
+
+          const files = [...new Set(anchors.map(h => h.split('/').filter(Boolean).pop()))];
+          if(files.length === 0) throw new Error('目录中没有 HTML 文件');
+
+          // 按文件名里的数字降序排序：poem50.html 比 poem49 新
+          files.sort((a,b)=>{
+            const na = a.match(/\d+/)?.[0] || a;
+            const nb = b.match(/\d+/)?.[0] || b;
+            return Number(nb) - Number(na);
+          });
+
+          const list = files.map(f => ({
+            title: f.replace('.html',''),
+            preview: '（无预览）',
+            img: 'images/default-cover.jpg',
+            file: f
+          }));
+
+          poemsList = list;
+          const latest10 = list.slice(0,10);
+          if(latest10.length>0) latestBadge.innerText = latest10[0].title || latest10[0].file;
+          renderPoemsGrid(latest10);
+        } catch(dirErr){
+          console.warn('目录抓取失败：', dirErr);
+          // 最终降级：生成有限 fallback（1..25）
+          const fallback = [];
+          for(let i=1;i<=25;i++){
+            const file = 'poem' + String(i).padStart(2,'0') + '.html';
+            fallback.push({ title: file.replace('.html',''), preview:'（无法读取预览）', img:'images/default-cover.jpg', file });
+          }
+          poemsList = fallback;
+          latestBadge.innerText = fallback[0].title;
+          renderPoemsGrid(fallback.slice(0,10));
+        }
+      }
+    }
+
+    // ------- 渲染卡片 -------
+    function renderPoemsGrid(poems){
+      poemsGrid.innerHTML = '';
+      poems.forEach(p=>{
+        const img = p.img && p.img.length ? p.img : 'images/default-cover.jpg';
+        const preview = p.preview ? p.preview : (p.excerpt ? p.excerpt : '');
+        const file = p.file || (p.slug ? p.slug + '.html' : '#');
+        const title = p.title || file.replace('.html','');
+
+        const card = document.createElement('article');
+        card.className = 'poem-card';
+        card.innerHTML = `
+          <img class="poem-cover" src="${escapeHtml(img)}" alt="${escapeHtml(title)}">
+          <div class="poem-body">
+            <h3><a href="poems/${escapeHtml(file)}" style="text-decoration:none;color:inherit">${escapeHtml(title)}</a></h3>
+            <p>${escapeHtml(preview)}</p>
+            <div class="poem-meta"><a href="poems/${escapeHtml(file)}">阅读全文 →</a></div>
+          </div>
+        `;
+        poemsGrid.appendChild(card);
+      });
+    }
+
+    // ------- 初始化 -------
+    (function init(){
+      loadDarkMode();
+
+      // 绑定事件
+      backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
+      sidebar.addEventListener('click', (e)=> e.stopPropagation());
+
+      // 加载诗歌（优先 poems.json）
+      loadPoemsJson();
+
+      // footer 年份
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+  </script>
 </body>
 </html>
