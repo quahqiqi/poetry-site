@@ -1,0 +1,10 @@
+[
+  {
+    "file": "poem50.html",
+    "title": "成长",
+    "preview": "没有你的日子，我好像独自行走在炎热沙地上的骆驼…",
+    "img": "images/poem50-cover.jpg",
+    "excerpt": "可选，等同 preview 的备用字段",
+    "slug": "poem50"
+  }
+]
