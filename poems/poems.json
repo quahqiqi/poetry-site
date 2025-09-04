@@ -1,10 +1,101 @@
 [
   {
     "file": "poem50.html",
-    "title": "成长",
-    "preview": "没有你的日子，我好像独自行走在炎热沙地上的骆驼…",
+    "title": "鸟屎",
+    "preview": "下课前，有只麻雀跑了进来…",
     "img": "images/poem50-cover.jpg",
-    "excerpt": "可选，等同 preview 的备用字段",
+    "excerpt": "下课前，有只麻雀跑了进来…",
     "slug": "poem50"
   }
+  
+  {
+    "file": "poem49.html",
+    "title": "堂吉诃德",
+    "preview": "我是堂吉诃德，你是堂吉诃德，他是堂吉诃德，我们都是堂吉诃德…",
+    "img": "images/poem49-cover.jpg",
+    "excerpt": "我是堂吉诃德，你是堂吉诃德，他是堂吉诃德，我们都是堂吉诃德…",
+    "slug": "poem49"
+  }
+
+  {
+    "file": "poem48.html",
+    "title": "如果我说的都不是真的",
+    "preview": "那天是35度，你说好冷，我说是的…",
+    "img": "images/poem48-cover.jpg",
+    "excerpt": "那天是35度，你说好冷，我说是的…",
+    "slug": "poem48"
+  }
+
+  {
+    "file": "poem47.html",
+    "title": "听见你未说的话",
+    "preview": "昨晚，还能听见你的叹息，今早，就失去了你…",
+    "img": "images/poem47-cover.jpg",
+    "excerpt":"昨晚，还能听见你的叹息，今早，就失去了你…",
+    "slug": "poem47"
+  }
+
+  {
+    "file": "poem46.html",
+    "title": "香水",
+    "preview": "水汽氤氲，像洒下点点星辰，迎着缕缕清风…",
+    "img": "images/poem46-cover.jpg",
+    "excerpt":"水汽氤氲，像洒下点点星辰，迎着缕缕清风…",
+    "slug": "poem46"
+  }
+
+  {
+    "file": "poem45.html",
+    "title": "请勿喂食疯子",
+    "preview": "夏天很热，热得好像有什么东西在心口烧，一点风没有，脾气都被烧气起来了…",
+    "img": "imagesoem45-cover.jpg",
+    "excerpt":"夏天很热，热得好像有什么东西在心口烧，一点风没有，脾气都被烧气起来了…",
+    "slug": "poem45"
+  }
+
+  {
+    "file": "poem44.html",
+    "title": "诗非诗",
+    "preview": "今日闲来，翻翻旧诗，诗篇余十，句句俗气…",
+    "img": "imagesoem44-cover.jpg",
+    "excerpt":"今日闲来，翻翻旧诗，诗篇余十，句句俗气…",
+    "slug": "poem44"
+  }
+
+   {
+    "file": "poem43.html",
+    "title": "大海",
+    "preview": "当，汹涌的海浪击打礁石，像是在洗刷着什么…",
+    "img": "imagesoem43-cover.jpg",
+    "excerpt":"当，汹涌的海浪击打礁石，像是在洗刷着什么…",
+    "slug": "poem43"
+  }
+
+   {
+    "file": "poem42.html",
+    "title": "今日如是",
+    "preview": "今日如往常，闹钟尖啸却叫不醒灵魂…",
+    "img": "imagesoem42-cover.jpg",
+    "excerpt":"今日如往常，闹钟尖啸却叫不醒灵魂…",
+    "slug": "poem42"
+  }
+
+   {
+    "file": "poem41.html",
+    "title": "梦醒时分",
+    "preview": "夜，沉寂如海，相思是一枚种子…",
+    "img": "imagesoem41-cover.jpg",
+    "excerpt":"夜，沉寂如海，相思是一枚种子…",
+    "slug": "poem41"
+  }
+
+{
+    "file": "poem40.html",
+    "title": "一碗汤面",
+    "preview": "当热汽扑面，雾气像一张脸，轻轻拂过脸颊…",
+    "img": "imagesoem40-cover.jpg",
+    "excerpt":"当热汽扑面，雾气像一张脸，轻轻拂过脸颊…",
+    "slug": "poem40"
+  }
+  
 ]
