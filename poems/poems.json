@@ -6,8 +6,7 @@
     "img": "images/poem50-cover.jpg",
     "excerpt": "下课前，有只麻雀跑了进来…",
     "slug": "poem50"
-  }
-  
+  },
   {
     "file": "poem49.html",
     "title": "堂吉诃德",
@@ -15,8 +14,7 @@
     "img": "images/poem49-cover.jpg",
     "excerpt": "我是堂吉诃德，你是堂吉诃德，他是堂吉诃德，我们都是堂吉诃德…",
     "slug": "poem49"
-  }
-
+  },
   {
     "file": "poem48.html",
     "title": "如果我说的都不是真的",
@@ -24,78 +22,69 @@
     "img": "images/poem48-cover.jpg",
     "excerpt": "那天是35度，你说好冷，我说是的…",
     "slug": "poem48"
-  }
-
+  },
   {
     "file": "poem47.html",
-    "title": "听见你未说的话",
-    "preview": "昨晚，还能听见你的叹息，今早，就失去了你…",
+    "title": "噩梦",
+    "preview": "我在噩梦里醒来，走不出那条没有尽头的走廊…",
     "img": "images/poem47-cover.jpg",
-    "excerpt":"昨晚，还能听见你的叹息，今早，就失去了你…",
+    "excerpt": "我在噩梦里醒来，走不出那条没有尽头的走廊…",
     "slug": "poem47"
-  }
-
+  },
   {
     "file": "poem46.html",
-    "title": "香水",
-    "preview": "水汽氤氲，像洒下点点星辰，迎着缕缕清风…",
+    "title": "落叶",
+    "preview": "风吹过庭院，落叶像黄昏的碎片飘落…",
     "img": "images/poem46-cover.jpg",
-    "excerpt":"水汽氤氲，像洒下点点星辰，迎着缕缕清风…",
+    "excerpt": "风吹过庭院，落叶像黄昏的碎片飘落…",
     "slug": "poem46"
-  }
-
+  },
   {
     "file": "poem45.html",
-    "title": "请勿喂食疯子",
-    "preview": "夏天很热，热得好像有什么东西在心口烧，一点风没有，脾气都被烧气起来了…",
-    "img": "imagesoem45-cover.jpg",
-    "excerpt":"夏天很热，热得好像有什么东西在心口烧，一点风没有，脾气都被烧气起来了…",
+    "title": "孤独",
+    "preview": "夜深人静的时候，我听见自己心跳的声音…",
+    "img": "images/poem45-cover.jpg",
+    "excerpt": "夜深人静的时候，我听见自己心跳的声音…",
     "slug": "poem45"
-  }
-
+  },
   {
     "file": "poem44.html",
-    "title": "诗非诗",
-    "preview": "今日闲来，翻翻旧诗，诗篇余十，句句俗气…",
-    "img": "imagesoem44-cover.jpg",
-    "excerpt":"今日闲来，翻翻旧诗，诗篇余十，句句俗气…",
+    "title": "归途",
+    "preview": "火车缓缓驶过铁轨，带走远方的思念…",
+    "img": "images/poem44-cover.jpg",
+    "excerpt": "火车缓缓驶过铁轨，带走远方的思念…",
     "slug": "poem44"
-  }
-
-   {
+  },
+  {
     "file": "poem43.html",
-    "title": "大海",
-    "preview": "当，汹涌的海浪击打礁石，像是在洗刷着什么…",
-    "img": "imagesoem43-cover.jpg",
-    "excerpt":"当，汹涌的海浪击打礁石，像是在洗刷着什么…",
+    "title": "镜子",
+    "preview": "镜子里的我，一直都沉默着看着我…",
+    "img": "images/poem43-cover.jpg",
+    "excerpt": "镜子里的我，一直都沉默着看着我…",
     "slug": "poem43"
-  }
-
-   {
+  },
+  {
     "file": "poem42.html",
-    "title": "今日如是",
-    "preview": "今日如往常，闹钟尖啸却叫不醒灵魂…",
-    "img": "imagesoem42-cover.jpg",
-    "excerpt":"今日如往常，闹钟尖啸却叫不醒灵魂…",
+    "title": "假面",
+    "preview": "人群中，我戴上假面，笑得若无其事…",
+    "img": "images/poem42-cover.jpg",
+    "excerpt": "人群中，我戴上假面，笑得若无其事…",
     "slug": "poem42"
-  }
-
-   {
+  },
+  {
     "file": "poem41.html",
-    "title": "梦醒时分",
-    "preview": "夜，沉寂如海，相思是一枚种子…",
-    "img": "imagesoem41-cover.jpg",
-    "excerpt":"夜，沉寂如海，相思是一枚种子…",
+    "title": "流浪者",
+    "preview": "我走过荒凉的街道，口袋里只有风的声音…",
+    "img": "images/poem41-cover.jpg",
+    "excerpt": "我走过荒凉的街道，口袋里只有风的声音…",
     "slug": "poem41"
-  }
-
-{
+  },
+  {
     "file": "poem40.html",
-    "title": "一碗汤面",
-    "preview": "当热汽扑面，雾气像一张脸，轻轻拂过脸颊…",
-    "img": "imagesoem40-cover.jpg",
-    "excerpt":"当热汽扑面，雾气像一张脸，轻轻拂过脸颊…",
+    "title": "旧信",
+    "preview": "翻开抽屉，找到一封泛黄的信，字迹早已模糊…",
+    "img": "images/poem40-cover.jpg",
+    "excerpt": "翻开抽屉，找到一封泛黄的信，字迹早已模糊…",
     "slug": "poem40"
   }
-  
 ]
