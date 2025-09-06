@@ -133,122 +133,16 @@
         </li>
       </ul>
     </section>
-
     <a href="index.html" class="btn">返回首页</a>
   </main>
-
-  <!-- ===== 悬浮栏开始 ===== -->
-  <div id="fb-outer" aria-live="polite">
-    <!-- 收起时显示的圆形按钮 -->
-    <div id="fb-closed" title="搜索" role="button" aria-label="打开搜索">
-      <!-- 放大镜图标 -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon-search"
-           viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-    </div>
-
-    <!-- 展开状态 -->
-    <div id="fb-bar" role="region" aria-label="悬浮工具" hidden>
-      <div class="fb-head">
-        <div class="fb-logo" aria-hidden="true">
-          <svg width="36" height="36" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-            <rect x="0" y="0" width="48" height="48" rx="10" fill="#fff"/>
-            <path d="M12 32c6-8 24-8 28-12" stroke="#b89c7a" stroke-width="2.8" stroke-linecap="round"/>
-            <circle cx="14" cy="16" r="3.2" fill="#b89c7a"/>
-          </svg>
-        </div>
-        <div class="fb-title">网站工具 · 快速搜索</div>
-        <div class="fb-actions">
-          <button id="fb-min" title="收起" aria-label="收起浮动栏" style="background:transparent;border:0;padding:6px;border-radius:8px;cursor:pointer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6L18 18M6 18L18 6" stroke="#6b5749" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <form id="fb-search-form" class="fb-search" role="search" aria-label="站内搜索">
-        <input id="fb-search-input" name="q" type="search" placeholder="在诗集、标签、页面中搜索（回车）" aria-label="搜索输入框" autocomplete="off" />
-        <button type="submit" class="fb-submit" aria-label="搜索">搜 索</button>
-      </form>
-
-      <div style="padding:10px 12px 14px; border-top:1px dashed rgba(0,0,0,0.03); font-size:13px; color:#5a4a41;">
-        <div style="margin-bottom:6px;">快速链接：</div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <a href="index.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">首页</a>
-          <a href="toc.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">目录</a>
-          <a href="about.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">作者</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ===== 悬浮栏结束 ===== -->
-
-  <script>
-    let photoClickCount = 0;
-    let resetTimer;
-    const photo = document.getElementById("authorPhoto");
-    if (photo) {
-      photo.addEventListener("click", () => {
-        photoClickCount++;
-        clearTimeout(resetTimer);
-        resetTimer = setTimeout(() => { photoClickCount = 0; }, 3000);
-        if (photoClickCount === 10) {
-          window.location.href = "easter-egg.html";
-        }
-      });
-    }
-
-    // 悬浮栏逻辑
-    (function(){
-      const closed = document.getElementById('fb-closed');
-      const bar = document.getElementById('fb-bar');
-      const minBtn = document.getElementById('fb-min');
-      const form = document.getElementById('fb-search-form');
-      const input = document.getElementById('fb-search-input');
-
-      closed.addEventListener('click', openBar);
-      function openBar(){
-        closed.setAttribute('hidden','');
-        bar.removeAttribute('hidden');
-        bar.style.transform = 'translateY(6px) scale(.98)';
-        bar.style.opacity = '0';
-        requestAnimationFrame(()=>{
-          bar.style.transition = 'transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s';
-          bar.style.transform = 'translateY(0) scale(1)';
-          bar.style.opacity = '1';
-        });
-        setTimeout(()=> input.focus(), 260);
-      }
-
-      minBtn.addEventListener('click', closeBar);
-      function closeBar(){
-        bar.style.transform = 'translateY(6px) scale(.98)';
-        bar.style.opacity = '0';
-        setTimeout(()=>{
-          bar.setAttribute('hidden','');
-          closed.removeAttribute('hidden');
-        }, 220);
-      }
-
-      document.addEventListener('keydown', (e)=>{
-        if(e.key === 'Escape'){ if(!bar.hasAttribute('hidden')) closeBar(); }
-        if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
-          e.preventDefault();
-          if(bar.hasAttribute('hidden')) openBar();
-          else closeBar();
-        }
-      });
-
-      form.addEventListener('submit', function(e){
-        e.preventDefault();
-        const q = (input.value || '').trim();
-        if(!q){ input.focus(); return; }
-        const safe = encodeURIComponent(q);
-        window.location.href = '/search.html?q=' + safe;
-      });
-    })();
+  <div id="floatbar-container"></div>
+<script>
+  fetch("floatbar.html")
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById("floatbar-container").innerHTML = html;
+    });
+</script>
   </script>
 </body>
 </html>
