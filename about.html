@@ -25,51 +25,6 @@
       flex-direction: column;
     }
 
-    /* 顶部导航栏 */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-      background: rgba(228, 216, 196, 0.95);
-      border-bottom: 1px solid rgba(0,0,0,0.04);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-    }
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 1rem;
-    }
-    .brand img {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    nav a {
-      text-decoration: none;
-      color: var(--muted);
-      font-weight: 600;
-      font-size: .95rem;
-      padding: 6px 8px;
-      border-radius: 6px;
-    }
-    nav a:hover {
-      background: rgba(0,0,0,0.03);
-    }
-
     /* 主要内容区域 */
     main {
       max-width: var(--max-width);
@@ -121,20 +76,6 @@
 </head>
 <body>
 
-  <header>
-    <div class="nav-left">
-      <a class="brand" href="index.html">
-        <img src="assets/img/logo.png" alt="logo" />
-        一个青年的天马行空
-      </a>
-      <nav>
-        <a href="index.html">首页</a>
-        <a href="toc.html">目录</a>
-        <a href="about.html">简介</a>
-      </nav>
-    </div>
-  </header>
-
   <main>
     <h1>关于作者</h1>
     <p class="subtitle">启宏，其人其诗</p>
@@ -172,25 +113,28 @@
       <a href="about.html">作者简介</a>
     </nav>
   </footer>
-
+  
+  {% include floatbar.html %}
+  
   <script>
     let photoClickCount = 0;
     let resetTimer;
 
     const photo = document.getElementById("authorPhoto");
 
-    photo.addEventListener("click", () => {
-      photoClickCount++;
+    if (photo) {
+      photo.addEventListener("click", () => {
+        photoClickCount++;
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(() => { photoClickCount = 0; }, 3000);
 
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => { photoClickCount = 0; }, 3000);
-
-      if (photoClickCount === 10) {
-        window.location.href = "easter-egg.html"; // 跳转菜单页
-      }
-    });
+        if (photoClickCount === 10) {
+          window.location.href = "easter-egg.html"; // 跳转菜单页
+        }
+      });
+    }
   </script>
-  
-{% include floatbar.html %}
+
+
 </body>
 </html>
