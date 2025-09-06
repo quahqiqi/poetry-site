@@ -1,0 +1,86 @@
+<!-- floatbar.html - 只包含样式与 DOM（不含 script） -->
+
+<style>
+  /* scope: #fb-outer 避免全局污染 */
+  #fb-outer{ position:fixed; right:20px; bottom:24px; z-index:99999; font-family: inherit; }
+  #fb-outer *{ box-sizing:border-box; }
+
+  #fb-bar {
+    width:320px; max-width:calc(100vw - 40px);
+    background: rgba(253,246,227,0.98);
+    border-radius:14px;
+    box-shadow: 0 8px 28px rgba(10,10,10,0.12);
+    overflow:hidden;
+    transform-origin: bottom right;
+    display:flex; flex-direction:column;
+    backdrop-filter: blur(6px);
+    transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s;
+  }
+
+  #fb-bar .fb-head{ display:flex; align-items:center; gap:10px; padding:10px 12px; }
+  #fb-bar .fb-logo{ width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:9px; }
+  #fb-bar .fb-title{ font-weight:600; font-size:14px; color:#3a2e2a; }
+  #fb-bar .fb-actions{ margin-left:auto; display:flex; gap:8px; align-items:center; }
+
+  #fb-bar .fb-search{ display:flex; gap:8px; padding:10px 12px 14px; border-top:1px solid rgba(0,0,0,0.04); }
+  #fb-bar input[type="search"]{ flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); font-size:14px; background:transparent; outline:none; color:inherit; }
+  #fb-bar input::placeholder{ color:#9b8c80; font-style:italic; }
+  #fb-bar .fb-submit{ padding:10px 12px; border-radius:10px; border:0; cursor:pointer; background:#b89c7a; color:#fff; font-weight:700; }
+
+  #fb-closed {
+    width:56px; height:56px; border-radius:50%; background:rgba(253,246,227,0.98);
+    box-shadow:0 8px 28px rgba(10,10,10,0.12); display:grid; place-items:center; cursor:pointer;
+  }
+
+  #fb-bar[hidden]{ display:none; }
+  #fb-closed[hidden]{ display:none; }
+
+  @media (max-width:420px){
+    #fb-bar{ width: min(94vw, 360px); border-radius:12px; }
+  }
+</style>
+
+<div id="fb-outer" aria-live="polite">
+  <div id="fb-closed" title="打开工具" role="button" aria-label="打开浮动工具">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="2" y="3" width="20" height="14" rx="3" fill="#b89c7a" opacity="0.16"/>
+      <path d="M3 7h18M8 12h3M14 12h3" stroke="#8c6a4f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="18.5" cy="18.5" r="3.5" fill="#b89c7a"/>
+      <path d="M20 20l3 3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div id="fb-bar" role="region" aria-label="悬浮工具" hidden>
+    <div class="fb-head">
+      <div class="fb-logo" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <rect x="0" y="0" width="48" height="48" rx="10" fill="#fff"/>
+          <path d="M12 32c6-8 24-8 28-12" stroke="#b89c7a" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="14" cy="16" r="3.2" fill="#b89c7a"/>
+        </svg>
+      </div>
+
+      <div class="fb-title">网站工具 · 快速搜索</div>
+
+      <div class="fb-actions">
+        <button id="fb-min" title="收起" aria-label="收起浮动栏" style="background:transparent;border:0;padding:6px;border-radius:8px;cursor:pointer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6L18 18M6 18L18 6" stroke="#6b5749" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <form id="fb-search-form" class="fb-search" role="search" aria-label="站内搜索">
+      <input id="fb-search-input" name="q" type="search" placeholder="在诗集、标签、页面中搜索（回车）" aria-label="搜索输入框" autocomplete="off" />
+      <button type="submit" class="fb-submit" aria-label="搜索">搜 索</button>
+    </form>
+
+    <div style="padding:10px 12px 14px; border-top:1px dashed rgba(0,0,0,0.03); font-size:13px; color:#5a4a41;">
+      <div style="margin-bottom:6px;">快速链接：</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="index.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">首页</a>
+        <a href="tags.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">标签</a>
+        <a href="about.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">作者</a>
+      </div>
+    </div>
+  </div>
+</div>
