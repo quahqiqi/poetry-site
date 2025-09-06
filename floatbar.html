@@ -1,5 +1,4 @@
-<!-- floatbar.html - 只包含样式与 DOM（不含 script） -->
-
+<!-- floatbar.html - 自包含：样式 + DOM + 脚本 -->
 <style>
   /* scope: #fb-outer 避免全局污染 */
   #fb-outer{ position:fixed; right:20px; bottom:24px; z-index:99999; font-family: inherit; }
@@ -42,18 +41,13 @@
 
 <div id="fb-outer" aria-live="polite">
   <div id="fb-closed" title="打开工具" role="button" aria-label="打开浮动工具">
-<svg xmlns="http://www.w3.org/2000/svg" 
-     width="24" height="24" 
-     viewBox="0 0 24 24" 
-     fill="none" 
-     stroke="currentColor" 
-     stroke-width="2" 
-     stroke-linecap="round" 
-     stroke-linejoin="round" 
-     class="icon-search">
-  <circle cx="11" cy="11" r="8"></circle>
-  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-</svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         class="icon-search">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
   </div>
 
   <div id="fb-bar" role="region" aria-label="悬浮工具" hidden>
@@ -70,7 +64,9 @@
 
       <div class="fb-actions">
         <button id="fb-min" title="收起" aria-label="收起浮动栏" style="background:transparent;border:0;padding:6px;border-radius:8px;cursor:pointer">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6L18 18M6 18L18 6" stroke="#6b5749" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6L18 18M6 18L18 6" stroke="#6b5749" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -90,3 +86,77 @@
     </div>
   </div>
 </div>
+
+<script>
+(function(){
+  const closed = document.getElementById('fb-closed');
+  const bar = document.getElementById('fb-bar');
+  const minBtn = document.getElementById('fb-min');
+  const form = document.getElementById('fb-search-form');
+  const input = document.getElementById('fb-search-input');
+
+  if(!closed || !bar || !minBtn || !form || !input) return;
+
+  // 打开
+  closed.addEventListener('click', openBar);
+  function openBar(){
+    closed.setAttribute('hidden','');
+    bar.removeAttribute('hidden');
+    bar.style.transform = 'translateY(6px) scale(.98)';
+    bar.style.opacity = '0';
+    requestAnimationFrame(()=>{
+      bar.style.transition = 'transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s';
+      bar.style.transform = 'translateY(0) scale(1)';
+      bar.style.opacity = '1';
+    });
+    setTimeout(()=> input.focus(), 260);
+  }
+
+  // 收起
+  minBtn.addEventListener('click', closeBar);
+  function closeBar(){
+    bar.style.transform = 'translateY(6px) scale(.98)';
+    bar.style.opacity = '0';
+    setTimeout(()=>{
+      bar.setAttribute('hidden','');
+      closed.removeAttribute('hidden');
+    }, 220);
+  }
+
+  // Esc / Ctrl+K
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){
+      if(!bar.hasAttribute('hidden')) closeBar();
+    }
+    if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+      e.preventDefault();
+      if(bar.hasAttribute('hidden')) openBar();
+      else closeBar();
+    }
+  });
+
+  // 载入 poems.json
+  let poemsIndex = [];
+  fetch("assets/data/poems.json")
+    .then(res => res.json())
+    .then(data => { poemsIndex = data; })
+    .catch(err => console.error("无法加载 poems.json", err));
+
+  // 搜索逻辑
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const q = (input.value || '').trim();
+    if(!q){ input.focus(); return; }
+
+    const matches = poemsIndex.filter(p => p.title.includes(q));
+
+    if(matches.length === 1){
+      window.location.href = matches[0].file;
+    } else if(matches.length > 1){
+      alert("找到多个结果：\n" + matches.map(p=>p.title).join("、"));
+    } else {
+      alert("未找到匹配结果：《" + q + "》");
+    }
+  });
+})();
+         </script>
