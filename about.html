@@ -76,6 +76,9 @@
 </head>
 <body>
 
+  <!-- 悬浮栏占位（floatbar.html 将被 fetch 并插入到此处） -->
+  <div id="floatbar" aria-hidden="true"></div>
+
   <main>
     <h1>关于作者</h1>
     <p class="subtitle">启宏，其人其诗</p>
@@ -93,9 +96,7 @@
       <h2>联系方式</h2>
       <ul>
         <li>
-            IG   <a href="https://www.instagram.com/galiambuqq/" target="_blank">
-           @galiambuqq
-          </a>
+            IG   <a href="https://www.instagram.com/galiambuqq/" target="_blank" rel="noopener"> @galiambuqq </a>
         </li>
         <li>
           📧 邮箱 <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a>
@@ -116,6 +117,7 @@
   
   
   <script>
+    // 点击头像彩蛋（保留你原有逻辑）
     let photoClickCount = 0;
     let resetTimer;
 
@@ -132,8 +134,96 @@
         }
       });
     }
-  </script>
 
+    // ---------- 自动加载 floatbar.html 并初始化 ----------
+    // 请确保你的 floatbar.html 文件位于站点根目录（或修改下面路径）
+    (function loadAndInitFloatbar(){
+      const FLOATBAR_PATH = 'floatbar.html'; // 或 '/floatbar.html' 或 '/assets/floatbar.html'
+      fetch(FLOATBAR_PATH)
+        .then(resp => {
+          if(!resp.ok) throw new Error('无法加载 ' + FLOATBAR_PATH);
+          return resp.text();
+        })
+        .then(html => {
+          // 插入到占位容器（若不存在则创建并插入 body）
+          let container = document.getElementById('floatbar');
+          if(!container){
+            container = document.createElement('div');
+            container.id = 'floatbar';
+            document.body.appendChild(container);
+          }
+          container.innerHTML = html;
+          // 初始化交互（打开/收起/快捷键/搜索提交等）
+          initFloatbar();
+        })
+        .catch(err => {
+          console.warn('floatbar 加载失败：', err);
+        });
+
+      // 初始化函数：绑定交互事件到刚插入的元素
+      function initFloatbar(){
+        try {
+          const closed = document.getElementById('fb-closed');
+          const bar = document.getElementById('fb-bar');
+          const minBtn = document.getElementById('fb-min');
+          const form = document.getElementById('fb-search-form');
+          const input = document.getElementById('fb-search-input');
+
+          if(!closed || !bar || !minBtn || !form || !input) {
+            // 结构不完整时不再继续绑定，避免报错
+            return;
+          }
+
+          function openBar(){
+            closed.setAttribute('hidden','');
+            bar.removeAttribute('hidden');
+            bar.style.transform = 'translateY(6px) scale(.98)';
+            bar.style.opacity = '0';
+            requestAnimationFrame(()=>{
+              bar.style.transition = 'transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s';
+              bar.style.transform = 'translateY(0) scale(1)';
+              bar.style.opacity = '1';
+            });
+            setTimeout(()=> input.focus(), 260);
+          }
+
+          function closeBar(){
+            bar.style.transform = 'translateY(6px) scale(.98)';
+            bar.style.opacity = '0';
+            setTimeout(()=>{
+              bar.setAttribute('hidden','');
+              closed.removeAttribute('hidden');
+            }, 220);
+          }
+
+          closed.addEventListener('click', openBar);
+          minBtn.addEventListener('click', closeBar);
+
+          document.addEventListener('keydown', (e)=>{
+            if(e.key === 'Escape'){
+              if(!bar.hasAttribute('hidden')) closeBar();
+            }
+            if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+              e.preventDefault();
+              if(bar.hasAttribute('hidden')) openBar();
+              else closeBar();
+            }
+          });
+
+          form.addEventListener('submit', function(e){
+            e.preventDefault();
+            const q = (input.value || '').trim();
+            if(!q){ input.focus(); return; }
+            const safe = encodeURIComponent(q);
+            // 修改为你的站内搜索路径（/search.html?q=）
+            window.location.href = '/search.html?q=' + safe;
+          });
+        } catch(err){
+          console.warn('initFloatbar 出错：', err);
+        }
+      }
+    })();
+  </script>
 
 </body>
 </html>
