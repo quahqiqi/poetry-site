@@ -1,4 +1,4 @@
-<!-- floatbar.html - 自包含：样式 + DOM + 脚本 -->
+<!-- floatbar.html - 悬浮搜索栏 -->
 <style>
   /* scope: #fb-outer 避免全局污染 */
   #fb-outer{ position:fixed; right:20px; bottom:24px; z-index:99999; font-family: inherit; }
@@ -40,16 +40,17 @@
 </style>
 
 <div id="fb-outer" aria-live="polite">
+  <!-- 初始按钮：放大镜 -->
   <div id="fb-closed" title="打开工具" role="button" aria-label="打开浮动工具">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-         class="icon-search">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="11" cy="11" r="8"></circle>
       <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
     </svg>
   </div>
 
+  <!-- 展开后的搜索栏 -->
   <div id="fb-bar" role="region" aria-label="悬浮工具" hidden>
     <div class="fb-head">
       <div class="fb-logo" aria-hidden="true">
@@ -59,9 +60,7 @@
           <circle cx="14" cy="16" r="3.2" fill="#b89c7a"/>
         </svg>
       </div>
-
       <div class="fb-title">网站工具 · 快速搜索</div>
-
       <div class="fb-actions">
         <button id="fb-min" title="收起" aria-label="收起浮动栏" style="background:transparent;border:0;padding:6px;border-radius:8px;cursor:pointer">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -75,15 +74,6 @@
       <input id="fb-search-input" name="q" type="search" placeholder="在诗集、目录、页面中搜索（回车）" aria-label="搜索输入框" autocomplete="off" />
       <button type="submit" class="fb-submit" aria-label="搜索">搜 索</button>
     </form>
-
-    <div style="padding:10px 12px 14px; border-top:1px dashed rgba(0,0,0,0.03); font-size:13px; color:#5a4a41;">
-      <div style="margin-bottom:6px;">快速链接：</div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <a href="index.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">首页</a>
-        <a href="toc.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">标签</a>
-        <a href="about.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">作者</a>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -95,8 +85,6 @@
   const form = document.getElementById('fb-search-form');
   const input = document.getElementById('fb-search-input');
 
-  if(!closed || !bar || !minBtn || !form || !input) return;
-
   // 打开
   closed.addEventListener('click', openBar);
   function openBar(){
@@ -105,7 +93,6 @@
     bar.style.transform = 'translateY(6px) scale(.98)';
     bar.style.opacity = '0';
     requestAnimationFrame(()=>{
-      bar.style.transition = 'transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s';
       bar.style.transform = 'translateY(0) scale(1)';
       bar.style.opacity = '1';
     });
@@ -123,7 +110,7 @@
     }, 220);
   }
 
-  // Esc / Ctrl+K
+  // Esc 收起 / Ctrl+K 打开
   document.addEventListener('keydown', (e)=>{
     if(e.key === 'Escape'){
       if(!bar.hasAttribute('hidden')) closeBar();
@@ -159,4 +146,4 @@
     }
   });
 })();
-         </script>
+</script>
