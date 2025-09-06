@@ -72,12 +72,40 @@
       text-align: center;
       border-top: 1px solid rgba(0,0,0,0.05);
     }
+
+    /* ===== 悬浮栏样式 ===== */
+    #fb-outer{ position:fixed; right:20px; bottom:24px; z-index:99999; font-family: inherit; }
+    #fb-outer *{ box-sizing:border-box; }
+    #fb-bar {
+      width:320px; max-width:calc(100vw - 40px);
+      background: rgba(253,246,227,0.98);
+      border-radius:14px;
+      box-shadow: 0 8px 28px rgba(10,10,10,0.12);
+      overflow:hidden;
+      transform-origin: bottom right;
+      display:flex; flex-direction:column;
+      backdrop-filter: blur(6px);
+      transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s;
+    }
+    #fb-bar .fb-head{ display:flex; align-items:center; gap:10px; padding:10px 12px; }
+    #fb-bar .fb-logo{ width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:9px; }
+    #fb-bar .fb-title{ font-weight:600; font-size:14px; color:#3a2e2a; }
+    #fb-bar .fb-actions{ margin-left:auto; display:flex; gap:8px; align-items:center; }
+    #fb-bar .fb-search{ display:flex; gap:8px; padding:10px 12px 14px; border-top:1px solid rgba(0,0,0,0.04); }
+    #fb-bar input[type="search"]{ flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); font-size:14px; background:transparent; outline:none; color:inherit; }
+    #fb-bar input::placeholder{ color:#9b8c80; font-style:italic; }
+    #fb-bar .fb-submit{ padding:10px 12px; border-radius:10px; border:0; cursor:pointer; background:#b89c7a; color:#fff; font-weight:700; }
+    #fb-closed { width:56px; height:56px; border-radius:50%; background:rgba(253,246,227,0.98); box-shadow:0 8px 28px rgba(10,10,10,0.12); display:grid; place-items:center; cursor:pointer; }
+    #fb-bar[hidden]{ display:none; }
+    #fb-closed[hidden]{ display:none; }
+    .icon-search{ width:28px; height:28px; stroke:#8c6a4f; transition:transform .2s; }
+    .icon-search:hover{ transform:scale(1.1); stroke:#b89c7a; }
+    @media (max-width:420px){
+      #fb-bar{ width: min(94vw, 360px); border-radius:12px; }
+    }
   </style>
 </head>
 <body>
-
-  <!-- 悬浮栏占位（floatbar.html 将被 fetch 并插入到此处） -->
-  <div id="floatbar" aria-hidden="true"></div>
 
   <main>
     <h1>关于作者</h1>
@@ -96,7 +124,9 @@
       <h2>联系方式</h2>
       <ul>
         <li>
-            IG   <a href="https://www.instagram.com/galiambuqq/" target="_blank" rel="noopener"> @galiambuqq </a>
+            IG   <a href="https://www.instagram.com/galiambuqq/" target="_blank">
+           @galiambuqq
+          </a>
         </li>
         <li>
           📧 邮箱 <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a>
@@ -107,123 +137,118 @@
     <a href="index.html" class="btn">返回首页</a>
   </main>
 
-  <footer>
-    <nav>
-      <a href="index.html">首页</a> |
-      <a href="toc.html">目录</a> |
-      <a href="about.html">作者简介</a>
-    </nav>
-  </footer>
-  
-  
+  <!-- ===== 悬浮栏开始 ===== -->
+  <div id="fb-outer" aria-live="polite">
+    <!-- 收起时显示的圆形按钮 -->
+    <div id="fb-closed" title="搜索" role="button" aria-label="打开搜索">
+      <!-- 放大镜图标 -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon-search"
+           viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+
+    <!-- 展开状态 -->
+    <div id="fb-bar" role="region" aria-label="悬浮工具" hidden>
+      <div class="fb-head">
+        <div class="fb-logo" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <rect x="0" y="0" width="48" height="48" rx="10" fill="#fff"/>
+            <path d="M12 32c6-8 24-8 28-12" stroke="#b89c7a" stroke-width="2.8" stroke-linecap="round"/>
+            <circle cx="14" cy="16" r="3.2" fill="#b89c7a"/>
+          </svg>
+        </div>
+        <div class="fb-title">网站工具 · 快速搜索</div>
+        <div class="fb-actions">
+          <button id="fb-min" title="收起" aria-label="收起浮动栏" style="background:transparent;border:0;padding:6px;border-radius:8px;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6L18 18M6 18L18 6" stroke="#6b5749" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <form id="fb-search-form" class="fb-search" role="search" aria-label="站内搜索">
+        <input id="fb-search-input" name="q" type="search" placeholder="在诗集、标签、页面中搜索（回车）" aria-label="搜索输入框" autocomplete="off" />
+        <button type="submit" class="fb-submit" aria-label="搜索">搜 索</button>
+      </form>
+
+      <div style="padding:10px 12px 14px; border-top:1px dashed rgba(0,0,0,0.03); font-size:13px; color:#5a4a41;">
+        <div style="margin-bottom:6px;">快速链接：</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="index.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">首页</a>
+          <a href="toc.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">目录</a>
+          <a href="about.html" style="font-size:13px; text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid rgba(0,0,0,0.04);">作者</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ===== 悬浮栏结束 ===== -->
+
   <script>
-    // 点击头像彩蛋（保留你原有逻辑）
     let photoClickCount = 0;
     let resetTimer;
-
     const photo = document.getElementById("authorPhoto");
-
     if (photo) {
       photo.addEventListener("click", () => {
         photoClickCount++;
         clearTimeout(resetTimer);
         resetTimer = setTimeout(() => { photoClickCount = 0; }, 3000);
-
         if (photoClickCount === 10) {
-          window.location.href = "easter-egg.html"; // 跳转菜单页
+          window.location.href = "easter-egg.html";
         }
       });
     }
 
-    // ---------- 自动加载 floatbar.html 并初始化 ----------
-    // 请确保你的 floatbar.html 文件位于站点根目录（或修改下面路径）
-    (function loadAndInitFloatbar(){
-      const FLOATBAR_PATH = 'floatbar.html'; // 或 '/floatbar.html' 或 '/assets/floatbar.html'
-      fetch(FLOATBAR_PATH)
-        .then(resp => {
-          if(!resp.ok) throw new Error('无法加载 ' + FLOATBAR_PATH);
-          return resp.text();
-        })
-        .then(html => {
-          // 插入到占位容器（若不存在则创建并插入 body）
-          let container = document.getElementById('floatbar');
-          if(!container){
-            container = document.createElement('div');
-            container.id = 'floatbar';
-            document.body.appendChild(container);
-          }
-          container.innerHTML = html;
-          // 初始化交互（打开/收起/快捷键/搜索提交等）
-          initFloatbar();
-        })
-        .catch(err => {
-          console.warn('floatbar 加载失败：', err);
+    // 悬浮栏逻辑
+    (function(){
+      const closed = document.getElementById('fb-closed');
+      const bar = document.getElementById('fb-bar');
+      const minBtn = document.getElementById('fb-min');
+      const form = document.getElementById('fb-search-form');
+      const input = document.getElementById('fb-search-input');
+
+      closed.addEventListener('click', openBar);
+      function openBar(){
+        closed.setAttribute('hidden','');
+        bar.removeAttribute('hidden');
+        bar.style.transform = 'translateY(6px) scale(.98)';
+        bar.style.opacity = '0';
+        requestAnimationFrame(()=>{
+          bar.style.transition = 'transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s';
+          bar.style.transform = 'translateY(0) scale(1)';
+          bar.style.opacity = '1';
         });
-
-      // 初始化函数：绑定交互事件到刚插入的元素
-      function initFloatbar(){
-        try {
-          const closed = document.getElementById('fb-closed');
-          const bar = document.getElementById('fb-bar');
-          const minBtn = document.getElementById('fb-min');
-          const form = document.getElementById('fb-search-form');
-          const input = document.getElementById('fb-search-input');
-
-          if(!closed || !bar || !minBtn || !form || !input) {
-            // 结构不完整时不再继续绑定，避免报错
-            return;
-          }
-
-          function openBar(){
-            closed.setAttribute('hidden','');
-            bar.removeAttribute('hidden');
-            bar.style.transform = 'translateY(6px) scale(.98)';
-            bar.style.opacity = '0';
-            requestAnimationFrame(()=>{
-              bar.style.transition = 'transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s';
-              bar.style.transform = 'translateY(0) scale(1)';
-              bar.style.opacity = '1';
-            });
-            setTimeout(()=> input.focus(), 260);
-          }
-
-          function closeBar(){
-            bar.style.transform = 'translateY(6px) scale(.98)';
-            bar.style.opacity = '0';
-            setTimeout(()=>{
-              bar.setAttribute('hidden','');
-              closed.removeAttribute('hidden');
-            }, 220);
-          }
-
-          closed.addEventListener('click', openBar);
-          minBtn.addEventListener('click', closeBar);
-
-          document.addEventListener('keydown', (e)=>{
-            if(e.key === 'Escape'){
-              if(!bar.hasAttribute('hidden')) closeBar();
-            }
-            if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
-              e.preventDefault();
-              if(bar.hasAttribute('hidden')) openBar();
-              else closeBar();
-            }
-          });
-
-          form.addEventListener('submit', function(e){
-            e.preventDefault();
-            const q = (input.value || '').trim();
-            if(!q){ input.focus(); return; }
-            const safe = encodeURIComponent(q);
-            // 修改为你的站内搜索路径（/search.html?q=）
-            window.location.href = '/search.html?q=' + safe;
-          });
-        } catch(err){
-          console.warn('initFloatbar 出错：', err);
-        }
+        setTimeout(()=> input.focus(), 260);
       }
+
+      minBtn.addEventListener('click', closeBar);
+      function closeBar(){
+        bar.style.transform = 'translateY(6px) scale(.98)';
+        bar.style.opacity = '0';
+        setTimeout(()=>{
+          bar.setAttribute('hidden','');
+          closed.removeAttribute('hidden');
+        }, 220);
+      }
+
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape'){ if(!bar.hasAttribute('hidden')) closeBar(); }
+        if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+          e.preventDefault();
+          if(bar.hasAttribute('hidden')) openBar();
+          else closeBar();
+        }
+      });
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const q = (input.value || '').trim();
+        if(!q){ input.focus(); return; }
+        const safe = encodeURIComponent(q);
+        window.location.href = '/search.html?q=' + safe;
+      });
     })();
   </script>
-
 </body>
 </html>
