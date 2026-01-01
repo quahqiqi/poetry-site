@@ -9,7 +9,7 @@
 
   <style>
     /* ==================== 
-       1. 全局变量 (两页完全一致)
+       1. 全局变量 
        ==================== */
     :root{
       --bg: #fdf6e3;
@@ -28,31 +28,21 @@
     html,body{height:100%; margin:0; font-family: 'Noto Serif SC', "思源宋体", serif; -webkit-font-smoothing:antialiased;}
     body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
-    }
+
     /* ==================== 
        新增：页面入场动画 
        ==================== */
     @keyframes fadeInUp {
-      from { 
-        opacity: 0; 
-        transform: translateY(20px); /* 初始位置向下偏移20像素 */
-      }
-      to { 
-        opacity: 1; 
-        transform: translateY(0);    /* 最终回到原位 */
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    /* 应用到主要内容区域 */
     main {
-      /* 0.8秒完成，使用柔和的缓动曲线 */
       animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
-      /* 初始状态设为不可见，防止闪烁 */
       opacity: 0; 
     }
 
     /* ==================== 
-       2. 头部 Header (两页完全一致)
+       2. 头部 Header (统一)
        ==================== */
     header{
       position:sticky; top:0; z-index:1200;
@@ -85,9 +75,7 @@
     .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* ==================== 
-       3. 搜索面板 (美化版 - 两页完全一致)
-       ==================== */
+    /* Search Panel */
     .search-panel{
       position:absolute; top:calc(100% + 10px); right:16px;
       width:320px; max-width:calc(100% - 40px);
@@ -125,7 +113,7 @@
     }
 
     /* ==================== 
-       4. 侧边栏 Sidebar (两页完全一致)
+       4. 侧边栏 Sidebar (统一)
        ==================== */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
@@ -140,7 +128,6 @@
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
       font-size:1rem; transition: background 0.2s;
     }
-    /* 统一 SVG 图标样式：20px大小 */
     .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
     
     .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); color: var(--accent); }
@@ -150,7 +137,7 @@
     .backdrop.show{ display:block; }
 
     /* ==================== 
-       5. 关于页面特有内容样式
+       5. 关于页面特有内容
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
@@ -164,9 +151,11 @@
     body.dark .author-section { background: var(--card-dark); }
 
     .author-photo {
-      width: 200px; height: 200px; object-fit: cover; display: block; margin: 0 auto 24px;
+      width: 200px; height: 200px;
+      object-fit: cover; display: block; margin: 0 auto 24px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 4px;
     }
+
     .author-text { max-width: 700px; margin: 0 auto; text-align: left; }
     .author-text p { margin-bottom: 1.2em; line-height: 1.8; font-size: 1.05rem; color: var(--muted); }
     body.dark .author-text p { color: var(--muted-dark); }
@@ -242,6 +231,7 @@
       <img src="assets/img/author.jpg" alt="作者启宏" class="author-photo" />
       <h2 style="margin-top:0; margin-bottom:10px;">关于作者</h2>
       <p style="color:var(--accent); font-weight:bold; margin-bottom:20px;">启宏，其人其诗</p>
+      
       <div class="author-text">
         <p>我是启宏，来自马来西亚雪兰莪。</p>
         <p>从小就喜欢思考，也总是对文字怀抱敬意。小时候，在一次偶然的阅读中遇见了新诗，那是我第一次发现，原来文字可以这样自由——不拘格律，却能直达心灵。那一刻起，我便爱上了它。</p>
@@ -249,6 +239,7 @@
         <p>我的作品也许还有许多不足，身边鲜有人可请教，于是我用了这样一种笨拙的方式——将诗放在这里，邀请你阅读，欢迎你批评指正。</p>
         <p>你们的每一句意见，都是我诗路上的灯火。在此，深深致谢。</p>
       </div>
+
       <div class="contact-info">
         <h3>联系方式</h3>
         <ul>
@@ -256,6 +247,7 @@
           <li>邮箱: <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a></li>
         </ul>
       </div>
+
       <a href="index.html" class="btn-back">返回首页</a>
     </section>
   </main>
@@ -272,32 +264,28 @@
     const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
     const randomPoemBtn = document.getElementById('randomPoemBtn');
 
-    // --- 侧栏与面板控制 ---
     function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
     function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
     function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
+    
+    function openSearch(){ searchPanel.style.display='block'; setTimeout(()=>searchInput.focus(),60); }
+    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; }
+    function toggleSearch(){ searchPanel.style.display==='block' ? closeSearch() : openSearch(); }
 
-    function openSearch(){ searchPanel.style.display = 'block'; setTimeout(()=>searchInput.focus(),60); }
-    function closeSearch(){ searchPanel.style.display = 'none'; searchInput.value=''; }
-    function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
-
-    // --- 事件绑定 ---
     menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
     backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
     searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
     
-    // 点击任意处关闭
     document.addEventListener('click', (e)=>{
       if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !menuBtn.contains(e.target)){ closeSidebar(); }
-      if(searchPanel.style.display === 'block' && !searchPanel.contains(e.target) && !searchBtn.contains(e.target)){ closeSearch(); }
+      if(searchPanel.style.display==='block' && !searchPanel.contains(e.target) && !searchBtn.contains(e.target)){ closeSearch(); }
     });
 
     document.addEventListener('keydown', (e)=>{
       if(e.key === 'Escape'){ closeSearch(); closeSidebar(); }
-      if((e.ctrlKey && e.key.toLowerCase()==='k') || e.key === '/'){ e.preventDefault(); openSearch(); }
     });
 
-    // --- 搜索跳转逻辑 (跳转到 index.html) ---
+    // 搜索逻辑：关于页没有内容，所以跳转回首页
     searchInput.addEventListener('keyup', (e)=>{
       if(e.key === 'Enter'){
         const val = searchInput.value.trim();
@@ -307,13 +295,10 @@
       }
     });
 
-    // --- 其他功能 ---
-    function persistDarkMode(enabled){ try { localStorage.setItem('site-dark', enabled ? '1' : '0'); } catch(e){} }
-    function loadDarkMode(){ try { const stored = localStorage.getItem('site-dark'); if(stored === '1') document.body.classList.add('dark'); } catch(e){} }
-    
+    function loadDarkMode(){ if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark'); }
     toggleDarkModeBtn.addEventListener('click', ()=>{
       const enabled = document.body.classList.toggle('dark');
-      persistDarkMode(enabled);
+      try{ localStorage.setItem('site-dark', enabled?'1':'0'); }catch(e){}
     });
 
     randomPoemBtn.addEventListener('click', ()=>{
