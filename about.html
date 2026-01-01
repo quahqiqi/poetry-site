@@ -9,7 +9,7 @@
 
   <style>
     /* ==================== 
-       1. 基础样式 (与 Index 保持完全一致)
+       1. 全局变量 (两页完全一致)
        ==================== */
     :root{
       --bg: #fdf6e3;
@@ -29,14 +29,16 @@
     body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
-    /* Header 样式 (与 Index 一致) */
+    /* ==================== 
+       2. 头部 Header (两页完全一致)
+       ==================== */
     header{
       position:sticky; top:0; z-index:1200;
       display:flex; align-items:center; justify-content:center;
       padding:12px 20px;
       background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
       border-bottom:1px solid var(--border);
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(8px);
     }
     body.dark header{
       background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95));
@@ -45,10 +47,11 @@
 
     .icon-btn{
       position:absolute; top:50%; transform:translateY(-50%);
-      background:transparent; border:none; padding:6px; border-radius:8px; cursor:pointer;
+      background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer;
       display:inline-flex; align-items:center; justify-content:center; color:inherit;
+      transition: background 0.2s;
     }
-    .icon-btn:focus{ outline:2px solid rgba(0,0,0,0.08); outline-offset:2px; }
+    .icon-btn:hover{ background: rgba(0,0,0,0.05); }
     .menu-btn{ left:16px; }
     .search-btn{ right:16px; }
 
@@ -60,21 +63,48 @@
     .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* 搜索面板 (与 Index 一致) */
+    /* ==================== 
+       3. 搜索面板 (美化版 - 两页完全一致)
+       ==================== */
     .search-panel{
-      position:absolute; top:100%; right:16px; margin-top:10px;
+      position:absolute; top:calc(100% + 10px); right:16px;
       width:320px; max-width:calc(100% - 40px);
-      background:var(--card); border:1px solid var(--border); padding:8px; border-radius:8px;
-      box-shadow:0 6px 18px rgba(0,0,0,0.12); display:none; z-index:1300;
+      background:rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-radius:16px; padding:10px;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,0.03);
+      display:none; z-index:1300;
+      animation: slideDown 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      transform-origin: top right;
     }
-    body.dark .search-panel{ background:var(--card-dark); border-color:var(--border-dark); box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+    body.dark .search-panel{ 
+      background:rgba(30, 30, 30, 0.95); 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
     .search-panel input{
-      width:100%; padding:8px 10px; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;
-      background:transparent; color:inherit;
+      width:100%; padding:12px 18px; border-radius:99px; /* 胶囊圆角 */
+      border:2px solid transparent; font-size:0.95rem; outline:none;
+      background:rgba(0, 0, 0, 0.04); color:inherit;
+      transition: all 0.2s ease;
     }
-    body.dark .search-panel input{ border-color:var(--border-dark); }
+    body.dark .search-panel input{ background:rgba(255,255,255,0.08); }
 
-    /* Sidebar 样式 (与 Index 一致) */
+    .search-panel input:focus{
+      background:#fff; border-color:var(--accent);
+      box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15);
+    }
+    body.dark .search-panel input:focus{ background:#2a2a2a; }
+
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ==================== 
+       4. 侧边栏 Sidebar (两页完全一致)
+       ==================== */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
       background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
@@ -82,21 +112,23 @@
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
     .sidebar .nav-group{ margin-bottom:12px; }
+    
     .sidebar a, .sidebar button{
-      display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px; margin:6px 0;
+      display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:12px; margin:6px 0;
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
-      font-size:1rem;
+      font-size:1rem; transition: background 0.2s;
     }
+    /* 统一 SVG 图标样式：20px大小 */
     .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
-    .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); }
-    body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.03); }
+    
+    .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); color: var(--accent); }
+    body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.05); }
 
-    /* 遮罩 */
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
     /* ==================== 
-       2. 关于页面特有样式 (保持原设计)
+       5. 关于页面特有内容样式
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
@@ -129,16 +161,14 @@
     }
     .btn-back:hover { background-color: #a67d56; }
 
-    footer{ max-width:var(--max-w); margin:28px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; }
+    footer{ max-width:var(--max-w); margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity:0.8; }
   </style>
 </head>
 <body>
 
   <header>
     <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
 
     <div class="logo-title">
@@ -147,26 +177,39 @@
     </div>
 
     <button class="icon-btn search-btn" id="searchBtn" aria-label="搜索">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
 
     <div class="search-panel" id="searchPanel">
-      <input id="searchInput" type="text" placeholder="输入关键词，回车跳转至首页搜索..." />
+      <input id="searchInput" type="text" placeholder="输入关键词，回车跳转至首页搜索..." autocomplete="off"/>
     </div>
   </header>
 
   <aside class="sidebar" id="sidebar">
     <div class="nav-group">
-      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>首页</a>
-      <a href="toc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>目录</a>
-      <a href="about.html" style="background: rgba(0,0,0,0.05);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>作者简介</a>
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
+        首页
+      </a>
+      <a href="toc.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        目录
+      </a>
+      <a href="about.html" style="background: rgba(0,0,0,0.05); color:var(--accent);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
+        作者简介
+      </a>
     </div>
-    <hr />
+    <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
     <div class="nav-group">
-      <button id="toggleDarkMode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>夜间模式</button>
-      <button id="randomPoemBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>随机一首</button>
+      <button id="toggleDarkMode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        夜间模式
+      </button>
+      <button id="randomPoemBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
+        随机一首
+      </button>
     </div>
   </aside>
 
@@ -232,13 +275,11 @@
       if((e.ctrlKey && e.key.toLowerCase()==='k') || e.key === '/'){ e.preventDefault(); openSearch(); }
     });
 
-    // --- 【重点修改】搜索跳转逻辑 ---
-    // 这里不再筛选（因为没有卡片），而是直接跳转回 index.html，并带上查询参数 ?q=...
+    // --- 搜索跳转逻辑 (跳转到 index.html) ---
     searchInput.addEventListener('keyup', (e)=>{
       if(e.key === 'Enter'){
         const val = searchInput.value.trim();
         if(val){
-          // 例如输入 "月光"，跳转到 index.html?q=月光
           window.location.href = 'index.html?q=' + encodeURIComponent(val);
         }
       }
