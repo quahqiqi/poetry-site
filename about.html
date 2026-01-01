@@ -74,8 +74,9 @@
     }
 
     /* ===== 悬浮栏样式 ===== */
-    #fb-outer{ position:fixed; right:20px; bottom:24px; z-index:99999; font-family: inherit; }
-    #fb-outer *{ box-sizing:border-box; }
+    #fb-outer { position:fixed; right:20px; bottom:24px; z-index:99999; font-family: inherit; }
+    #fb-outer * { box-sizing:border-box; }
+    
     #fb-bar {
       width:320px; max-width:calc(100vw - 40px);
       background: rgba(253,246,227,0.98);
@@ -85,24 +86,42 @@
       transform-origin: bottom right;
       display:flex; flex-direction:column;
       backdrop-filter: blur(6px);
-      transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s;
+      /* 动画效果 */
+      transition: transform .25s cubic-bezier(.2,.9,.2,1), opacity .2s;
+      opacity: 1;
+      transform: scale(1);
     }
-    #fb-bar .fb-head{ display:flex; align-items:center; gap:10px; padding:10px 12px; }
-    #fb-bar .fb-logo{ width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:9px; }
-    #fb-bar .fb-title{ font-weight:600; font-size:14px; color:#3a2e2a; }
-    #fb-bar .fb-actions{ margin-left:auto; display:flex; gap:8px; align-items:center; }
-    #fb-bar .fb-search{ display:flex; gap:8px; padding:10px 12px 14px; border-top:1px solid rgba(0,0,0,0.04); }
-    #fb-bar input[type="search"]{ flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); font-size:14px; background:transparent; outline:none; color:inherit; }
-    #fb-bar input::placeholder{ color:#9b8c80; font-style:italic; }
-    #fb-bar .fb-submit{ padding:10px 12px; border-radius:10px; border:0; cursor:pointer; background:#b89c7a; color:#fff; font-weight:700; }
-    #fb-closed { width:56px; height:56px; border-radius:50%; background:rgba(253,246,227,0.98); box-shadow:0 8px 28px rgba(10,10,10,0.12); display:grid; place-items:center; cursor:pointer; }
-    #fb-bar[hidden]{ display:none; }
-    #fb-closed[hidden]{ display:none; }
-    .icon-search{ width:28px; height:28px; stroke:#8c6a4f; transition:transform .2s; }
-    .icon-search:hover{ transform:scale(1.1); stroke:#b89c7a; }
-    @media (max-width:420px){
-      #fb-bar{ width: min(94vw, 360px); border-radius:12px; }
+    
+    /* 隐藏状态样式 */
+    #fb-bar[hidden] { 
+      display: none !important; /* 强制隐藏 */
     }
+
+    #fb-bar .fb-head { display:flex; align-items:center; gap:10px; padding:10px 12px; }
+    #fb-bar .fb-logo { width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:9px; background: #eaddcf; color:#6d5a44; }
+    #fb-bar .fb-title { font-weight:600; font-size:14px; color:#3a2e2a; }
+    #fb-bar .fb-actions { margin-left:auto; display:flex; gap:8px; align-items:center; }
+    
+    /* 关闭按钮样式 */
+    .icon-close { cursor: pointer; padding: 4px; border-radius: 50%; transition: background 0.2s; }
+    .icon-close:hover { background: rgba(0,0,0,0.05); }
+
+    #fb-bar .fb-search { display:flex; gap:8px; padding:10px 12px 14px; border-top:1px solid rgba(0,0,0,0.04); }
+    #fb-bar input[type="search"] { flex:1; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); font-size:14px; background:transparent; outline:none; color:inherit; }
+    #fb-bar input::placeholder { color:#9b8c80; font-style:italic; }
+    #fb-bar .fb-submit { padding:10px 12px; border-radius:10px; border:0; cursor:pointer; background:#b89c7a; color:#fff; font-weight:700; }
+    
+    #fb-closed { 
+      width:56px; height:56px; border-radius:50%; 
+      background:rgba(253,246,227,0.98); 
+      box-shadow:0 8px 28px rgba(10,10,10,0.12); 
+      display:grid; place-items:center; cursor:pointer; 
+      transition: transform 0.2s;
+    }
+    #fb-closed:hover { transform: scale(1.05); }
+    #fb-closed[hidden] { display:none; }
+    
+    .icon-search { width:24px; height:24px; stroke:#8c6a4f; stroke-width: 2; fill: none; }
   </style>
 </head>
 <body>
@@ -124,9 +143,7 @@
       <h2>联系方式</h2>
       <ul>
         <li>
-            IG   <a href="https://www.instagram.com/galiambuqq/" target="_blank">
-           @galiambuqq
-          </a>
+            IG <a href="https://www.instagram.com/galiambuqq/" target="_blank">@galiambuqq</a>
         </li>
         <li>
           📧 邮箱 <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a>
@@ -135,14 +152,58 @@
     </section>
     <a href="index.html" class="btn">返回首页</a>
   </main>
-  <div id="floatbar-container"></div>
-<script>
-  fetch("floatbar.html")
-    .then(r => r.text())
-    .then(html => {
-      document.getElementById("floatbar-container").innerHTML = html;
+
+  <footer>
+    &copy; 2023 启宏. All rights reserved.
+  </footer>
+
+  <div id="fb-outer">
+    <div id="fb-bar" hidden>
+      <div class="fb-head">
+        <div class="fb-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>
+        </div>
+        <div class="fb-title">文章搜索</div>
+        <div class="fb-actions">
+          <div id="fb-close-btn" class="icon-close" title="收起">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6d5a44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </div>
+        </div>
+      </div>
+      <form class="fb-search" action="search_result.html" method="get">
+        <input type="search" name="q" placeholder="输入诗题或关键词...">
+        <button type="submit" class="fb-submit">Go</button>
+      </form>
+    </div>
+
+    <div id="fb-closed" title="搜索">
+      <svg class="icon-search" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取元素
+      const bar = document.getElementById('fb-bar');
+      const closedBtn = document.getElementById('fb-closed');
+      const closeActionBtn = document.getElementById('fb-close-btn');
+
+      // 点击圆形按钮 -> 打开搜索框
+      closedBtn.addEventListener('click', function() {
+        bar.hidden = false;       // 显示长条
+        closedBtn.hidden = true;  // 隐藏圆钮
+      });
+
+      // 点击关闭叉叉 -> 收起搜索框
+      closeActionBtn.addEventListener('click', function() {
+        bar.hidden = true;        // 隐藏长条
+        closedBtn.hidden = false; // 显示圆钮
+      });
     });
-</script>
   </script>
+
 </body>
 </html>
