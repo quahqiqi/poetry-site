@@ -22,20 +22,12 @@
     body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
-    /* ==================== 
-       新增：页面入场动画 
-       ==================== */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    main {
-      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
-      opacity: 0; 
-    }
+    /* 页面入场动画 */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    main { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
 
     /* ==================== 
-       2. 头部 Header (统一)
+       2. 头部 Header 
        ==================== */
     header{
       position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
@@ -72,11 +64,12 @@
     @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
     /* ==================== 
-       4. 侧边栏 Sidebar (统一)
+       4. 侧边栏 Sidebar 
        ==================== */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
       background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
+      overflow-y: auto; /* 允许侧边栏内容过多时滚动 */
     }
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
@@ -92,10 +85,41 @@
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
-    /* === 标签云样式 (新增) === */
-    .tags-section { padding: 0 12px; margin-top: 16px; margin-bottom: 16px; }
-    .tags-title { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; font-weight: bold; opacity: 0.8; }
-    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    /* === 标签云样式 (可折叠版) === */
+    .tags-section { 
+      padding: 0 12px; margin-top: 16px; margin-bottom: 16px; 
+    }
+    
+    /* 标题 + 箭头 */
+    .tags-header {
+      display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; padding: 4px 0; user-select: none;
+    }
+    .tags-title { font-size: 0.85rem; color: var(--muted); font-weight: bold; opacity: 0.8; margin: 0; }
+    .tags-arrow { 
+      width: 16px; height: 16px; transition: transform 0.3s ease; 
+      color: var(--muted); opacity: 0.6; 
+    }
+    
+    /* 折叠逻辑 */
+    .tag-cloud { 
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+      max-height: 500px; /* 展开时的最大高度 */
+      opacity: 1;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    }
+    
+    /* 收起状态的类 */
+    .tags-section.collapsed .tag-cloud {
+      max-height: 0; 
+      opacity: 0;
+      margin-top: 0;
+    }
+    .tags-section.collapsed .tags-arrow {
+      transform: rotate(-90deg); /* 箭头旋转 */
+    }
+
     .tag-btn {
       font-size: 0.8rem; padding: 4px 10px;
       background: rgba(0,0,0,0.04); color: var(--muted);
@@ -109,7 +133,7 @@
     }
 
     /* ==================== 
-       5. 首页特有内容
+       5. 首页内容
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
@@ -191,8 +215,11 @@
       </a>
     </div>
 
-    <div class="tags-section">
-      <div class="tags-title">标签云</div>
+    <div class="tags-section" id="tagsSection">
+      <div class="tags-header" onclick="toggleTags()">
+        <span class="tags-title">标签云</span>
+        <svg class="tags-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </div>
       <div id="tagCloud" class="tag-cloud">
         <span style="font-size:0.8rem;color:var(--muted);">Loading...</span>
       </div>
@@ -244,6 +271,7 @@
     const poemsGrid = document.getElementById('poemsGrid');
     const latestBadge = document.getElementById('latestBadge');
     const tagCloud = document.getElementById('tagCloud');
+    const tagsSection = document.getElementById('tagsSection');
 
     let poemsList = [];
 
@@ -260,6 +288,11 @@
     function openSearch(){ searchPanel.style.display = 'block'; setTimeout(()=>searchInput.focus(),60); }
     function closeSearch(){ searchPanel.style.display = 'none'; searchInput.value=''; filterPoemCards(''); }
     function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
+
+    // 标签折叠逻辑
+    function toggleTags() {
+      tagsSection.classList.toggle('collapsed');
+    }
 
     menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
     backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
@@ -290,7 +323,6 @@
 
     // 搜索与标签筛选逻辑
     searchInput.addEventListener('keyup', (e)=>{
-      // 输入文字时清除标签高亮
       document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
       filterPoemCards(searchInput.value.trim());
       if(e.key === 'Escape'){ closeSearch(); }
@@ -307,10 +339,8 @@
 
       const filtered = poemsList.filter(p => {
         if(isTag){
-          // 精确匹配标签
           return p.tags && p.tags.includes(q);
         } else {
-          // 模糊匹配标题、内容、标签
           const t = (p.title || '').toLowerCase();
           const c = (p.preview || p.excerpt || '').toLowerCase();
           const tagStr = (p.tags || []).join(' ').toLowerCase();
@@ -344,7 +374,6 @@
           document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           filterPoemCards(tag, true);
-          // 移动端点击标签后收起侧边栏
           if(window.innerWidth < 768) closeSidebar();
         };
         tagCloud.appendChild(btn);
@@ -359,7 +388,7 @@
         const poems = await res.json();
         poemsList = poems;
 
-        renderTags(poems); // 生成标签
+        renderTags(poems);
 
         // 检查URL参数
         const params = new URLSearchParams(window.location.search);
@@ -396,25 +425,4 @@
 
         const card = document.createElement('article');
         card.className = 'poem-card';
-        card.innerHTML = `
-          <a href="poems/${escapeHtml(file)}" style="display:block; text-decoration:none;">
-            <img class="poem-cover" src="${escapeHtml(img)}" alt="封面" onerror="this.src='assets/img/logo.png'">
-          </a>
-          <div class="poem-body">
-            <h3><a href="poems/${escapeHtml(file)}">${escapeHtml(title)}</a></h3>
-            <p>${escapeHtml(preview)}</p>
-            <div class="poem-meta">阅读全文 →</div>
-          </div>
-        `;
-        poemsGrid.appendChild(card);
-      });
-    }
-
-    (function init(){
-      loadDarkMode();
-      document.getElementById('year').textContent = new Date().getFullYear();
-      loadPoemsJson();
-    })();
-  </script>
-</body>
-</html>
+        card.inner
