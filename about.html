@@ -28,6 +28,28 @@
     html,body{height:100%; margin:0; font-family: 'Noto Serif SC', "思源宋体", serif; -webkit-font-smoothing:antialiased;}
     body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
+    }
+    /* ==================== 
+       新增：页面入场动画 
+       ==================== */
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px); /* 初始位置向下偏移20像素 */
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);    /* 最终回到原位 */
+      }
+    }
+
+    /* 应用到主要内容区域 */
+    main {
+      /* 0.8秒完成，使用柔和的缓动曲线 */
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+      /* 初始状态设为不可见，防止闪烁 */
+      opacity: 0; 
+    }
 
     /* ==================== 
        2. 头部 Header (两页完全一致)
