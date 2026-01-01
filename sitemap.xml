@@ -1,71 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- 首页 -->
-  <url>
-    <loc>https://quahqiqi.github.io/poetry-site/</loc>
-    <priority>1.0</priority>
-  </url>
-
-  <!-- 目录 -->
   <url>
     <loc>https://quahqiqi.github.io/poetry-site/index.html</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://quahqiqi.github.io/poetry-site/about.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://quahqiqi.github.io/poetry-site/toc.html</loc>
     <priority>0.9</priority>
   </url>
 
-  <!-- 标签汇总页 -->
-  <url>
-    <loc>https://quahqiqi.github.io/poetry-site/tags.html</loc>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- 每一首诗的页面 -->
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem01.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem02.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem03.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem04.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem05.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem06.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem07.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem08.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem09.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem10.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem11.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem12.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem13.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem14.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem15.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem16.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem17.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem18.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem19.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem20.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem21.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem22.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem23.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem24.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem25.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem26.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem27.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem28.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem29.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem30.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem31.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem32.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem33.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem34.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem35.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem36.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem37.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem38.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem39.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem40.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem41.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem42.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem43.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem44.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem45.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem46.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem47.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem48.html</loc></url>
-  <url><loc>https://quahqiqi.github.io/poetry-site/poem49.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem01.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem02.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem03.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem04.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem05.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem06.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem07.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem08.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem09.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem10.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem11.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem12.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem13.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem14.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem15.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem16.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem17.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem18.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem19.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem20.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem21.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem22.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem23.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem24.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem25.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem26.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem27.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem28.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem29.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem30.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem31.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem32.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem33.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem34.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem35.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem36.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem37.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem38.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem39.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem40.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem41.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem42.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem43.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem44.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem45.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem46.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem47.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem48.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem49.html</loc></url>
+  <url><loc>https://quahqiqi.github.io/poetry-site/poems/poem50.html</loc></url>
 </urlset>
