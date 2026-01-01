@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>关于作者 - 一个青年的天马行空</title>
   <link rel="icon" href="favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     /* ==================== 
-       1. 基础变量 (保持不变)
+       1. 基础样式 (与 Index 保持完全一致)
        ==================== */
     :root{
       --bg: #fdf6e3;
@@ -29,44 +29,7 @@
     body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
-    /* ==================== 
-       2. 全屏沉浸式搜索 (你喜欢的那个新样式)
-       ==================== */
-    .search-overlay {
-      position: fixed; inset: 0; 
-      background: rgba(253, 246, 227, 0.95); /* 浅色背景 */
-      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      z-index: 9999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s;
-    }
-    .search-overlay.active { opacity: 1; pointer-events: auto; visibility: visible; }
-    body.dark .search-overlay { background: rgba(18, 18, 18, 0.95); }
-
-    .search-close {
-      position: absolute; top: 30px; right: 30px;
-      width: 40px; height: 40px; border-radius: 50%; border: none; background: transparent;
-      cursor: pointer; color: var(--muted); display: flex; align-items: center; justify-content: center;
-      transition: transform 0.2s, color 0.2s;
-    }
-    .search-close:hover { transform: rotate(90deg); color: var(--accent); background: rgba(0,0,0,0.05); }
-
-    .search-container { width: 100%; max-width: 800px; padding: 0 20px; text-align: center; transform: translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    .search-overlay.active .search-container { transform: translateY(0); }
-
-    .search-input {
-      width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--border);
-      font-family: inherit; font-size: clamp(1.5rem, 5vw, 3rem); /* 大字体 */
-      color: inherit; padding: 10px 0; text-align: center; outline: none; transition: border-color 0.3s;
-    }
-    .search-input:focus { border-bottom-color: var(--accent); }
-    .search-input::placeholder { color: rgba(150, 150, 150, 0.4); font-weight: 300; }
-    .search-hint { margin-top: 20px; font-size: 0.9rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }
-
-    /* ==================== 
-       3. 通用 UI (Header/Sidebar)
-       ==================== */
+    /* Header 样式 (与 Index 一致) */
     header{
       position:sticky; top:0; z-index:1200;
       display:flex; align-items:center; justify-content:center;
@@ -75,33 +38,68 @@
       border-bottom:1px solid var(--border);
       backdrop-filter: blur(4px);
     }
-    body.dark header{ background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95)); border-color:var(--border-dark); }
+    body.dark header{
+      background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95));
+      border-color:var(--border-dark);
+    }
 
-    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:6px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:inherit; }
-    .icon-btn:hover{ background: rgba(0,0,0,0.05); }
+    .icon-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:transparent; border:none; padding:6px; border-radius:8px; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center; color:inherit;
+    }
+    .icon-btn:focus{ outline:2px solid rgba(0,0,0,0.08); outline-offset:2px; }
     .menu-btn{ left:16px; }
     .search-btn{ right:16px; }
 
-    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; max-width:var(--max-w); width:100%; }
+    .logo-title{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      max-width:var(--max-w); width:100%;
+    }
     .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
     .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* Sidebar */
-    .sidebar{ position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px; background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; }
+    /* 搜索面板 (与 Index 一致) */
+    .search-panel{
+      position:absolute; top:100%; right:16px; margin-top:10px;
+      width:320px; max-width:calc(100% - 40px);
+      background:var(--card); border:1px solid var(--border); padding:8px; border-radius:8px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.12); display:none; z-index:1300;
+    }
+    body.dark .search-panel{ background:var(--card-dark); border-color:var(--border-dark); box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+    .search-panel input{
+      width:100%; padding:8px 10px; border-radius:6px; border:1px solid #ccc; font-size:0.95rem;
+      background:transparent; color:inherit;
+    }
+    body.dark .search-panel input{ border-color:var(--border-dark); }
+
+    /* Sidebar 样式 (与 Index 一致) */
+    .sidebar{
+      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
+    }
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
-    .sidebar a, .sidebar button{ display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px; margin:6px 0; border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer; font-size:1rem; }
+    .sidebar .nav-group{ margin-bottom:12px; }
+    .sidebar a, .sidebar button{
+      display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:10px; margin:6px 0;
+      border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
+      font-size:1rem;
+    }
+    .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
     .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); }
+    body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.03); }
+
+    /* 遮罩 */
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
     /* ==================== 
-       4. 内容区域 (恢复原本的设计样式)
+       2. 关于页面特有样式 (保持原设计)
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
-    /* 恢复：原本的白色卡片样式 */
     .author-section {
       text-align: center;
       background: var(--card);
@@ -111,61 +109,36 @@
     }
     body.dark .author-section { background: var(--card-dark); }
 
-    /* 恢复：原本的 200px 照片 */
     .author-photo {
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border-radius: 4px; /* 这里改回了原来的小圆角，不是正圆 */
-      /* 如果你之前喜欢圆形，可以改成 50% */
+      width: 200px; height: 200px; object-fit: cover; display: block; margin: 0 auto 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 4px;
     }
-
-    /* 恢复：原本的文字排版 */
     .author-text { max-width: 700px; margin: 0 auto; text-align: left; }
     .author-text p { margin-bottom: 1.2em; line-height: 1.8; font-size: 1.05rem; color: var(--muted); }
     body.dark .author-text p { color: var(--muted-dark); }
     
-    /* 恢复：原本的联系方式 (List样式) */
     .contact-info { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
     body.dark .contact-info { border-color: var(--border-dark); }
     .contact-info ul { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
     .contact-info a { color: var(--accent); text-decoration: none; font-weight: 600; }
     
-    /* 恢复：原本的方形圆角按钮 */
     .btn-back {
-      display: inline-block;
-      margin-top: 30px;
-      padding: 10px 24px;
-      background-color: var(--accent);
-      color: white;
-      text-decoration: none;
-      border-radius: 6px; /* 经典圆角 */
-      font-weight: 600;
-      transition: background-color 0.3s;
+      display: inline-block; margin-top: 30px; padding: 10px 24px;
+      background-color: var(--accent); color: white; text-decoration: none;
+      border-radius: 6px; font-weight: 600; transition: background-color 0.3s;
     }
     .btn-back:hover { background-color: #a67d56; }
 
-    footer{ margin:28px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; }
+    footer{ max-width:var(--max-w); margin:28px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; }
   </style>
 </head>
 <body>
 
-  <div id="searchOverlay" class="search-overlay">
-    <button class="search-close" id="searchClose" aria-label="关闭搜索">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-    </button>
-    <div class="search-container">
-      <input type="text" id="searchInput" class="search-input" placeholder="输入诗题或关键词..." autocomplete="off">
-      <div class="search-hint">按 Enter 键搜索，ESC 键关闭</div>
-    </div>
-  </div>
-
   <header>
-    <button class="icon-btn menu-btn" id="menuBtn">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
     </button>
 
     <div class="logo-title">
@@ -173,32 +146,37 @@
       <h1>一个青年的天马行空</h1>
     </div>
 
-    <button class="icon-btn search-btn" id="searchBtn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <button class="icon-btn search-btn" id="searchBtn" aria-label="搜索">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
     </button>
+
+    <div class="search-panel" id="searchPanel">
+      <input id="searchInput" type="text" placeholder="输入关键词，回车跳转至首页搜索..." />
+    </div>
   </header>
 
   <aside class="sidebar" id="sidebar">
     <div class="nav-group">
-      <a href="index.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>首页</a>
-      <a href="toc.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>目录</a>
-      <a href="about.html" style="background: rgba(0,0,0,0.05);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>作者简介</a>
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>首页</a>
+      <a href="toc.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>目录</a>
+      <a href="about.html" style="background: rgba(0,0,0,0.05);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>作者简介</a>
     </div>
-    <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
+    <hr />
     <div class="nav-group">
-      <button id="toggleDarkMode"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>夜间模式</button>
-      <button id="randomPoemBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>随机一首</button>
+      <button id="toggleDarkMode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>夜间模式</button>
+      <button id="randomPoemBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>随机一首</button>
     </div>
   </aside>
+
   <div class="backdrop" id="backdrop"></div>
 
   <main>
     <section class="author-section">
       <img src="assets/img/author.jpg" alt="作者启宏" class="author-photo" />
-      
       <h2 style="margin-top:0; margin-bottom:10px;">关于作者</h2>
       <p style="color:var(--accent); font-weight:bold; margin-bottom:20px;">启宏，其人其诗</p>
-
       <div class="author-text">
         <p>我是启宏，来自马来西亚雪兰莪。</p>
         <p>从小就喜欢思考，也总是对文字怀抱敬意。小时候，在一次偶然的阅读中遇见了新诗，那是我第一次发现，原来文字可以这样自由——不拘格律，却能直达心灵。那一刻起，我便爱上了它。</p>
@@ -206,7 +184,6 @@
         <p>我的作品也许还有许多不足，身边鲜有人可请教，于是我用了这样一种笨拙的方式——将诗放在这里，邀请你阅读，欢迎你批评指正。</p>
         <p>你们的每一句意见，都是我诗路上的灯火。在此，深深致谢。</p>
       </div>
-
       <div class="contact-info">
         <h3>联系方式</h3>
         <ul>
@@ -214,7 +191,6 @@
           <li>邮箱: <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a></li>
         </ul>
       </div>
-
       <a href="index.html" class="btn-back">返回首页</a>
     </section>
   </main>
@@ -222,76 +198,67 @@
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
 
   <script>
-    // 元素引用
-    const searchOverlay = document.getElementById('searchOverlay');
-    const searchBtn = document.getElementById('searchBtn');
-    const searchClose = document.getElementById('searchClose');
-    const searchInput = document.getElementById('searchInput');
-    
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
     const menuBtn = document.getElementById('menuBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchPanel = document.getElementById('searchPanel');
+    const searchInput = document.getElementById('searchInput');
     const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
     const randomPoemBtn = document.getElementById('randomPoemBtn');
 
-    // --- 搜索栏逻辑 (Zen Mode) ---
-    function openSearch(){
-      searchOverlay.classList.add('active');
-      setTimeout(() => searchInput.focus(), 100);
-    }
-    function closeSearch(){
-      searchOverlay.classList.remove('active');
-      searchInput.value = '';
-    }
-
-    searchBtn.addEventListener('click', (e) => { e.stopPropagation(); openSearch(); });
-    searchClose.addEventListener('click', closeSearch);
-    
-    // 键盘操作
-    document.addEventListener('keydown', (e) => {
-      if(e.key === 'Escape'){
-        if(searchOverlay.classList.contains('active')) closeSearch();
-        if(sidebar.classList.contains('active')) closeSidebar();
-      }
-    });
-
-    // 搜索回车跳转
-    searchInput.addEventListener('keyup', (e) => {
-      if(e.key === 'Enter'){ window.location.href = 'index.html'; }
-    });
-
-    // --- 侧边栏逻辑 ---
+    // --- 侧栏与面板控制 ---
     function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
     function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
+    function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
+
+    function openSearch(){ searchPanel.style.display = 'block'; setTimeout(()=>searchInput.focus(),60); }
+    function closeSearch(){ searchPanel.style.display = 'none'; searchInput.value=''; }
+    function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
+
+    // --- 事件绑定 ---
+    menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
+    backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
+    searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
     
-    menuBtn.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); });
-    backdrop.addEventListener('click', closeSidebar);
-    
-    // 点击任意处关闭侧边栏
+    // 点击任意处关闭
     document.addEventListener('click', (e)=>{
-      if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !menuBtn.contains(e.target)){
-        closeSidebar();
+      if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !menuBtn.contains(e.target)){ closeSidebar(); }
+      if(searchPanel.style.display === 'block' && !searchPanel.contains(e.target) && !searchBtn.contains(e.target)){ closeSearch(); }
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){ closeSearch(); closeSidebar(); }
+      if((e.ctrlKey && e.key.toLowerCase()==='k') || e.key === '/'){ e.preventDefault(); openSearch(); }
+    });
+
+    // --- 【重点修改】搜索跳转逻辑 ---
+    // 这里不再筛选（因为没有卡片），而是直接跳转回 index.html，并带上查询参数 ?q=...
+    searchInput.addEventListener('keyup', (e)=>{
+      if(e.key === 'Enter'){
+        const val = searchInput.value.trim();
+        if(val){
+          // 例如输入 "月光"，跳转到 index.html?q=月光
+          window.location.href = 'index.html?q=' + encodeURIComponent(val);
+        }
       }
     });
 
     // --- 其他功能 ---
     function persistDarkMode(enabled){ try { localStorage.setItem('site-dark', enabled ? '1' : '0'); } catch(e){} }
     function loadDarkMode(){ try { const stored = localStorage.getItem('site-dark'); if(stored === '1') document.body.classList.add('dark'); } catch(e){} }
-
+    
     toggleDarkModeBtn.addEventListener('click', ()=>{
       const enabled = document.body.classList.toggle('dark');
       persistDarkMode(enabled);
     });
 
     randomPoemBtn.addEventListener('click', ()=>{
-        const i = Math.floor(Math.random()*49)+1;
-        window.location.href = 'poems/poem' + String(i).padStart(2,'0') + '.html';
+      const i = Math.floor(Math.random()*49)+1;
+      window.location.href = 'poems/poem' + String(i).padStart(2,'0') + '.html';
     });
 
-    (function init(){
-      loadDarkMode();
-      document.getElementById('year').textContent = new Date().getFullYear();
-    })();
+    (function init(){ loadDarkMode(); document.getElementById('year').textContent = new Date().getFullYear(); })();
   </script>
 </body>
 </html>
