@@ -69,7 +69,7 @@
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
       background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
-      overflow-y: auto; /* 允许侧边栏内容过多时滚动 */
+      overflow-y: auto;
     }
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
@@ -86,51 +86,16 @@
     .backdrop.show{ display:block; }
 
     /* === 标签云样式 (可折叠版) === */
-    .tags-section { 
-      padding: 0 12px; margin-top: 16px; margin-bottom: 16px; 
-    }
-    
-    /* 标题 + 箭头 */
-    .tags-header {
-      display: flex; justify-content: space-between; align-items: center;
-      cursor: pointer; padding: 4px 0; user-select: none;
-    }
+    .tags-section { padding: 0 12px; margin-top: 16px; margin-bottom: 16px; }
+    .tags-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 4px 0; user-select: none; }
     .tags-title { font-size: 0.85rem; color: var(--muted); font-weight: bold; opacity: 0.8; margin: 0; }
-    .tags-arrow { 
-      width: 16px; height: 16px; transition: transform 0.3s ease; 
-      color: var(--muted); opacity: 0.6; 
-    }
-    
-    /* 折叠逻辑 */
-    .tag-cloud { 
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
-      max-height: 500px; /* 展开时的最大高度 */
-      opacity: 1;
-      overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
-    }
-    
-    /* 收起状态的类 */
-    .tags-section.collapsed .tag-cloud {
-      max-height: 0; 
-      opacity: 0;
-      margin-top: 0;
-    }
-    .tags-section.collapsed .tags-arrow {
-      transform: rotate(-90deg); /* 箭头旋转 */
-    }
-
-    .tag-btn {
-      font-size: 0.8rem; padding: 4px 10px;
-      background: rgba(0,0,0,0.04); color: var(--muted);
-      border-radius: 12px; cursor: pointer;
-      transition: all 0.2s; border: 1px solid transparent;
-    }
+    .tags-arrow { width: 16px; height: 16px; transition: transform 0.3s ease; color: var(--muted); opacity: 0.6; }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; max-height: 500px; opacity: 1; overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease; }
+    .tags-section.collapsed .tag-cloud { max-height: 0; opacity: 0; margin-top: 0; }
+    .tags-section.collapsed .tags-arrow { transform: rotate(-90deg); }
+    .tag-btn { font-size: 0.8rem; padding: 4px 10px; background: rgba(0,0,0,0.04); color: var(--muted); border-radius: 12px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
     body.dark .tag-btn { background: rgba(255,255,255,0.08); color: var(--muted-dark); }
-    .tag-btn:hover, .tag-btn.active {
-      background: var(--accent); color: #fff;
-      transform: translateY(-1px); box-shadow: 0 2px 5px rgba(184, 156, 122, 0.3);
-    }
+    .tag-btn:hover, .tag-btn.active { background: var(--accent); color: #fff; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(184, 156, 122, 0.3); }
 
     /* ==================== 
        5. 首页内容
@@ -171,7 +136,7 @@
     .poem-meta{ margin-top:14px; font-size:0.85rem; color:var(--accent); font-weight: 600; text-align: right;}
 
     footer{ margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity: 0.8; }
-
+    
     @media (max-width:640px){
       .logo-title h1{ font-size:1rem }
       .search-panel{ right:10px; width:calc(100% - 40px); }
@@ -289,10 +254,7 @@
     function closeSearch(){ searchPanel.style.display = 'none'; searchInput.value=''; filterPoemCards(''); }
     function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
 
-    // 标签折叠逻辑
-    function toggleTags() {
-      tagsSection.classList.toggle('collapsed');
-    }
+    function toggleTags() { tagsSection.classList.toggle('collapsed'); }
 
     menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
     backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
@@ -321,7 +283,6 @@
       }
     });
 
-    // 搜索与标签筛选逻辑
     searchInput.addEventListener('keyup', (e)=>{
       document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
       filterPoemCards(searchInput.value.trim());
@@ -332,7 +293,7 @@
       const ql = (q||'').toLowerCase();
       
       if(!ql) {
-        renderPoemsGrid(poemsList.slice(0, 10)); // 默认显示前10
+        renderPoemsGrid(poemsList.slice(0, 10)); 
         if(poemsList.length > 0) latestBadge.innerText = poemsList[0].title;
         return;
       }
@@ -352,7 +313,6 @@
       latestBadge.innerText = isTag ? `标签: #${q}` : `搜索: ${q}`;
     }
 
-    // 渲染标签云
     function renderTags(poems) {
       if(!tagCloud) return;
       const tagsMap = {};
@@ -361,7 +321,6 @@
           p.tags.forEach(t => tagsMap[t] = (tagsMap[t] || 0) + 1);
         }
       });
-      // 按数量排序
       const sortedTags = Object.keys(tagsMap).sort((a,b) => tagsMap[b] - tagsMap[a]);
 
       tagCloud.innerHTML = '';
@@ -380,17 +339,17 @@
       });
     }
 
-    // 加载数据
     async function loadPoemsJson(){
       try {
-        const res = await fetch('poems/poems.json', {cache:'no-store'});
-        if(!res.ok) throw new Error('读取失败');
+        // !!! 核心修复：加时间戳，防止浏览器或 GitHub 缓存旧文件 !!!
+        const res = await fetch('poems/poems.json?t=' + new Date().getTime());
+        
+        if(!res.ok) throw new Error('找不到 poems.json 文件，请检查上传！');
         const poems = await res.json();
         poemsList = poems;
 
         renderTags(poems);
 
-        // 检查URL参数
         const params = new URLSearchParams(window.location.search);
         const query = params.get('q');
         const tagQuery = params.get('tag');
@@ -408,6 +367,9 @@
         }
       } catch(err){
         console.warn('Fallback:', err);
+        // 如果出错，给用户一个温和的提示
+        latestBadge.innerText = "加载失败，请刷新";
+        latestBadge.style.color = "red";
       }
     }
 
@@ -425,4 +387,6 @@
 
         const card = document.createElement('article');
         card.className = 'poem-card';
-        card.inner
+        card.innerHTML = `
+          <a href="poems/${escapeHtml(file)}" style="display:block; text-decoration:none;">
+            <img class="poem-cover" src="${escapeHtml(img)}" alt="封面" onerror="
