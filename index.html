@@ -35,7 +35,7 @@
     }
 
     /* ==================== 
-       2. 头部 Header (统一样式)
+       2. 头部 Header (统一)
        ==================== */
     header{
       position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
@@ -91,6 +91,22 @@
     body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.05); }
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
+
+    /* === 标签云样式 (新增) === */
+    .tags-section { padding: 0 12px; margin-top: 16px; margin-bottom: 16px; }
+    .tags-title { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; font-weight: bold; opacity: 0.8; }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag-btn {
+      font-size: 0.8rem; padding: 4px 10px;
+      background: rgba(0,0,0,0.04); color: var(--muted);
+      border-radius: 12px; cursor: pointer;
+      transition: all 0.2s; border: 1px solid transparent;
+    }
+    body.dark .tag-btn { background: rgba(255,255,255,0.08); color: var(--muted-dark); }
+    .tag-btn:hover, .tag-btn.active {
+      background: var(--accent); color: #fff;
+      transform: translateY(-1px); box-shadow: 0 2px 5px rgba(184, 156, 122, 0.3);
+    }
 
     /* ==================== 
        5. 首页特有内容
@@ -174,6 +190,14 @@
         作者简介
       </a>
     </div>
+
+    <div class="tags-section">
+      <div class="tags-title">标签云</div>
+      <div id="tagCloud" class="tag-cloud">
+        <span style="font-size:0.8rem;color:var(--muted);">Loading...</span>
+      </div>
+    </div>
+
     <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
     <div class="nav-group">
       <button id="toggleDarkMode">
@@ -219,6 +243,7 @@
     const randomPoemBtn = document.getElementById('randomPoemBtn');
     const poemsGrid = document.getElementById('poemsGrid');
     const latestBadge = document.getElementById('latestBadge');
+    const tagCloud = document.getElementById('tagCloud');
 
     let poemsList = [];
 
@@ -263,29 +288,70 @@
       }
     });
 
-    // 搜索过滤逻辑
+    // 搜索与标签筛选逻辑
     searchInput.addEventListener('keyup', (e)=>{
+      // 输入文字时清除标签高亮
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
       filterPoemCards(searchInput.value.trim());
       if(e.key === 'Escape'){ closeSearch(); }
     });
 
-    function filterPoemCards(q){
+    function filterPoemCards(q, isTag = false){
       const ql = (q||'').toLowerCase();
+      
       if(!ql) {
         renderPoemsGrid(poemsList.slice(0, 10)); // 默认显示前10
         if(poemsList.length > 0) latestBadge.innerText = poemsList[0].title;
         return;
       }
+
       const filtered = poemsList.filter(p => {
-        const t = (p.title || '').toLowerCase();
-        const c = (p.preview || p.excerpt || '').toLowerCase();
-        return t.includes(ql) || c.includes(ql);
+        if(isTag){
+          // 精确匹配标签
+          return p.tags && p.tags.includes(q);
+        } else {
+          // 模糊匹配标题、内容、标签
+          const t = (p.title || '').toLowerCase();
+          const c = (p.preview || p.excerpt || '').toLowerCase();
+          const tagStr = (p.tags || []).join(' ').toLowerCase();
+          return t.includes(ql) || c.includes(ql) || tagStr.includes(ql);
+        }
       });
+      
       renderPoemsGrid(filtered);
-      latestBadge.innerText = `找到 ${filtered.length} 篇`;
+      latestBadge.innerText = isTag ? `标签: #${q}` : `搜索: ${q}`;
     }
 
-    // 加载 poems.json 并处理外部跳转参数
+    // 渲染标签云
+    function renderTags(poems) {
+      if(!tagCloud) return;
+      const tagsMap = {};
+      poems.forEach(p => {
+        if(p.tags){
+          p.tags.forEach(t => tagsMap[t] = (tagsMap[t] || 0) + 1);
+        }
+      });
+      // 按数量排序
+      const sortedTags = Object.keys(tagsMap).sort((a,b) => tagsMap[b] - tagsMap[a]);
+
+      tagCloud.innerHTML = '';
+      sortedTags.forEach(tag => {
+        const btn = document.createElement('span');
+        btn.className = 'tag-btn';
+        btn.textContent = `#${tag}`;
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          filterPoemCards(tag, true);
+          // 移动端点击标签后收起侧边栏
+          if(window.innerWidth < 768) closeSidebar();
+        };
+        tagCloud.appendChild(btn);
+      });
+    }
+
+    // 加载数据
     async function loadPoemsJson(){
       try {
         const res = await fetch('poems/poems.json', {cache:'no-store'});
@@ -293,11 +359,16 @@
         const poems = await res.json();
         poemsList = poems;
 
-        // 检查URL参数 (从关于页/目录页跳过来的搜索)
+        renderTags(poems); // 生成标签
+
+        // 检查URL参数
         const params = new URLSearchParams(window.location.search);
         const query = params.get('q');
+        const tagQuery = params.get('tag');
 
-        if(query){
+        if(tagQuery){
+           filterPoemCards(tagQuery, true);
+        } else if(query){
             searchInput.value = query;
             openSearch();
             filterPoemCards(query);
