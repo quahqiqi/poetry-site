@@ -9,7 +9,7 @@
 
   <style>
     /* ==================== 
-       1. 全局变量 (与 About/Index 完全一致)
+       1. 全局变量 (保持一致)
        ==================== */
     :root{
       --bg: #fdf6e3;
@@ -30,7 +30,7 @@
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
     /* ==================== 
-       2. 头部 Header (完全一致)
+       2. 头部 Header (保持一致)
        ==================== */
     header{
       position:sticky; top:0; z-index:1200;
@@ -64,7 +64,7 @@
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
     /* ==================== 
-       3. 搜索面板 (完全一致)
+       3. 搜索面板 (保持一致)
        ==================== */
     .search-panel{
       position:absolute; top:calc(100% + 10px); right:16px;
@@ -82,19 +82,13 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
       border: 1px solid rgba(255,255,255,0.05);
     }
-    
     .search-panel input{
-      width:100%; padding:12px 18px; border-radius:99px; /* 胶囊圆角 */
+      width:100%; padding:12px 18px; border-radius:99px;
       border:2px solid transparent; font-size:0.95rem; outline:none;
-      background:rgba(0, 0, 0, 0.04); color:inherit;
-      transition: all 0.2s ease;
+      background:rgba(0, 0, 0, 0.04); color:inherit; transition: all 0.2s ease;
     }
     body.dark .search-panel input{ background:rgba(255,255,255,0.08); }
-
-    .search-panel input:focus{
-      background:#fff; border-color:var(--accent);
-      box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15);
-    }
+    .search-panel input:focus{ background:#fff; border-color:var(--accent); box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15); }
     body.dark .search-panel input:focus{ background:#2a2a2a; }
 
     @keyframes slideDown {
@@ -103,7 +97,7 @@
     }
 
     /* ==================== 
-       4. 侧边栏 Sidebar (完全一致)
+       4. 侧边栏 (保持一致)
        ==================== */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
@@ -118,53 +112,79 @@
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
       font-size:1rem; transition: background 0.2s;
     }
-    /* SVG 统一粗细 */
     .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
-    
     .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); color: var(--accent); }
     body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.05); }
-
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
     /* ==================== 
-       5. 目录页专属样式
+       5. 目录页美化 (Clean & Elegant)
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
-    .toc-header { text-align: center; margin-bottom: 30px; }
-    .toc-header h2 { margin: 0 0 8px 0; font-size: 1.5rem; color: var(--muted); }
-    .toc-header p { margin: 0; font-size: 0.9rem; color: var(--accent); opacity: 0.8; }
-
-    /* 本地筛选框 */
-    .toc-filter-container { max-width: 400px; margin: 0 auto 30px; position: relative; }
-    .toc-filter-input {
-      width: 100%; padding: 10px 16px 10px 40px; 
-      border-radius: 8px; border: 1px solid var(--border);
-      background: var(--card); color: inherit; font-family: inherit; transition: all 0.2s;
+    /* 顶部标题区 */
+    .toc-header {
+      text-align: center; margin-bottom: 40px; padding-bottom: 20px;
+      border-bottom: 1px dashed var(--border);
     }
-    .toc-filter-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(184, 156, 122, 0.1); }
-    body.dark .toc-filter-input { background: var(--card-dark); border-color: var(--border-dark); }
-    
-    .filter-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    .toc-header h2 { margin: 0 0 8px 0; font-size: 1.6rem; color: var(--muted); font-weight: normal; }
+    .toc-header p { margin: 0; font-size: 0.95rem; color: var(--accent); letter-spacing: 1px; }
 
-    /* 列表网格 */
-    .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    /* 美化后的网格 */
+    .toc-grid {
+      display: grid;
+      /* 自动适应宽度，每列最小180px，看起来像精致的卡片 */
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+      gap: 16px;
+    }
 
     .toc-item {
-      display: block; background: var(--card); padding: 16px; border-radius: 8px;
-      text-decoration: none; color: var(--text); border: 1px solid transparent;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px 20px;
+      background: var(--card);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid transparent;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
     }
-    body.dark .toc-item { background: var(--card-dark); border-color: rgba(255,255,255,0.05); }
+    body.dark .toc-item { background: var(--card-dark); border-color: rgba(255,255,255,0.03); }
 
-    .toc-item:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.06); border-color: var(--accent); }
-    .toc-item:hover .toc-title { color: var(--accent); }
+    /* 悬停效果：轻微上浮，边框变色 */
+    .toc-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+      border-color: var(--accent);
+      z-index: 2;
+    }
 
-    .toc-num { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; display: block; opacity: 0.6; }
-    .toc-title { font-size: 1.05rem; font-weight: 700; margin: 0; line-height: 1.4; transition: color 0.2s; }
+    .toc-num {
+      font-size: 0.85rem;
+      color: var(--accent); /* 使用主题色 */
+      opacity: 0.6;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-family: sans-serif;
+    }
+
+    .toc-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    body.dark .toc-title { color: var(--muted-dark); }
     
-    .no-result { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted); display: none; }
+    .toc-item:hover .toc-title {
+      color: var(--accent); /* 悬停时标题也变色 */
+    }
 
     footer{ margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity:0.8; }
   </style>
@@ -220,12 +240,7 @@
   <main>
     <div class="toc-header">
       <h2>诗集目录</h2>
-      <p>共收录 50 首 · 点击标题阅读</p>
-    </div>
-
-    <div class="toc-filter-container">
-      <svg class="filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input type="text" id="tocFilter" class="toc-filter-input" placeholder="在列表中快速筛选..." autocomplete="off">
+      <p>共收录 50 首 · 记录生活的点滴</p>
     </div>
 
     <div class="toc-grid" id="tocGrid">
@@ -279,8 +294,6 @@
       <a href="poems/poem48.html" class="toc-item"><span class="toc-num">48.</span><span class="toc-title">如果我说的都不是真的</span></a>
       <a href="poems/poem49.html" class="toc-item"><span class="toc-num">49.</span><span class="toc-title">堂吉诃德</span></a>
       <a href="poems/poem50.html" class="toc-item"><span class="toc-num">50.</span><span class="toc-title">鸟屎</span></a>
-      
-      <div class="no-result" id="noResult">没有找到匹配的诗歌</div>
     </div>
   </main>
 
@@ -296,7 +309,7 @@
     const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
     const randomPoemBtn = document.getElementById('randomPoemBtn');
 
-    // --- 通用交互 (复制自 about.html) ---
+    // --- 交互逻辑 (与 About/Index 保持一致) ---
     function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
     function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
     function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
@@ -318,34 +331,12 @@
       if(e.key === 'Escape'){ closeSearch(); closeSidebar(); }
     });
 
-    // 头部搜索 -> 跳转到 Index (保持一致性)
+    // 头部搜索 -> 跳转到 Index
     searchInput.addEventListener('keyup', (e)=>{
       if(e.key === 'Enter'){
         const val = searchInput.value.trim();
         if(val) window.location.href = 'index.html?q=' + encodeURIComponent(val);
       }
-    });
-
-    // --- 本地筛选功能 (New Feature) ---
-    const tocFilter = document.getElementById('tocFilter');
-    const tocItems = document.querySelectorAll('.toc-item');
-    const noResult = document.getElementById('noResult');
-
-    tocFilter.addEventListener('keyup', ()=>{
-      const q = tocFilter.value.trim().toLowerCase();
-      let visibleCount = 0;
-
-      tocItems.forEach(item => {
-        const text = item.innerText.toLowerCase();
-        if(text.includes(q)){
-          item.style.display = 'block';
-          visibleCount++;
-        } else {
-          item.style.display = 'none';
-        }
-      });
-      
-      noResult.style.display = (visibleCount === 0) ? 'block' : 'none';
     });
 
     // --- 杂项 ---
@@ -355,4 +346,11 @@
       try{ localStorage.setItem('site-dark', enabled?'1':'0'); }catch(e){}
     });
     randomPoemBtn.addEventListener('click', ()=>{
-      const i = Math.floor(Math.rando
+      const i = Math.floor(Math.random()*49)+1;
+      window.location.href = 'poems/poem' + String(i).padStart(2,'0') + '.html';
+    });
+
+    (function init(){ loadDarkMode(); document.getElementById('year').textContent = new Date().getFullYear(); })();
+  </script>
+</body>
+</html>
