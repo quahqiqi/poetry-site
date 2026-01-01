@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta name="google-site-verification" content="Jmg21UHrR3PnnXpixUqiImr3md0w94_voZSFNLw_2Ls" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>一个青年的天马行空</title>
   <link rel="icon" href="favicon.ico" />
@@ -231,10 +232,9 @@
       });
     }
 
-    // 初始化加载
+    // 初始化加载 (带缓存刷新和错误弹窗)
     async function loadPoemsJson(){
       try {
-        // 关键点：加时间戳强制刷新缓存
         const res = await fetch('poems/poems.json?t=' + new Date().getTime());
         if(!res.ok) throw new Error('Status: '+res.status);
         poemsList = await res.json();
@@ -246,8 +246,7 @@
         else if(p.get('tag')) { filterPoems(p.get('tag'), true); }
         else { renderGrid(poemsList.slice(0, 10)); if(poemsList[0]) latestBadge.innerText = poemsList[0].title; }
       } catch(err) {
-        // 如果出错，弹窗提示
-        alert("无法加载 poems/poems.json 文件！\n请检查文件是否上传，或JSON格式是否正确。\n\n错误信息: " + err.message);
+        alert("无法加载 poems/poems.json！\n请检查文件是否上传，或JSON格式是否正确。\n错误: " + err.message);
         latestBadge.innerText = "加载失败";
         latestBadge.style.color = "red";
       }
