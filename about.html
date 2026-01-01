@@ -2,254 +2,180 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta name="google-site-verification" content="Jmg21UHrR3PnnXpixUqiImr3md0w94_voZSFNLw_2Ls" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>关于作者 - 一个青年的天马行空</title>
+  <title>一个青年的天马行空</title>
   <link rel="icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ==================== 
-       1. 全局变量 
-       ==================== */
+    /* === 1. 全局变量 === */
     :root{
-      --bg: #fdf6e3;
-      --card: #fff;
-      --muted: #6d5850;
-      --accent: #b89c7a;
-      --border: #d7cdbd;
-      --bg-dark: #121212;
-      --card-dark: #1e1e1e;
-      --muted-dark: #d4d4d4;
-      --border-dark: #333;
-      --max-w: 1100px;
-      --sidebar-width: 280px;
+      --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
+      --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
+      --max-w: 1100px; --sidebar-width: 280px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', "思源宋体", serif; -webkit-font-smoothing:antialiased;}
+    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', serif;}
     body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
-    /* ==================== 
-       新增：页面入场动画 
-       ==================== */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    main {
-      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
-      opacity: 0; 
-    }
+    /* 动画 */
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    main { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
 
-    /* ==================== 
-       2. 头部 Header (统一)
-       ==================== */
+    /* === 2. Header === */
     header{
-      position:sticky; top:0; z-index:1200;
-      display:flex; align-items:center; justify-content:center;
-      padding:12px 20px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
-      border-bottom:1px solid var(--border);
-      backdrop-filter: blur(8px);
+      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
+      padding:12px 20px; background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
+      border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
     }
-    body.dark header{
-      background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95));
-      border-color:var(--border-dark);
-    }
+    body.dark header{ background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95)); border-color:var(--border-dark); }
 
-    .icon-btn{
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer;
-      display:inline-flex; align-items:center; justify-content:center; color:inherit;
-      transition: background 0.2s;
-    }
-    .icon-btn:hover{ background: rgba(0,0,0,0.05); }
-    .menu-btn{ left:16px; }
-    .search-btn{ right:16px; }
-
-    .logo-title{
-      display:flex; align-items:center; justify-content:center; gap:10px;
-      max-width:var(--max-w); width:100%;
-    }
-    .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer; color:inherit; }
+    .menu-btn{ left:16px; } .search-btn{ right:16px; }
+    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; }
+    .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; }
     .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* Search Panel */
+    /* === 3. Search Panel === */
     .search-panel{
-      position:absolute; top:calc(100% + 10px); right:16px;
-      width:320px; max-width:calc(100% - 40px);
-      background:rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-radius:16px; padding:10px;
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,0.03);
-      display:none; z-index:1300;
-      animation: slideDown 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-      transform-origin: top right;
+      position:absolute; top:calc(100% + 10px); right:16px; width:320px; max-width:calc(100% - 40px);
+      background:rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-radius:16px; padding:10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1); display:none; z-index:1300;
     }
-    body.dark .search-panel{ 
-      background:rgba(30, 30, 30, 0.95); 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    
-    .search-panel input{
-      width:100%; padding:12px 18px; border-radius:99px; /* 胶囊圆角 */
-      border:2px solid transparent; font-size:0.95rem; outline:none;
-      background:rgba(0, 0, 0, 0.04); color:inherit;
-      transition: all 0.2s ease;
-    }
-    body.dark .search-panel input{ background:rgba(255,255,255,0.08); }
+    body.dark .search-panel{ background:rgba(30,30,30,0.95); border:1px solid rgba(255,255,255,0.1); }
+    .search-panel input{ width:100%; padding:12px 18px; border-radius:99px; border:none; background:rgba(0,0,0,0.05); color:inherit; outline:none; }
+    body.dark .search-panel input{ background:rgba(255,255,255,0.1); }
 
-    .search-panel input:focus{
-      background:#fff; border-color:var(--accent);
-      box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15);
-    }
-    body.dark .search-panel input:focus{ background:#2a2a2a; }
-
-    @keyframes slideDown {
-      0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ==================== 
-       4. 侧边栏 Sidebar (统一)
-       ==================== */
+    /* === 4. Sidebar (与 About 统一) === */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
-      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; overflow-y: auto;
     }
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
-    .sidebar .nav-group{ margin-bottom:12px; }
     
-    .sidebar a, .sidebar button{
-      display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:12px; margin:6px 0;
-      border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
-      font-size:1rem; transition: background 0.2s;
+    /* 侧边栏通用按钮样式 */
+    .nav-item {
+      display:flex; align-items:center; gap:12px; width:100%; padding:12px; margin:6px 0;
+      border-radius:8px; background:transparent; color:inherit; text-decoration:none; 
+      border:none; cursor:pointer; font-size:1rem; font-family: inherit; text-align: left;
+      transition: background 0.2s;
     }
-    .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
+    .nav-item svg { width:22px; height:22px; flex-shrink: 0; stroke-width: 2px; }
     
-    .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); color: var(--accent); }
-    body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.05); }
+    .nav-item:hover, .nav-item.open { background: rgba(0,0,0,0.05); color: var(--accent); }
+    body.dark .nav-item:hover, body.dark .nav-item.open { background: rgba(255,255,255,0.05); }
+    
+    /* 当前页高亮 */
+    .nav-item.active { background: rgba(0,0,0,0.05); color: var(--accent); font-weight: 600; }
+    body.dark .nav-item.active { background: rgba(255,255,255,0.08); }
 
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
-    /* ==================== 
-       5. 关于页面特有内容
-       ==================== */
+    /* === 标签云展开区域 === */
+    .tag-cloud-container {
+      overflow: hidden; max-height: 0; transition: max-height 0.3s ease;
+      padding-left: 12px; /* 稍微缩进一点 */
+    }
+    .tag-cloud-container.open { max-height: 500px; margin-bottom: 10px; }
+    
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .tag-btn { 
+      font-size: 0.85rem; padding: 4px 10px; background: rgba(0,0,0,0.04); 
+      border-radius: 12px; cursor: pointer; color: var(--muted); border: 1px solid transparent; 
+    }
+    body.dark .tag-btn { background: rgba(255,255,255,0.08); color: var(--muted-dark); }
+    .tag-btn.active { background: var(--accent); color: #fff; }
+    
+    /* 箭头旋转 */
+    .chevron-icon { margin-left: auto; transition: transform 0.3s; width:16px!important; height:16px!important; opacity: 0.6; }
+    .nav-item.open .chevron-icon { transform: rotate(180deg); }
+
+    /* === 5. Content === */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
+    .intro{ padding:24px; border-radius:16px; background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5)); border: 1px solid rgba(255,255,255,0.5); display:flex; justify-content:space-between; align-items:center; box-shadow:0 8px 24px rgba(0,0,0,0.05); }
+    body.dark .intro{ background: linear-gradient(135deg, rgba(30,30,30,0.8), rgba(30,30,30,0.5)); border-color: rgba(255,255,255,0.05); }
+    .intro h2{ margin:0 0 8px 0; font-size:1.2rem; }
+    .intro p{ margin:0; color:var(--muted); font-size:0.95rem; }
+    .latest-badge { display:inline-block; padding: 4px 12px; background: rgba(184, 156, 122, 0.15); color: var(--accent); border-radius: 99px; font-weight: 700; font-size: 0.9rem; }
 
-    .author-section {
-      text-align: center;
-      background: var(--card);
-      padding: 40px 20px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-    }
-    body.dark .author-section { background: var(--card-dark); }
-
-    .author-photo {
-      width: 200px; height: 200px;
-      object-fit: cover; display: block; margin: 0 auto 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 4px;
-    }
-
-    .author-text { max-width: 700px; margin: 0 auto; text-align: left; }
-    .author-text p { margin-bottom: 1.2em; line-height: 1.8; font-size: 1.05rem; color: var(--muted); }
-    body.dark .author-text p { color: var(--muted-dark); }
+    #poemsGrid{ margin-top:24px; display:grid; gap:20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .poem-card{ background:var(--card); border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.05); transition:transform .3s; }
+    body.dark .poem-card{ background:var(--card-dark); box-shadow:none; border:1px solid rgba(255,255,255,0.05); }
+    .poem-card:hover{ transform:translateY(-5px); }
+    .poem-cover{ width:100%; height:160px; object-fit:cover; background:#efe7da; display:block; }
+    .poem-body{ padding:16px; }
+    .poem-body h3{ margin:0 0 10px; font-size:1.05rem; }
+    .poem-body h3 a { text-decoration:none; color:inherit; }
+    .poem-body p{ margin:0; color:var(--muted); font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .poem-meta{ margin-top:14px; font-size:0.85rem; color:var(--accent); font-weight: 600; text-align: right; }
     
-    .contact-info { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
-    body.dark .contact-info { border-color: var(--border-dark); }
-    .contact-info ul { list-style: none; padding: 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-    .contact-info a { color: var(--accent); text-decoration: none; font-weight: 600; }
-    
-    .btn-back {
-      display: inline-block; margin-top: 30px; padding: 10px 24px;
-      background-color: var(--accent); color: white; text-decoration: none;
-      border-radius: 6px; font-weight: 600; transition: background-color 0.3s;
-    }
-    .btn-back:hover { background-color: #a67d56; }
-
-    footer{ max-width:var(--max-w); margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity:0.8; }
+    footer{ margin:40px auto; text-align:center; color:var(--muted); font-size:0.9rem; opacity:0.8; }
+    @media (max-width:640px){ .intro{ flex-direction:column; align-items:flex-start; } .intro div:last-child{ margin-top:10px; } }
   </style>
 </head>
 <body>
 
   <header>
-    <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-    </button>
-
-    <div class="logo-title">
-      <img src="assets/img/logo.png" alt="logo" id="siteLogo">
-      <h1>一个青年的天马行空</h1>
-    </div>
-
-    <button class="icon-btn search-btn" id="searchBtn" aria-label="搜索">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-    </button>
-
-    <div class="search-panel" id="searchPanel">
-      <input id="searchInput" type="text" placeholder="输入关键词，回车跳转至首页搜索..." autocomplete="off"/>
-    </div>
+    <button class="icon-btn menu-btn" id="menuBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+    <div class="logo-title"><img src="assets/img/logo.png" alt="logo"><h1>一个青年的天马行空</h1></div>
+    <button class="icon-btn search-btn" id="searchBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="输入关键词..." autocomplete="off"/></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <div class="nav-group">
-      <a href="index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
+    <div style="margin-bottom:12px">
+      <a href="index.html" class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
         首页
       </a>
-      <a href="toc.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+      <a href="toc.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
         目录
       </a>
-      <a href="about.html" style="background: rgba(0,0,0,0.05); color:var(--accent);">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
+      <a href="about.html" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
         作者简介
       </a>
+
+      <button class="nav-item open" onclick="toggleTags(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+        标签
+        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+      
+      <div id="tagCloudContainer" class="tag-cloud-container open">
+        <div id="tagCloud" class="tag-cloud">
+          <span style="font-size:0.8rem;color:var(--muted);">加载中...</span>
+        </div>
+      </div>
     </div>
-    <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
-    <div class="nav-group">
-      <button id="toggleDarkMode">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+
+    <hr style="border-top:1px solid var(--border); margin:10px 0;">
+    
+    <div>
+      <button id="toggleDarkMode" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         夜间模式
       </button>
-      <button id="randomPoemBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
+      <button id="randomPoemBtn" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
         随机一首
       </button>
     </div>
   </aside>
-
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <section class="author-section">
-      <img src="assets/img/author.jpg" alt="作者启宏" class="author-photo" />
-      <h2 style="margin-top:0; margin-bottom:10px;">关于作者</h2>
-      <p style="color:var(--accent); font-weight:bold; margin-bottom:20px;">启宏，其人其诗</p>
-      
-      <div class="author-text">
-        <p>我是启宏，来自马来西亚雪兰莪。</p>
-        <p>从小就喜欢思考，也总是对文字怀抱敬意。小时候，在一次偶然的阅读中遇见了新诗，那是我第一次发现，原来文字可以这样自由——不拘格律，却能直达心灵。那一刻起，我便爱上了它。</p>
-        <p>中学时期，我开始尝试写诗。新诗对我来说陌生又亲切，它成了我情绪的出口、思想的栖身处。</p>
-        <p>我的作品也许还有许多不足，身边鲜有人可请教，于是我用了这样一种笨拙的方式——将诗放在这里，邀请你阅读，欢迎你批评指正。</p>
-        <p>你们的每一句意见，都是我诗路上的灯火。在此，深深致谢。</p>
-      </div>
-
-      <div class="contact-info">
-        <h3>联系方式</h3>
-        <ul>
-          <li>IG: <a href="https://www.instagram.com/galiambuqq/" target="_blank">@galiambuqq</a></li>
-          <li>邮箱: <a href="mailto:qihongpoet@gmail.com">qihongpoet@gmail.com</a></li>
-        </ul>
-      </div>
-
-      <a href="index.html" class="btn-back">返回首页</a>
+    <section class="intro">
+      <div><h2>欢迎来到我的诗集网站</h2><p>这里收录了我的每一段心灵独白和奇思妙想。</p></div>
+      <div><span id="latestBadge" class="latest-badge">Loading...</span></div>
     </section>
+    <section id="poemsGrid"></section>
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
@@ -263,50 +189,115 @@
     const searchInput = document.getElementById('searchInput');
     const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
     const randomPoemBtn = document.getElementById('randomPoemBtn');
+    const poemsGrid = document.getElementById('poemsGrid');
+    const latestBadge = document.getElementById('latestBadge');
+    const tagCloud = document.getElementById('tagCloud');
+    const tagContainer = document.getElementById('tagCloudContainer');
 
+    let poemsList = [];
+
+    // 交互逻辑
+    function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
     function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
     function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
-    function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
-    
+    function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
     function openSearch(){ searchPanel.style.display='block'; setTimeout(()=>searchInput.focus(),60); }
-    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; }
-    function toggleSearch(){ searchPanel.style.display==='block' ? closeSearch() : openSearch(); }
+    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; filterPoems(''); }
+
+    function toggleTags(btn) {
+      btn.classList.toggle('open');
+      tagContainer.classList.toggle('open');
+    }
 
     menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
-    backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
     searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
-    
-    document.addEventListener('click', (e)=>{
-      if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !menuBtn.contains(e.target)){ closeSidebar(); }
-      if(searchPanel.style.display==='block' && !searchPanel.contains(e.target) && !searchBtn.contains(e.target)){ closeSearch(); }
-    });
-
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape'){ closeSearch(); closeSidebar(); }
-    });
-
-    // 搜索逻辑：关于页没有内容，所以跳转回首页
-    searchInput.addEventListener('keyup', (e)=>{
-      if(e.key === 'Enter'){
-        const val = searchInput.value.trim();
-        if(val){
-          window.location.href = 'index.html?q=' + encodeURIComponent(val);
-        }
-      }
-    });
-
-    function loadDarkMode(){ if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark'); }
+    backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
     toggleDarkModeBtn.addEventListener('click', ()=>{
-      const enabled = document.body.classList.toggle('dark');
-      try{ localStorage.setItem('site-dark', enabled?'1':'0'); }catch(e){}
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('site-dark', isDark?'1':'0');
     });
-
     randomPoemBtn.addEventListener('click', ()=>{
-      const i = Math.floor(Math.random()*49)+1;
-      window.location.href = 'poems/poem' + String(i).padStart(2,'0') + '.html';
+      if(poemsList.length>0) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
     });
 
-    (function init(){ loadDarkMode(); document.getElementById('year').textContent = new Date().getFullYear(); })();
+    function filterPoems(q, isTag=false){
+      const ql = (q||'').toLowerCase();
+      if(!ql) { renderGrid(poemsList.slice(0, 10)); if(poemsList[0]) latestBadge.innerText = poemsList[0].title; return; }
+      const filtered = poemsList.filter(p => {
+        if(isTag) return p.tags && p.tags.includes(q);
+        return (p.title+p.preview+(p.tags||[]).join(' ')).toLowerCase().includes(ql);
+      });
+      renderGrid(filtered);
+      latestBadge.innerText = isTag ? `标签: #${q}` : `搜索: ${q}`;
+    }
+
+    searchInput.addEventListener('keyup', ()=>{ 
+      document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+      filterPoems(searchInput.value.trim()); 
+    });
+
+    function renderGrid(list){
+      poemsGrid.innerHTML = '';
+      if(list.length===0){ poemsGrid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--muted)">没有找到内容</p>'; return; }
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'poem-card';
+        card.innerHTML = `
+          <a href="poems/${p.file}" style="display:block;text-decoration:none">
+            <img class="poem-cover" src="${p.img}" onerror="this.src='assets/img/logo.png'">
+          </a>
+          <div class="poem-body">
+            <h3><a href="poems/${p.file}">${p.title}</a></h3>
+            <p>${p.preview}</p>
+            <div class="poem-meta">阅读全文 →</div>
+          </div>
+        `;
+        poemsGrid.appendChild(card);
+      });
+    }
+
+    function renderTags(){
+      if(!tagCloud) return;
+      const map = {};
+      poemsList.forEach(p=> (p.tags||[]).forEach(t=> map[t]=(map[t]||0)+1));
+      tagCloud.innerHTML = '';
+      Object.keys(map).sort((a,b)=>map[b]-map[a]).forEach(t=>{
+        const btn = document.createElement('span');
+        btn.className = 'tag-btn';
+        btn.innerText = `#${t}`;
+        btn.onclick = (e)=>{ 
+          e.stopPropagation(); 
+          document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          filterPoems(t, true);
+          if(window.innerWidth<768) closeSidebar();
+        };
+        tagCloud.appendChild(btn);
+      });
+    }
+
+    async function loadPoemsJson(){
+      try {
+        const res = await fetch('poems/poems.json?t=' + new Date().getTime());
+        if(!res.ok) throw new Error('Status: '+res.status);
+        poemsList = await res.json();
+        renderTags();
+        const p = new URLSearchParams(window.location.search);
+        if(p.get('q')) { searchInput.value=p.get('q'); filterPoems(p.get('q')); }
+        else if(p.get('tag')) { filterPoems(p.get('tag'), true); }
+        else { renderGrid(poemsList.slice(0, 10)); if(poemsList[0]) latestBadge.innerText = poemsList[0].title; }
+      } catch(err) {
+        alert("无法加载 poems/poems.json，请检查文件是否存在！");
+        latestBadge.innerText = "加载失败";
+        latestBadge.style.color = "red";
+      }
+    }
+
+    (function(){
+      if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
+      document.getElementById('year').innerText = new Date().getFullYear();
+      loadPoemsJson();
+    })();
   </script>
 </body>
 </html>
