@@ -9,20 +9,12 @@
 
   <style>
     /* ==================== 
-       1. 全局变量 (保持一致)
+       1. 全局变量 
        ==================== */
     :root{
-      --bg: #fdf6e3;
-      --card: #fff;
-      --muted: #6d5850;
-      --accent: #b89c7a;
-      --border: #d7cdbd;
-      --bg-dark: #121212;
-      --card-dark: #1e1e1e;
-      --muted-dark: #d4d4d4;
-      --border-dark: #333;
-      --max-w: 1100px;
-      --sidebar-width: 280px;
+      --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
+      --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
+      --max-w: 1100px; --sidebar-width: 280px;
     }
     *{box-sizing:border-box}
     html,body{height:100%; margin:0; font-family: 'Noto Serif SC', "思源宋体", serif; -webkit-font-smoothing:antialiased;}
@@ -30,74 +22,56 @@
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
     /* ==================== 
-       2. 头部 Header (保持一致)
+       新增：页面入场动画 
+       ==================== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    main {
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+      opacity: 0; 
+    }
+
+    /* ==================== 
+       2. 头部 Header (统一)
        ==================== */
     header{
-      position:sticky; top:0; z-index:1200;
-      display:flex; align-items:center; justify-content:center;
-      padding:12px 20px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
-      border-bottom:1px solid var(--border);
-      backdrop-filter: blur(8px);
+      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
+      padding:12px 20px; background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
+      border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
     }
-    body.dark header{
-      background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95));
-      border-color:var(--border-dark);
-    }
+    body.dark header{ background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95)); border-color:var(--border-dark); }
 
     .icon-btn{
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer;
-      display:inline-flex; align-items:center; justify-content:center; color:inherit;
-      transition: background 0.2s;
+      position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center; color:inherit; transition: background 0.2s;
     }
     .icon-btn:hover{ background: rgba(0,0,0,0.05); }
-    .menu-btn{ left:16px; }
-    .search-btn{ right:16px; }
+    .menu-btn{ left:16px; } .search-btn{ right:16px; }
 
-    .logo-title{
-      display:flex; align-items:center; justify-content:center; gap:10px;
-      max-width:var(--max-w); width:100%;
-    }
+    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; max-width:var(--max-w); width:100%; }
     .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
     .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* ==================== 
-       3. 搜索面板 (保持一致)
-       ==================== */
+    /* Search Panel */
     .search-panel{
-      position:absolute; top:calc(100% + 10px); right:16px;
-      width:320px; max-width:calc(100% - 40px);
-      background:rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      position:absolute; top:calc(100% + 10px); right:16px; width:320px; max-width:calc(100% - 40px);
+      background:rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-radius:16px; padding:10px;
       box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,0.03);
-      display:none; z-index:1300;
-      animation: slideDown 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1);
-      transform-origin: top right;
+      display:none; z-index:1300; animation: slideDown 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1); transform-origin: top right;
     }
-    body.dark .search-panel{ 
-      background:rgba(30, 30, 30, 0.95); 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .search-panel input{
-      width:100%; padding:12px 18px; border-radius:99px;
-      border:2px solid transparent; font-size:0.95rem; outline:none;
-      background:rgba(0, 0, 0, 0.04); color:inherit; transition: all 0.2s ease;
-    }
+    body.dark .search-panel{ background:rgba(30, 30, 30, 0.95); box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); }
+    .search-panel input{ width:100%; padding:12px 18px; border-radius:99px; border:2px solid transparent; font-size:0.95rem; outline:none; background:rgba(0,0,0,0.04); color:inherit; transition: all 0.2s ease; }
     body.dark .search-panel input{ background:rgba(255,255,255,0.08); }
     .search-panel input:focus{ background:#fff; border-color:var(--accent); box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15); }
     body.dark .search-panel input:focus{ background:#2a2a2a; }
-
-    @keyframes slideDown {
-      0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    @keyframes slideDown { 0% { opacity: 0; transform: translateY(-10px) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
     /* ==================== 
-       4. 侧边栏 (保持一致)
+       4. 侧边栏 Sidebar (统一)
        ==================== */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
@@ -106,7 +80,6 @@
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
     .sidebar .nav-group{ margin-bottom:12px; }
-    
     .sidebar a, .sidebar button{
       display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:12px; margin:6px 0;
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
@@ -119,44 +92,35 @@
     .backdrop.show{ display:block; }
 
     /* ==================== 
-       5. 目录页美化 (Clean & Elegant)
+       5. 目录页专属样式 
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
-    /* 顶部标题区 */
-    .toc-header {
+    .toc-header { 
       text-align: center; margin-bottom: 40px; padding-bottom: 20px;
-      border-bottom: 1px dashed var(--border);
+      border-bottom: 1px dashed var(--border); 
     }
     .toc-header h2 { margin: 0 0 8px 0; font-size: 1.6rem; color: var(--muted); font-weight: normal; }
     .toc-header p { margin: 0; font-size: 0.95rem; color: var(--accent); letter-spacing: 1px; }
 
-    /* 美化后的网格 */
+    /* 纯净网格布局 */
     .toc-grid {
       display: grid;
-      /* 自动适应宽度，每列最小180px，看起来像精致的卡片 */
+      /* 自适应卡片大小 */
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
       gap: 16px;
     }
 
     .toc-item {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 16px 20px;
-      background: var(--card);
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid transparent;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding: 16px 20px; background: var(--card); border-radius: 8px;
+      text-decoration: none; color: var(--text); border: 1px solid transparent;
       box-shadow: 0 2px 6px rgba(0,0,0,0.02);
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       position: relative;
     }
     body.dark .toc-item { background: var(--card-dark); border-color: rgba(255,255,255,0.03); }
 
-    /* 悬停效果：轻微上浮，边框变色 */
     .toc-item:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.06);
@@ -165,26 +129,15 @@
     }
 
     .toc-num {
-      font-size: 0.85rem;
-      color: var(--accent); /* 使用主题色 */
-      opacity: 0.6;
-      font-weight: 700;
-      margin-bottom: 6px;
-      font-family: sans-serif;
+      font-size: 0.85rem; color: var(--accent); opacity: 0.6; font-weight: 700;
+      margin-bottom: 6px; font-family: sans-serif;
     }
-
     .toc-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.4;
-      color: var(--muted);
+      font-size: 1.05rem; font-weight: 700; line-height: 1.4; color: var(--muted);
       transition: color 0.2s;
     }
     body.dark .toc-title { color: var(--muted-dark); }
-    
-    .toc-item:hover .toc-title {
-      color: var(--accent); /* 悬停时标题也变色 */
-    }
+    .toc-item:hover .toc-title { color: var(--accent); }
 
     footer{ margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity:0.8; }
   </style>
@@ -309,7 +262,6 @@
     const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
     const randomPoemBtn = document.getElementById('randomPoemBtn');
 
-    // --- 交互逻辑 (与 About/Index 保持一致) ---
     function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
     function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
     function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
@@ -331,20 +283,22 @@
       if(e.key === 'Escape'){ closeSearch(); closeSidebar(); }
     });
 
-    // 头部搜索 -> 跳转到 Index
+    // 搜索逻辑：目录页没有内容可筛选，所以跳转回首页
     searchInput.addEventListener('keyup', (e)=>{
       if(e.key === 'Enter'){
         const val = searchInput.value.trim();
-        if(val) window.location.href = 'index.html?q=' + encodeURIComponent(val);
+        if(val){
+          window.location.href = 'index.html?q=' + encodeURIComponent(val);
+        }
       }
     });
 
-    // --- 杂项 ---
     function loadDarkMode(){ if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark'); }
     toggleDarkModeBtn.addEventListener('click', ()=>{
       const enabled = document.body.classList.toggle('dark');
       try{ localStorage.setItem('site-dark', enabled?'1':'0'); }catch(e){}
     });
+
     randomPoemBtn.addEventListener('click', ()=>{
       const i = Math.floor(Math.random()*49)+1;
       window.location.href = 'poems/poem' + String(i).padStart(2,'0') + '.html';
