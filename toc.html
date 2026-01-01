@@ -1,78 +1,377 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>目录 | 一个青年的天马行空</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <title>目录 - 一个青年的天马行空</title>
+  <link rel="icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==================== 
+       1. 全局变量 (保持统一)
+       ==================== */
+    :root{
+      --bg: #fdf6e3;
+      --card: #fff;
+      --muted: #6d5850;
+      --accent: #b89c7a;
+      --border: #d7cdbd;
+      --bg-dark: #121212;
+      --card-dark: #1e1e1e;
+      --muted-dark: #d4d4d4;
+      --border-dark: #333;
+      --max-w: 1100px;
+      --sidebar-width: 280px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', "思源宋体", serif; -webkit-font-smoothing:antialiased;}
+    body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
+    body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
+
+    /* ==================== 
+       2. 头部 Header (保持统一)
+       ==================== */
+    header{
+      position:sticky; top:0; z-index:1200;
+      display:flex; align-items:center; justify-content:center;
+      padding:12px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
+      border-bottom:1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+    body.dark header{
+      background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95));
+      border-color:var(--border-dark);
+    }
+
+    .icon-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center; color:inherit;
+      transition: background 0.2s;
+    }
+    .icon-btn:hover{ background: rgba(0,0,0,0.05); }
+    .menu-btn{ left:16px; }
+    .search-btn{ right:16px; }
+
+    .logo-title{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      max-width:var(--max-w); width:100%;
+    }
+    .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
+    body.dark .logo-title h1{ color:var(--muted-dark); }
+
+    /* ==================== 
+       3. 搜索面板 (保持统一)
+       ==================== */
+    .search-panel{
+      position:absolute; top:calc(100% + 10px); right:16px;
+      width:320px; max-width:calc(100% - 40px);
+      background:rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-radius:16px; padding:10px;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0,0,0,0.03);
+      display:none; z-index:1300;
+      animation: slideDown 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      transform-origin: top right;
+    }
+    body.dark .search-panel{ 
+      background:rgba(30, 30, 30, 0.95); 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .search-panel input{
+      width:100%; padding:12px 18px; border-radius:99px;
+      border:2px solid transparent; font-size:0.95rem; outline:none;
+      background:rgba(0, 0, 0, 0.04); color:inherit; transition: all 0.2s ease;
+    }
+    body.dark .search-panel input{ background:rgba(255,255,255,0.08); }
+    .search-panel input:focus{ background:#fff; border-color:var(--accent); box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15); }
+    body.dark .search-panel input:focus{ background:#2a2a2a; }
+
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ==================== 
+       4. 侧边栏 (保持统一)
+       ==================== */
+    .sidebar{
+      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250;
+    }
+    body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
+    .sidebar.active{ left:0; }
+    .sidebar .nav-group{ margin-bottom:12px; }
+    
+    .sidebar a, .sidebar button{
+      display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:12px; margin:6px 0;
+      border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
+      font-size:1rem; transition: background 0.2s;
+    }
+    .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
+    .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); color: var(--accent); }
+    body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.05); }
+    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
+    .backdrop.show{ display:block; }
+
+    /* ==================== 
+       5. 目录页专属样式 (TOC Styles)
+       ==================== */
+    main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
+
+    /* 顶部标题区 */
+    .toc-header {
+      text-align: center; margin-bottom: 30px;
+    }
+    .toc-header h2 { margin: 0 0 8px 0; font-size: 1.5rem; color: var(--muted); }
+    .toc-header p { margin: 0; font-size: 0.9rem; color: var(--accent); opacity: 0.8; }
+
+    /* 快速筛选框 (TOC Filter) */
+    .toc-filter-container {
+      max-width: 400px; margin: 0 auto 30px; position: relative;
+    }
+    .toc-filter-input {
+      width: 100%; padding: 10px 16px 10px 40px; 
+      border-radius: 8px; border: 1px solid var(--border);
+      background: var(--card); color: inherit; font-family: inherit;
+      transition: all 0.2s;
+    }
+    .toc-filter-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(184, 156, 122, 0.1); }
+    body.dark .toc-filter-input { background: var(--card-dark); border-color: var(--border-dark); }
+    
+    .filter-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+
+    /* 列表网格 */
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 响应式网格 */
+      gap: 16px;
+    }
+
+    .toc-item {
+      display: block;
+      background: var(--card);
+      padding: 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid transparent;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+      position: relative; overflow: hidden;
+    }
+    body.dark .toc-item { background: var(--card-dark); border-color: rgba(255,255,255,0.05); }
+
+    .toc-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.06);
+      border-color: var(--accent);
+    }
+    .toc-item:hover .toc-title { color: var(--accent); }
+
+    .toc-num {
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; display: block; font-family: sans-serif; opacity: 0.6;
+    }
+    .toc-title {
+      font-size: 1.05rem; font-weight: 700; margin: 0; line-height: 1.4; transition: color 0.2s;
+    }
+    
+    /* 搜索不到时的提示 */
+    .no-result {
+      grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted); display: none;
+    }
+
+    footer{ margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity:0.8; }
+  </style>
 </head>
 <body>
-  
+
   <header>
-  <h1>诗集目录</h1>
-  <p class="subtitle">点击标题阅读每一首诗</p>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <div class="logo-title">
+      <img src="assets/img/logo.png" alt="logo" id="siteLogo">
+      <h1>一个青年的天马行空</h1>
+    </div>
+    <button class="icon-btn search-btn" id="searchBtn" aria-label="搜索">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </button>
+    <div class="search-panel" id="searchPanel">
+      <input id="searchInput" type="text" placeholder="全局搜索：输入关键词回车..." autocomplete="off"/>
+    </div>
   </header>
-  
+
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-group">
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
+        首页
+      </a>
+      <a href="toc.html" style="background: rgba(0,0,0,0.05); color:var(--accent);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        目录
+      </a>
+      <a href="about.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
+        作者简介
+      </a>
+    </div>
+    <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
+    <div class="nav-group">
+      <button id="toggleDarkMode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        夜间模式
+      </button>
+      <button id="randomPoemBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
+        随机一首
+      </button>
+    </div>
+  </aside>
+
+  <div class="backdrop" id="backdrop"></div>
+
   <main>
-    <ul class="poem-list">
-      <li><a href="poems/poem01.html">1. 成长</a></li>
-      <li><a href="poems/poem02.html">2. 风</a></li>
-      <li><a href="poems/poem03.html">3. 这是一片寂静的湖</a></li>
-      <li><a href="poems/poem04.html">4. 拥抱</a></li>
-      <li><a href="poems/poem05.html">5. 独</a></li>
-      <li><a href="poems/poem06.html">6. 时间</a></li>
-      <li><a href="poems/poem07.html">7. 九月</a></li>
-      <li><a href="poems/poem08.html">8. 无题</a></li>
-      <li><a href="poems/poem09.html">9. 茉莉</a></li>
-      <li><a href="poems/poem10.html">10. 血</a></li>
-      <li><a href="poems/poem11.html">11. 幸福</a></li>
-      <li><a href="poems/poem12.html">12. 如果我是一只鱼</a></li>
-      <li><a href="poems/poem13.html">13. 橙色</a></li>
-      <li><a href="poems/poem14.html">14. 加减法练习题</a></li>
-      <li><a href="poems/poem15.html">15. 中秋</a></li>
-      <li><a href="poems/poem16.html">16. 鸟</a></li>
-      <li><a href="poems/poem17.html">17. 他们</a></li>
-      <li><a href="poems/poem18.html">18. 我会</a></li>
-      <li><a href="poems/poem19.html">19. 秋思</a></li>
-      <li><a href="poems/poem20.html">20. 若将心事比作路边花</a></li>
-      <li><a href="poems/poem21.html">21. 十月</a></li>
-      <li><a href="poems/poem22.html">22. 答应我</a></li>
-      <li><a href="poems/poem23.html">23. 我记得</a></li>
-      <li><a href="poems/poem24.html">24. 小时候</a></li>
-      <li><a href="poems/poem25.html">25. 橘子</a></li>
-      <li><a href="poems/poem26.html">26. 意义</a></li>
-      <li><a href="poems/poem27.html">27. 笔墨</a></li>
-      <li><a href="poems/poem28.html">28. 明信片</a></li>
-      <li><a href="poems/poem29.html">29. 疯子</a></li>
-      <li><a href="poems/poem30.html">30. 退意</a></li>
-      <li><a href="poems/poem31.html">31. 花期</a></li>
-      <li><a href="poems/poem32.html">32. 今天之后</a></li>
-      <li><a href="poems/poem33.html">33. 离开</a></li>
-      <li><a href="poems/poem34.html">34. 她</a></li>
-      <li><a href="poems/poem35.html">35. 无题</a></li>
-      <li><a href="poems/poem36.html">36. 年夜</a></li>
-      <li><a href="poems/poem37.html">37. 苹果</a></li>
-      <li><a href="poems/poem38.html">38. 十七</a></li>
-      <li><a href="poems/poem39.html">39. 阿嫲</a></li>
-      <li><a href="poems/poem40.html">40. 一碗汤面</a></li>
-      <li><a href="poems/poem41.html">41. 梦醒时分</a></li>
-      <li><a href="poems/poem42.html">42. 今日如是</a></li>
-      <li><a href="poems/poem43.html">43. 大海</a></li>
-      <li><a href="poems/poem44.html">44. 诗非诗</a></li>
-      <li><a href="poems/poem45.html">45. 请勿喂食疯子</a></li>
-      <li><a href="poems/poem46.html">46. 香水</a></li>
-      <li><a href="poems/poem47.html">47. 听见你未说的话</a></li>
-      <li><a href="poems/poem48.html">48. 如果我说的都不是真的</a></li>
-      <li><a href="poems/poem49.html">49. 堂吉诃德</a></li>
-      <li><a href="poems/poem50.html">50. 鸟屎</a></li>
-    </ul>
+    <div class="toc-header">
+      <h2>诗集目录</h2>
+      <p>共收录 50 首 · 点击标题阅读</p>
+    </div>
+
+    <div class="toc-filter-container">
+      <svg class="filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="tocFilter" class="toc-filter-input" placeholder="在列表中快速筛选..." autocomplete="off">
+    </div>
+
+    <div class="toc-grid" id="tocGrid">
+      <a href="poems/poem01.html" class="toc-item"><span class="toc-num">01.</span><span class="toc-title">成长</span></a>
+      <a href="poems/poem02.html" class="toc-item"><span class="toc-num">02.</span><span class="toc-title">风</span></a>
+      <a href="poems/poem03.html" class="toc-item"><span class="toc-num">03.</span><span class="toc-title">这是一片寂静的湖</span></a>
+      <a href="poems/poem04.html" class="toc-item"><span class="toc-num">04.</span><span class="toc-title">拥抱</span></a>
+      <a href="poems/poem05.html" class="toc-item"><span class="toc-num">05.</span><span class="toc-title">独</span></a>
+      <a href="poems/poem06.html" class="toc-item"><span class="toc-num">06.</span><span class="toc-title">时间</span></a>
+      <a href="poems/poem07.html" class="toc-item"><span class="toc-num">07.</span><span class="toc-title">九月</span></a>
+      <a href="poems/poem08.html" class="toc-item"><span class="toc-num">08.</span><span class="toc-title">无题</span></a>
+      <a href="poems/poem09.html" class="toc-item"><span class="toc-num">09.</span><span class="toc-title">茉莉</span></a>
+      <a href="poems/poem10.html" class="toc-item"><span class="toc-num">10.</span><span class="toc-title">血</span></a>
+      <a href="poems/poem11.html" class="toc-item"><span class="toc-num">11.</span><span class="toc-title">幸福</span></a>
+      <a href="poems/poem12.html" class="toc-item"><span class="toc-num">12.</span><span class="toc-title">如果我是一只鱼</span></a>
+      <a href="poems/poem13.html" class="toc-item"><span class="toc-num">13.</span><span class="toc-title">橙色</span></a>
+      <a href="poems/poem14.html" class="toc-item"><span class="toc-num">14.</span><span class="toc-title">加减法练习题</span></a>
+      <a href="poems/poem15.html" class="toc-item"><span class="toc-num">15.</span><span class="toc-title">中秋</span></a>
+      <a href="poems/poem16.html" class="toc-item"><span class="toc-num">16.</span><span class="toc-title">鸟</span></a>
+      <a href="poems/poem17.html" class="toc-item"><span class="toc-num">17.</span><span class="toc-title">他们</span></a>
+      <a href="poems/poem18.html" class="toc-item"><span class="toc-num">18.</span><span class="toc-title">我会</span></a>
+      <a href="poems/poem19.html" class="toc-item"><span class="toc-num">19.</span><span class="toc-title">秋思</span></a>
+      <a href="poems/poem20.html" class="toc-item"><span class="toc-num">20.</span><span class="toc-title">若将心事比作路边花</span></a>
+      <a href="poems/poem21.html" class="toc-item"><span class="toc-num">21.</span><span class="toc-title">十月</span></a>
+      <a href="poems/poem22.html" class="toc-item"><span class="toc-num">22.</span><span class="toc-title">答应我</span></a>
+      <a href="poems/poem23.html" class="toc-item"><span class="toc-num">23.</span><span class="toc-title">我记得</span></a>
+      <a href="poems/poem24.html" class="toc-item"><span class="toc-num">24.</span><span class="toc-title">小时候</span></a>
+      <a href="poems/poem25.html" class="toc-item"><span class="toc-num">25.</span><span class="toc-title">橘子</span></a>
+      <a href="poems/poem26.html" class="toc-item"><span class="toc-num">26.</span><span class="toc-title">意义</span></a>
+      <a href="poems/poem27.html" class="toc-item"><span class="toc-num">27.</span><span class="toc-title">笔墨</span></a>
+      <a href="poems/poem28.html" class="toc-item"><span class="toc-num">28.</span><span class="toc-title">明信片</span></a>
+      <a href="poems/poem29.html" class="toc-item"><span class="toc-num">29.</span><span class="toc-title">疯子</span></a>
+      <a href="poems/poem30.html" class="toc-item"><span class="toc-num">30.</span><span class="toc-title">退意</span></a>
+      <a href="poems/poem31.html" class="toc-item"><span class="toc-num">31.</span><span class="toc-title">花期</span></a>
+      <a href="poems/poem32.html" class="toc-item"><span class="toc-num">32.</span><span class="toc-title">今天之后</span></a>
+      <a href="poems/poem33.html" class="toc-item"><span class="toc-num">33.</span><span class="toc-title">离开</span></a>
+      <a href="poems/poem34.html" class="toc-item"><span class="toc-num">34.</span><span class="toc-title">她</span></a>
+      <a href="poems/poem35.html" class="toc-item"><span class="toc-num">35.</span><span class="toc-title">无题</span></a>
+      <a href="poems/poem36.html" class="toc-item"><span class="toc-num">36.</span><span class="toc-title">年夜</span></a>
+      <a href="poems/poem37.html" class="toc-item"><span class="toc-num">37.</span><span class="toc-title">苹果</span></a>
+      <a href="poems/poem38.html" class="toc-item"><span class="toc-num">38.</span><span class="toc-title">十七</span></a>
+      <a href="poems/poem39.html" class="toc-item"><span class="toc-num">39.</span><span class="toc-title">阿嫲</span></a>
+      <a href="poems/poem40.html" class="toc-item"><span class="toc-num">40.</span><span class="toc-title">一碗汤面</span></a>
+      <a href="poems/poem41.html" class="toc-item"><span class="toc-num">41.</span><span class="toc-title">梦醒时分</span></a>
+      <a href="poems/poem42.html" class="toc-item"><span class="toc-num">42.</span><span class="toc-title">今日如是</span></a>
+      <a href="poems/poem43.html" class="toc-item"><span class="toc-num">43.</span><span class="toc-title">大海</span></a>
+      <a href="poems/poem44.html" class="toc-item"><span class="toc-num">44.</span><span class="toc-title">诗非诗</span></a>
+      <a href="poems/poem45.html" class="toc-item"><span class="toc-num">45.</span><span class="toc-title">请勿喂食疯子</span></a>
+      <a href="poems/poem46.html" class="toc-item"><span class="toc-num">46.</span><span class="toc-title">香水</span></a>
+      <a href="poems/poem47.html" class="toc-item"><span class="toc-num">47.</span><span class="toc-title">听见你未说的话</span></a>
+      <a href="poems/poem48.html" class="toc-item"><span class="toc-num">48.</span><span class="toc-title">如果我说的都不是真的</span></a>
+      <a href="poems/poem49.html" class="toc-item"><span class="toc-num">49.</span><span class="toc-title">堂吉诃德</span></a>
+      <a href="poems/poem50.html" class="toc-item"><span class="toc-num">50.</span><span class="toc-title">鸟屎</span></a>
+      
+      <div class="no-result" id="noResult">没有找到匹配的诗歌</div>
+    </div>
   </main>
-  <footer>
-    <nav>
-      <a href="index.html">首页</a> |
-      <a href="toc.html">目录</a> |
-      <a href="about.html">作者简介</a>
-    </nav>
-  </footer>
-</body>
-</html>
+
+  <footer>© <span id="year"></span> 一个青年的天马行空</footer>
+
+  <script>
+    // 元素引用
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('backdrop');
+    const menuBtn = document.getElementById('menuBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchPanel = document.getElementById('searchPanel');
+    const searchInput = document.getElementById('searchInput');
+    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
+    const randomPoemBtn = document.getElementById('randomPoemBtn');
+
+    // --- 通用交互 (复制自 about.html) ---
+    function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
+    function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
+    function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
+    
+    function openSearch(){ searchPanel.style.display='block'; setTimeout(()=>searchInput.focus(),60); }
+    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; }
+    function toggleSearch(){ searchPanel.style.display==='block' ? closeSearch() : openSearch(); }
+
+    menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
+    backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
+    searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
+    
+    document.addEventListener('click', (e)=>{
+      if(sidebar.classList.contains('active') && !sidebar.contains(e.target) && !menuBtn.contains(e.target)){ closeSidebar(); }
+      if(searchPanel.style.display==='block' && !searchPanel.contains(e.target) && !searchBtn.contains(e.target)){ closeSearch(); }
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){ closeSearch(); closeSidebar(); }
+    });
+
+    // 头部搜索 -> 跳转到 Index (保持一致性)
+    searchInput.addEventListener('keyup', (e)=>{
+      if(e.key === 'Enter'){
+        const val = searchInput.value.trim();
+        if(val) window.location.href = 'index.html?q=' + encodeURIComponent(val);
+      }
+    });
+
+    // --- 本地筛选功能 (New Feature) ---
+    const tocFilter = document.getElementById('tocFilter');
+    const tocItems = document.querySelectorAll('.toc-item');
+    const noResult = document.getElementById('noResult');
+
+    tocFilter.addEventListener('keyup', ()=>{
+      const q = tocFilter.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      tocItems.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        if(text.includes(q)){
+          item.style.display = 'block';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      noResult.style.display = (visibleCount === 0) ? 'block' : 'none';
+    });
+
+    // --- 杂项 ---
+    function loadDarkMode(){ if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark'); }
+    toggleDarkModeBtn.addEventListener('click', ()=>{
+      const enabled = docum
