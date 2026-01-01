@@ -9,7 +9,7 @@
 
   <style>
     /* ==================== 
-       1. 全局变量 (保持统一)
+       1. 全局变量 (与 About/Index 完全一致)
        ==================== */
     :root{
       --bg: #fdf6e3;
@@ -30,7 +30,7 @@
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
     /* ==================== 
-       2. 头部 Header (保持统一)
+       2. 头部 Header (完全一致)
        ==================== */
     header{
       position:sticky; top:0; z-index:1200;
@@ -64,7 +64,7 @@
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
     /* ==================== 
-       3. 搜索面板 (保持统一)
+       3. 搜索面板 (完全一致)
        ==================== */
     .search-panel{
       position:absolute; top:calc(100% + 10px); right:16px;
@@ -82,13 +82,19 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
       border: 1px solid rgba(255,255,255,0.05);
     }
+    
     .search-panel input{
-      width:100%; padding:12px 18px; border-radius:99px;
+      width:100%; padding:12px 18px; border-radius:99px; /* 胶囊圆角 */
       border:2px solid transparent; font-size:0.95rem; outline:none;
-      background:rgba(0, 0, 0, 0.04); color:inherit; transition: all 0.2s ease;
+      background:rgba(0, 0, 0, 0.04); color:inherit;
+      transition: all 0.2s ease;
     }
     body.dark .search-panel input{ background:rgba(255,255,255,0.08); }
-    .search-panel input:focus{ background:#fff; border-color:var(--accent); box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15); }
+
+    .search-panel input:focus{
+      background:#fff; border-color:var(--accent);
+      box-shadow: 0 0 0 4px rgba(184, 156, 122, 0.15);
+    }
     body.dark .search-panel input:focus{ background:#2a2a2a; }
 
     @keyframes slideDown {
@@ -97,7 +103,7 @@
     }
 
     /* ==================== 
-       4. 侧边栏 (保持统一)
+       4. 侧边栏 Sidebar (完全一致)
        ==================== */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
@@ -112,81 +118,53 @@
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; border:none; cursor:pointer;
       font-size:1rem; transition: background 0.2s;
     }
+    /* SVG 统一粗细 */
     .sidebar a svg, .sidebar button svg{ width:20px; height:20px; flex:0 0 20px; }
+    
     .sidebar a:hover, .sidebar button:hover{ background: rgba(0,0,0,0.05); color: var(--accent); }
     body.dark .sidebar a:hover, body.dark .sidebar button:hover{ background: rgba(255,255,255,0.05); }
+
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
     /* ==================== 
-       5. 目录页专属样式 (TOC Styles)
+       5. 目录页专属样式
        ==================== */
     main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
 
-    /* 顶部标题区 */
-    .toc-header {
-      text-align: center; margin-bottom: 30px;
-    }
+    .toc-header { text-align: center; margin-bottom: 30px; }
     .toc-header h2 { margin: 0 0 8px 0; font-size: 1.5rem; color: var(--muted); }
     .toc-header p { margin: 0; font-size: 0.9rem; color: var(--accent); opacity: 0.8; }
 
-    /* 快速筛选框 (TOC Filter) */
-    .toc-filter-container {
-      max-width: 400px; margin: 0 auto 30px; position: relative;
-    }
+    /* 本地筛选框 */
+    .toc-filter-container { max-width: 400px; margin: 0 auto 30px; position: relative; }
     .toc-filter-input {
       width: 100%; padding: 10px 16px 10px 40px; 
       border-radius: 8px; border: 1px solid var(--border);
-      background: var(--card); color: inherit; font-family: inherit;
-      transition: all 0.2s;
+      background: var(--card); color: inherit; font-family: inherit; transition: all 0.2s;
     }
     .toc-filter-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(184, 156, 122, 0.1); }
     body.dark .toc-filter-input { background: var(--card-dark); border-color: var(--border-dark); }
     
-    .filter-icon {
-      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-      color: var(--muted); pointer-events: none;
-    }
+    .filter-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 
     /* 列表网格 */
-    .toc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 响应式网格 */
-      gap: 16px;
-    }
+    .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
     .toc-item {
-      display: block;
-      background: var(--card);
-      padding: 16px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid transparent;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-      transition: all 0.2s ease;
-      position: relative; overflow: hidden;
+      display: block; background: var(--card); padding: 16px; border-radius: 8px;
+      text-decoration: none; color: var(--text); border: 1px solid transparent;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: all 0.2s ease;
     }
     body.dark .toc-item { background: var(--card-dark); border-color: rgba(255,255,255,0.05); }
 
-    .toc-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 15px rgba(0,0,0,0.06);
-      border-color: var(--accent);
-    }
+    .toc-item:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.06); border-color: var(--accent); }
     .toc-item:hover .toc-title { color: var(--accent); }
 
-    .toc-num {
-      font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; display: block; font-family: sans-serif; opacity: 0.6;
-    }
-    .toc-title {
-      font-size: 1.05rem; font-weight: 700; margin: 0; line-height: 1.4; transition: color 0.2s;
-    }
+    .toc-num { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; display: block; opacity: 0.6; }
+    .toc-title { font-size: 1.05rem; font-weight: 700; margin: 0; line-height: 1.4; transition: color 0.2s; }
     
-    /* 搜索不到时的提示 */
-    .no-result {
-      grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted); display: none;
-    }
+    .no-result { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--muted); display: none; }
 
     footer{ margin:40px auto; padding:0 16px; color:#6e5b4a; font-size:0.9rem; text-align:center; opacity:0.8; }
   </style>
@@ -205,7 +183,7 @@
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
     <div class="search-panel" id="searchPanel">
-      <input id="searchInput" type="text" placeholder="全局搜索：输入关键词回车..." autocomplete="off"/>
+      <input id="searchInput" type="text" placeholder="输入关键词，回车跳转至首页搜索..." autocomplete="off"/>
     </div>
   </header>
 
@@ -374,4 +352,8 @@
     // --- 杂项 ---
     function loadDarkMode(){ if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark'); }
     toggleDarkModeBtn.addEventListener('click', ()=>{
-      const enabled = docum
+      const enabled = document.body.classList.toggle('dark');
+      try{ localStorage.setItem('site-dark', enabled?'1':'0'); }catch(e){}
+    });
+    randomPoemBtn.addEventListener('click', ()=>{
+      const i = Math.floor(Math.rando
