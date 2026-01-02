@@ -24,7 +24,7 @@
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     main { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
 
-    /* === 2. Header === */
+    /* === 2. Header (全站统一) === */
     header{
       position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
       padding:12px 20px; background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
@@ -39,7 +39,7 @@
     .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* === 3. Search Panel === */
+    /* === 3. Search Panel (首页保持输入框，通过网格过滤) === */
     .search-panel{
       position:absolute; top:calc(100% + 10px); right:16px; width:320px; max-width:calc(100% - 40px);
       background:rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-radius:16px; padding:10px;
@@ -49,7 +49,7 @@
     .search-panel input{ width:100%; padding:12px 18px; border-radius:99px; border:none; background:rgba(0,0,0,0.05); color:inherit; outline:none; }
     body.dark .search-panel input{ background:rgba(255,255,255,0.1); }
 
-    /* === 4. Sidebar === */
+    /* === 4. Sidebar (全站统一) === */
     .sidebar{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
       background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; overflow-y: auto;
@@ -57,7 +57,6 @@
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
     
-    /* 侧边栏通用按钮样式 (统一) */
     .nav-item {
       display:flex; align-items:center; gap:12px; width:100%; padding:12px; margin:6px 0;
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; 
@@ -65,35 +64,21 @@
       transition: background 0.2s;
     }
     .nav-item svg { width:22px; height:22px; flex-shrink: 0; stroke-width: 2px; }
-    
-    /* 悬停和打开状态 */
     .nav-item:hover, .nav-item.open { background: rgba(0,0,0,0.05); color: var(--accent); }
     body.dark .nav-item:hover, body.dark .nav-item.open { background: rgba(255,255,255,0.05); }
-    
-    /* 当前页高亮 */
     .nav-item.active { background: rgba(0,0,0,0.05); color: var(--accent); font-weight: 600; }
     body.dark .nav-item.active { background: rgba(255,255,255,0.08); }
 
     .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
     .backdrop.show{ display:block; }
 
-    /* === 标签云展开区域 (内嵌) === */
-    .tag-cloud-container {
-      overflow: hidden; max-height: 0; transition: max-height 0.3s ease;
-      padding-left: 12px; /* 稍微缩进一点 */
-    }
-    /* 默认展开样式，如果要默认收起，把 .open 去掉 */
+    /* 标签云 */
+    .tag-cloud-container { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; padding-left: 12px; }
     .tag-cloud-container.open { max-height: 500px; margin-bottom: 10px; }
-    
     .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .tag-btn { 
-      font-size: 0.85rem; padding: 4px 10px; background: rgba(0,0,0,0.04); 
-      border-radius: 12px; cursor: pointer; color: var(--muted); border: 1px solid transparent; 
-    }
+    .tag-btn { font-size: 0.85rem; padding: 4px 10px; background: rgba(0,0,0,0.04); border-radius: 12px; cursor: pointer; color: var(--muted); border: 1px solid transparent; }
     body.dark .tag-btn { background: rgba(255,255,255,0.08); color: var(--muted-dark); }
     .tag-btn.active { background: var(--accent); color: #fff; }
-    
-    /* 箭头旋转 */
     .chevron-icon { margin-left: auto; transition: transform 0.3s; width:16px!important; height:16px!important; opacity: 0.6; }
     .nav-item.open .chevron-icon { transform: rotate(180deg); }
 
@@ -126,7 +111,7 @@
     <button class="icon-btn menu-btn" id="menuBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
     <div class="logo-title"><img src="assets/img/logo.png" alt="logo"><h1>一个青年的天马行空</h1></div>
     <button class="icon-btn search-btn" id="searchBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="输入关键词..." autocomplete="off"/></div>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="输入关键词或诗题..." autocomplete="off"/></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
@@ -143,22 +128,16 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
         作者简介
       </a>
-
       <button class="nav-item open" onclick="toggleTags(this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
         标签
         <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
-      
       <div id="tagCloudContainer" class="tag-cloud-container open">
-        <div id="tagCloud" class="tag-cloud">
-          <span style="font-size:0.8rem;color:var(--muted);">加载中...</span>
-        </div>
+        <div id="tagCloud" class="tag-cloud"><span style="font-size:0.8rem;color:var(--muted);">加载中...</span></div>
       </div>
     </div>
-
     <hr style="border-top:1px solid var(--border); margin:10px 0;">
-    
     <div>
       <button id="toggleDarkMode" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -204,16 +183,14 @@
     function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
     function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
     function openSearch(){ searchPanel.style.display='block'; setTimeout(()=>searchInput.focus(),60); }
-    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; filterPoems(''); }
+    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; filterPoems(''); } // 首页搜索是清空过滤器
 
-    function toggleTags(btn) {
-      btn.classList.toggle('open');
-      tagContainer.classList.toggle('open');
-    }
+    function toggleTags(btn) { btn.classList.toggle('open'); tagContainer.classList.toggle('open'); }
 
     menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
     searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
     backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
+    
     toggleDarkModeBtn.addEventListener('click', ()=>{
       const isDark = document.body.classList.toggle('dark');
       localStorage.setItem('site-dark', isDark?'1':'0');
@@ -222,9 +199,17 @@
       if(poemsList.length>0) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
     });
 
+    // === 核心：首页搜索是过滤 Grid，不是下拉框 ===
+    // 理由：首页本身就是结果页，直接过滤体验最好。
+    searchInput.addEventListener('keyup', ()=>{ 
+      document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
+      filterPoems(searchInput.value.trim()); 
+    });
+
     function filterPoems(q, isTag=false){
       const ql = (q||'').toLowerCase();
       if(!ql) { renderGrid(poemsList.slice(0, 10)); if(poemsList[0]) latestBadge.innerText = poemsList[0].title; return; }
+      
       const filtered = poemsList.filter(p => {
         if(isTag) return p.tags && p.tags.includes(q);
         return (p.title+p.preview+(p.tags||[]).join(' ')).toLowerCase().includes(ql);
@@ -232,11 +217,6 @@
       renderGrid(filtered);
       latestBadge.innerText = isTag ? `标签: #${q}` : `搜索: ${q}`;
     }
-
-    searchInput.addEventListener('keyup', ()=>{ 
-      document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
-      filterPoems(searchInput.value.trim()); 
-    });
 
     function renderGrid(list){
       poemsGrid.innerHTML = '';
@@ -263,13 +243,13 @@
       const map = {};
       poemsList.forEach(p=> (p.tags||[]).forEach(t=> map[t]=(map[t]||0)+1));
       tagCloud.innerHTML = '';
-      // 只要4个标签，不需要复杂的排序了，但为了保险还是排一下
       Object.keys(map).sort((a,b)=>map[b]-map[a]).forEach(t=>{
         const btn = document.createElement('span');
         btn.className = 'tag-btn';
         btn.innerText = `#${t}`;
+        // 首页点击标签 -> 直接原地过滤
         btn.onclick = (e)=>{ 
-          e.stopPropagation(); 
+          e.stopPropagation();
           document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('active'));
           btn.classList.add('active');
           filterPoems(t, true);
@@ -284,10 +264,18 @@
         const res = await fetch('poems/poems.json?t=' + new Date().getTime());
         if(!res.ok) throw new Error('Status: '+res.status);
         poemsList = await res.json();
+        
         renderTags();
+        
         const p = new URLSearchParams(window.location.search);
         if(p.get('q')) { searchInput.value=p.get('q'); filterPoems(p.get('q')); }
-        else if(p.get('tag')) { filterPoems(p.get('tag'), true); }
+        else if(p.get('tag')) { 
+          // 自动高亮对应标签
+          setTimeout(()=>{
+             // 简单的逻辑：触发对应标签点击，或者手动调用过滤
+             filterPoems(p.get('tag'), true); 
+          }, 100);
+        }
         else { renderGrid(poemsList.slice(0, 10)); if(poemsList[0]) latestBadge.innerText = poemsList[0].title; }
       } catch(err) {
         alert("无法加载 poems/poems.json，请检查文件是否存在！");
