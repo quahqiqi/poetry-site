@@ -1,136 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>香水 | 一个青年的天马行空</title>
-  <link rel="stylesheet" href="../style.css" />
-  <style>
-    body {
-      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      background-color: #f5f0e6;
-      color: #333;
-      padding: 1.5em;
-      max-width: 700px;
-      margin: auto;
-    }
-    .poem-title {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .poem-meta {
-      font-size: 0.9em;
-      color: #777;
-      margin-bottom: 1em;
-    }
-    .poem-body {
-      white-space: pre-wrap;
-      line-height: 1.8em;
-      margin-bottom: 2em;
-    }
-    .poem-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 1em 0;
-    }
-    .nav-links {
-      display: flex;
-      justify-content: space-between;
-      margin: 2em 0;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #6b4e2e;
-      background-color: #e6dccb;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-    }
-    .actions {
-      display: flex;
-      gap: 1em;
-      margin-bottom: 2em;
-    }
-    .comment-section {
-      border-top: 1px solid #ccc;
-      padding-top: 2em;
-    }
-    .comment-section h3 {
-      font-size: 1.2em;
-    }
-    .comment-form textarea,
-    .comment-form input {
-      width: 100%;
-      padding: 0.5em;
-      margin: 0.5em 0;
-      font-family: inherit;
-    }
-    .comment-form button {
-      background-color: #cbb89d;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .featured-comments {
-      background-color: #f8f5f0;
-      padding: 1em;
-      border-left: 4px solid #b89c7a;
-      margin-bottom: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>香水</title>
+    
+    <meta property="og:title" content="香水">
+    <meta property="og:description" content="水汽氤氲，像洒下点点星辰，迎着缕缕清风...">
+    <meta property="og:image" content="https://quahqiqi.github.io/poetry-site/images/poem46.jpg">
+    <meta property="og:url" content="https://quahqiqi.github.io/poetry-site/poems/poem46.html">
+    <meta property="og:type" content="article">
+
+    <style>
+        body { font-family: "PingFang SC", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }
+        img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        .share-btn { margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; width: 100%; }
+    </style>
 </head>
 <body>
-  <h1 class="poem-title">香水</h1>
-  <div class="poem-meta">创作日期：2025年7月4日｜
-
-  <img src="../images/xiangshui.jpg" alt="配图" class="poem-image" />
-
-  <div class="poem-body">
-水汽氤氲，
-像洒下点点星辰，
-迎着缕缕清风，
-落在走廊、球场、心房里。
-
-那时我们靠得很近，
-焦糖领着香草扑进鼻腔，
-像阳光洒下的甜香，
-说话时弯弯的眼角，
-我几乎以为
-能携手步入远方的星光。
-
-甜香渐浓，
-一会儿甜得发腻，一会儿若隐若现，
-花果的清香在呼吸间飘忽，
-当湿润的犹豫在夜里发酵，
-苦味从沉默里蔓延，
-有时好笑，有时让你心烦。
-
-尾调里，木质理性的香气；
-空气中依然残留的甜味；
-对话框里未读的消息——
-每次想起你说过的每一句，
-心就一次次被拉进
-这场无声的告别里。
-
-香气早已飘散，
-在这场未完的梦里。
-
-  </div>
-
-  <div class="actions">
-    <button onclick="alert('谢谢你的喜欢！')">❤️ 点赞</button>
-    <button onclick="navigator.share ? navigator.share({ title: '成长', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
-  </div>
-
-  <div class="nav-links">
-    <a href="poem45.html">← 上一首</a>
-    <a href="poem47.html">下一首 →</a>
-  </div>
+    <article>
+        <img src="../images/poem46.jpg" alt="香水">
+        <h1>香水</h1>
+        <p style="white-space: pre-wrap;">水汽氤氲，像洒下点点星辰，迎着缕缕清风...</p>
+    </article>
     
-</script>
-  </div>
+    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / Facebook</button>
+
+    <script>
+    async function shareToSocial() {
+        const shareData = {
+            title: "香水",
+            text: "水汽氤氲，像洒下点点星辰，迎着缕缕清风...",
+            url: window.location.href
+        };
+        const imageUrl = '../images/poem46.jpg'; 
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], 'poem46.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: shareData.title,
+                    text: shareData.text + " " + shareData.url
+                });
+            } else {
+                await navigator.share({ title: shareData.title, url: shareData.url });
+            }
+        } catch (err) {
+            console.log('分享失败:', err);
+        }
+    }
+    </script>
 </body>
-  </html>
+</html>

@@ -1,153 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>风 | 一个青年的天马行空</title>
-  <link rel="stylesheet" href="../style.css" />
-  <style>
-    body {
-      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      background-color: #f5f0e6;
-      color: #333;
-      padding: 1.5em;
-      max-width: 700px;
-      margin: auto;
-    }
-    .poem-title {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .poem-meta {
-      font-size: 0.9em;
-      color: #777;
-      margin-bottom: 1em;
-    }
-    .poem-body {
-      white-space: pre-wrap;
-      line-height: 1.8em;
-      margin-bottom: 2em;
-    }
-    .poem-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 1em 0;
-    }
-    .nav-links {
-      display: flex;
-      justify-content: space-between;
-      margin: 2em 0;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #6b4e2e;
-      background-color: #e6dccb;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-    }
-    .actions {
-      display: flex;
-      gap: 1em;
-      margin-bottom: 2em;
-    }
-    .comment-section {
-      border-top: 1px solid #ccc;
-      padding-top: 2em;
-    }
-    .comment-section h3 {
-      font-size: 1.2em;
-    }
-    .comment-form textarea,
-    .comment-form input {
-      width: 100%;
-      padding: 0.5em;
-      margin: 0.5em 0;
-      font-family: inherit;
-    }
-    .comment-form button {
-      background-color: #cbb89d;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .featured-comments {
-      background-color: #f8f5f0;
-      padding: 1em;
-      border-left: 4px solid #b89c7a;
-      margin-bottom: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>风</title>
+    
+    <meta property="og:title" content="风">
+    <meta property="og:description" content="春风，生活中处处都有它的身影...">
+    <meta property="og:image" content="https://quahqiqi.github.io/poetry-site/images/poem02.jpg">
+    <meta property="og:url" content="https://quahqiqi.github.io/poetry-site/poems/poem02.html">
+    <meta property="og:type" content="article">
+
+    <style>
+        body { font-family: "PingFang SC", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }
+        img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        .share-btn { margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; width: 100%; }
+    </style>
 </head>
 <body>
-  <h1 class="poem-title">风</h1>
-  <div class="poem-meta">创作日期：2024年5月31日｜
-
-  <img src="../images/poem02.jpg" alt="配图" class="poem-image" />
-
-  <div class="poem-body">
-风
-生活中处处都有它的身影
-字里行间都透露出它的感情
-我想与她拥抱，想依偎在她的怀里
-想在花海的簇拥中与她跳上最浪漫的探戈
-离开了她
-湖面没有了波光粼粼的涟漪
-鱼儿变得寡欢无趣
-水草失去了畅快的活力
-风铃也因她而失去了往日的神采
-
-夏风
-带给我属于夏天的活泼
-屋檐外的蓝天白云
-身旁那道靓丽的倩影
-形成一张张照片
-深深地刻在我的脑海里
-当她回眸
-那一刻，世界好像因她失去了色彩
-因为我满心满眼都是她
-
-秋风
-轻轻地拂过我的脸颊
-沿着前方
-树上传来窸窸窣窣的声音
-像是在讨论着什么
-一阵微风袭来
-泛黄的枫叶像一只只嬉戏的蝴蝶
-迎着风轻轻地舞动
-我快步地赶回家里
-看见她裹着毛衣
-坐在台阶上
-对我露出了月牙般皎洁的笑容
-那一幕，是我永远无法忘怀的温柔
-
-冬风
-狂暴地撕扯我的身体
-好似一只没有人性的野兽
-寂寞的文字，传来阵阵哀叹
-那记忆中的笑容，正在变得模糊
-那心底深处的光芒，正在被黑暗吞噬
-空气中弥漫着异样的情绪
-但我已然记不清 
-这种异样的情绪究竟从何而来
-唉,
-人类真是一种健忘的动物
-  </div>
-
-  <div class="actions">
-    <button onclick="alert('谢谢你的喜欢！')">👍 点赞</button>
-    <button onclick="navigator.share ? navigator.share({ title: '成长', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
-  </div>
-
-  <div class="nav-links">
-    <a href="poem01.html">← 上一首</a>
-    <a href="poem03.html">下一首 →</a>
-  </div>
+    <article>
+        <img src="../images/poem02.jpg" alt="风">
+        <h1>风</h1>
+        <p style="white-space: pre-wrap;">春风，生活中处处都有它的身影...</p>
+    </article>
     
-</script>
-  </div>
+    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / Facebook</button>
+
+    <script>
+    async function shareToSocial() {
+        const shareData = {
+            title: "风",
+            text: "春风，生活中处处都有它的身影...",
+            url: window.location.href
+        };
+        const imageUrl = '../images/poem02.jpg'; 
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], 'poem02.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: shareData.title,
+                    text: shareData.text + " " + shareData.url
+                });
+            } else {
+                await navigator.share({ title: shareData.title, url: shareData.url });
+            }
+        } catch (err) {
+            console.log('分享失败:', err);
+        }
+    }
+    </script>
 </body>
 </html>

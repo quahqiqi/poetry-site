@@ -1,135 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>公路 | 一个青年的天马行空</title>
-  <link rel="stylesheet" href="../style.css" />
-  <style>
-    body {
-      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      background-color: #f5f0e6;
-      color: #333;
-      padding: 1.5em;
-      max-width: 700px;
-      margin: auto;
-    }
-    .poem-title {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .poem-meta {
-      font-size: 0.9em;
-      color: #777;
-      margin-bottom: 1em;
-    }
-    .poem-body {
-      white-space: pre-wrap;
-      line-height: 1.8em;
-      margin-bottom: 2em;
-    }
-    .poem-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 1em 0;
-    }
-    .nav-links {
-      display: flex;
-      justify-content: space-between;
-      margin: 2em 0;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #6b4e2e;
-      background-color: #e6dccb;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-    }
-    .actions {
-      display: flex;
-      gap: 1em;
-      margin-bottom: 2em;
-    }
-    .comment-section {
-      border-top: 1px solid #ccc;
-      padding-top: 2em;
-    }
-    .comment-section h3 {
-      font-size: 1.2em;
-    }
-    .comment-form textarea,
-    .comment-form input {
-      width: 100%;
-      padding: 0.5em;
-      margin: 0.5em 0;
-      font-family: inherit;
-    }
-    .comment-form button {
-      background-color: #cbb89d;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .featured-comments {
-      background-color: #f8f5f0;
-      padding: 1em;
-      border-left: 4px solid #b89c7a;
-      margin-bottom: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公路</title>
+    
+    <meta property="og:title" content="公路">
+    <meta property="og:description" content="天色未亮，有人匆匆背起行囊，他们把忙碌挂在脸上，把压力化为动力，把房贷托于肩上...">
+    <meta property="og:image" content="https://quahqiqi.github.io/poetry-site/images/poem52.jpg">
+    <meta property="og:url" content="https://quahqiqi.github.io/poetry-site/poems/poem52.html">
+    <meta property="og:type" content="article">
+
+    <style>
+        body { font-family: "PingFang SC", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }
+        img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        .share-btn { margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; width: 100%; }
+    </style>
 </head>
 <body>
-  <h1 class="poem-title">公路</h1>
-  <div class="poem-meta">创作日期：2025年6月10日｜
-
-  <img src="../images/poem52.jpg" alt="配图" class="poem-image" />
-
-  <div class="poem-body">
-天色未亮，
-有人匆匆背起行囊，
-他们把忙碌挂在脸上，
-把压力化为动力，
-把房贷托于肩上，
-把自己送给恶魔，
-把未来献给明天的太阳。
-
-把车子驶上公路，
-望见无数忙人，
-方向仿佛相同，心愿仿佛一致，
-在轰鸣的铁流里，
-用前世五百次回眸，
-换一场今生的塞车。
-
-我用一生追逐太阳，
-太阳却不给面子，
-悄悄地把自己换成月亮。
-我只能摸黑，再把自己撞得满头包。
-
-路中央遇见了个傻子，
-穿得破破烂烂，
-那双有神的眼睛很吸引人，
-嘴里含了金子，
-他相信7月的天空会碎裂，
-他不知道，
-成年那年，
-他就被生活悄悄掏空了灵魂。
-  </div>
-
-  <div class="actions">
-    <button onclick="alert('谢谢你的喜欢！')">👍 点赞</button>
-    <button onclick="navigator.share ? navigator.share({ title: '成长', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
-  </div>
-
-  <div class="nav-links">
-    <a href="poem51.html">← 上一首</a>
-    <a href="poem53.html">下一首 →</a>
-  </div>
+    <article>
+        <img src="../images/poem52.jpg" alt="公路">
+        <h1>公路</h1>
+        <p style="white-space: pre-wrap;">天色未亮，有人匆匆背起行囊，他们把忙碌挂在脸上，把压力化为动力，把房贷托于肩上...</p>
+    </article>
     
-</script>
-  </div>
+    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / Facebook</button>
+
+    <script>
+    async function shareToSocial() {
+        const shareData = {
+            title: "公路",
+            text: "天色未亮，有人匆匆背起行囊，他们把忙碌挂在脸上，把压力化为动力，把房贷托于肩上...",
+            url: window.location.href
+        };
+        const imageUrl = '../images/poem52.jpg'; 
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], 'poem52.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: shareData.title,
+                    text: shareData.text + " " + shareData.url
+                });
+            } else {
+                await navigator.share({ title: shareData.title, url: shareData.url });
+            }
+        } catch (err) {
+            console.log('分享失败:', err);
+        }
+    }
+    </script>
 </body>
 </html>

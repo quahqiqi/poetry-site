@@ -1,138 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>女孩 | 一个青年的天马行空</title>
-  <link rel="stylesheet" href="../style.css" />
-  <style>
-    body {
-      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      background-color: #f5f0e6;
-      color: #333;
-      padding: 1.5em;
-      max-width: 700px;
-      margin: auto;
-    }
-    .poem-title {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .poem-meta {
-      font-size: 0.9em;
-      color: #777;
-      margin-bottom: 1em;
-    }
-    .poem-body {
-      white-space: pre-wrap;
-      line-height: 1.8em;
-      margin-bottom: 2em;
-    }
-    .poem-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 1em 0;
-    }
-    .nav-links {
-      display: flex;
-      justify-content: space-between;
-      margin: 2em 0;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #6b4e2e;
-      background-color: #e6dccb;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-    }
-    .actions {
-      display: flex;
-      gap: 1em;
-      margin-bottom: 2em;
-    }
-    .comment-section {
-      border-top: 1px solid #ccc;
-      padding-top: 2em;
-    }
-    .comment-section h3 {
-      font-size: 1.2em;
-    }
-    .comment-form textarea,
-    .comment-form input {
-      width: 100%;
-      padding: 0.5em;
-      margin: 0.5em 0;
-      font-family: inherit;
-    }
-    .comment-form button {
-      background-color: #cbb89d;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .featured-comments {
-      background-color: #f8f5f0;
-      padding: 1em;
-      border-left: 4px solid #b89c7a;
-      margin-bottom: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>女孩</title>
+    
+    <meta property="og:title" content="女孩">
+    <meta property="og:description" content="女孩，你为何满眼凄惶，眉间愁云惨淡，你为何撕开虚伪的皮囊，露出血与肉...">
+    <meta property="og:image" content="https://quahqiqi.github.io/poetry-site/images/poem51.jpg">
+    <meta property="og:url" content="https://quahqiqi.github.io/poetry-site/poems/poem51.html">
+    <meta property="og:type" content="article">
+
+    <style>
+        body { font-family: "PingFang SC", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }
+        img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        .share-btn { margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; width: 100%; }
+    </style>
 </head>
 <body>
-  <h1 class="poem-title">女孩</h1>
-  <div class="poem-meta">创作日期：2025年9月9日｜
-
-  <img src="../images/poem51.jpg" alt="配图" class="poem-image" />
-
-  <div class="poem-body">
-女孩，
-你为何满眼凄惶，
-眉间愁云惨淡，
-你为何撕开虚伪的皮囊，  
-露出血与肉，
-再把玫瑰塞进胸膛，  
-你为何流出枯干的泪，
-泪珠欲救那冰冷的心。
-
-女孩，我在聆听你的苦痛，
-你爱得深沉，却难抵慌也似的逃离，
-盼不见月光如水的秋波，
-力乏，仅于对爱情的怅惘，
-你岂愿品尝绝望？
-奈何痴心错交给了负心汉。
-
-女孩，你为何怯步，
-任冷峭言语刺破双脚，
-也不愿再回头，
-你怨我如这黑夜的静，
-让自虐克制思念，
-让爱意被忧愁啃噬，
-女孩，当我回过神，
-竟才发觉你的孤独！
-
-女孩，我终于看见我的悲哀；
-看见你眼中欲言又止的伤，
-看见临别的泪花，
-将爱烧成灰，掩于心底，
-黄昏再把回忆拾起，
-沉入寂静之地。
-  </div>
-
-  <div class="actions">
-    <button onclick="alert('谢谢你的喜欢！')">👍 点赞</button>
-    <button onclick="navigator.share ? navigator.share({ title: '成长', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
-  </div>
-
-  <div class="nav-links">
-    <a href="poem50.html">← 上一首</a>
-    <a href="poem52.html">下一首 →</a>
-  </div>
+    <article>
+        <img src="../images/poem51.jpg" alt="女孩">
+        <h1>女孩</h1>
+        <p style="white-space: pre-wrap;">女孩，你为何满眼凄惶，眉间愁云惨淡，你为何撕开虚伪的皮囊，露出血与肉...</p>
+    </article>
     
-</script>
-  </div>
+    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / Facebook</button>
+
+    <script>
+    async function shareToSocial() {
+        const shareData = {
+            title: "女孩",
+            text: "女孩，你为何满眼凄惶，眉间愁云惨淡，你为何撕开虚伪的皮囊，露出血与肉...",
+            url: window.location.href
+        };
+        const imageUrl = '../images/poem51.jpg'; 
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], 'poem51.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: shareData.title,
+                    text: shareData.text + " " + shareData.url
+                });
+            } else {
+                await navigator.share({ title: shareData.title, url: shareData.url });
+            }
+        } catch (err) {
+            console.log('分享失败:', err);
+        }
+    }
+    </script>
 </body>
 </html>

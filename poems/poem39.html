@@ -1,129 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>阿嫲 | 一个青年的天马行空</title>
-  <link rel="stylesheet" href="../style.css" />
-  <style>
-    body {
-      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      background-color: #f5f0e6;
-      color: #333;
-      padding: 1.5em;
-      max-width: 700px;
-      margin: auto;
-    }
-    .poem-title {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .poem-meta {
-      font-size: 0.9em;
-      color: #777;
-      margin-bottom: 1em;
-    }
-    .poem-body {
-      white-space: pre-wrap;
-      line-height: 1.8em;
-      margin-bottom: 2em;
-    }
-    .poem-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 1em 0;
-    }
-    .nav-links {
-      display: flex;
-      justify-content: space-between;
-      margin: 2em 0;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #6b4e2e;
-      background-color: #e6dccb;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-    }
-    .actions {
-      display: flex;
-      gap: 1em;
-      margin-bottom: 2em;
-    }
-    .comment-section {
-      border-top: 1px solid #ccc;
-      padding-top: 2em;
-    }
-    .comment-section h3 {
-      font-size: 1.2em;
-    }
-    .comment-form textarea,
-    .comment-form input {
-      width: 100%;
-      padding: 0.5em;
-      margin: 0.5em 0;
-      font-family: inherit;
-    }
-    .comment-form button {
-      background-color: #cbb89d;
-      color: white;
-      border: none;
-      padding: 0.5em 1em;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .featured-comments {
-      background-color: #f8f5f0;
-      padding: 1em;
-      border-left: 4px solid #b89c7a;
-      margin-bottom: 1em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿嫲</title>
+    
+    <meta property="og:title" content="阿嫲">
+    <meta property="og:description" content="岁月压弯了她的脊梁，又偷走了她的力气...">
+    <meta property="og:image" content="https://quahqiqi.github.io/poetry-site/images/poem39.jpg">
+    <meta property="og:url" content="https://quahqiqi.github.io/poetry-site/poems/poem39.html">
+    <meta property="og:type" content="article">
+
+    <style>
+        body { font-family: "PingFang SC", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }
+        img { width: 100%; border-radius: 8px; margin-bottom: 20px; }
+        .share-btn { margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; width: 100%; }
+    </style>
 </head>
 <body>
-  <h1 class="poem-title">阿嫲</h1>
-  <div class="poem-meta">创作日期：2025年3月18日｜
-
-  <img src="../images/poem39.jpg" alt="配图" class="poem-image" />
-
-  <div class="poem-body">
-天淅淅沥沥地下着小雨，
-雨滴落在水面，圈圈涟漪，
-鱼儿随着雨的旋律轻舞，
-瞧见她静坐门前，静静等待。
-
-记忆里，她笑意盈盈，满面春风，
-眉眼轻柔，步履从容，
-轻声细语，如春风照拂，
-让人忍不住想要亲近。
-
-岁月压弯了她的脊梁，
-又偷走了她的力气，
-她曾织布纺线，灶前翻炒，
-如今连提起筷子，指尖也微微颤抖。
-
-时间啊，慢些吧！别再催她远行，
-让我多陪陪她，哪怕忘了我的名字，
-哪怕她再也想不起回家的路。
-我愿做一把伞，
-在这场淅沥的小雨里，
-陪伴她，静静地守候着......
-
-  </div>
-
-  <div class="actions">
-    <button onclick="alert('谢谢你的喜欢！')">❤️ 点赞</button>
-    <button onclick="navigator.share ? navigator.share({ title: '成长', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
-  </div>
-
-  <div class="nav-links">
-    <a href="poem38.html">← 上一首</a>
-    <a href="poem40.html">下一首 →</a>
-  </div>
+    <article>
+        <img src="../images/poem39.jpg" alt="阿嫲">
+        <h1>阿嫲</h1>
+        <p style="white-space: pre-wrap;">岁月压弯了她的脊梁，又偷走了她的力气...</p>
+    </article>
     
-</script>
-  </div>
+    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / Facebook</button>
+
+    <script>
+    async function shareToSocial() {
+        const shareData = {
+            title: "阿嫲",
+            text: "岁月压弯了她的脊梁，又偷走了她的力气...",
+            url: window.location.href
+        };
+        const imageUrl = '../images/poem39.jpg'; 
+        try {
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], 'poem39.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: shareData.title,
+                    text: shareData.text + " " + shareData.url
+                });
+            } else {
+                await navigator.share({ title: shareData.title, url: shareData.url });
+            }
+        } catch (err) {
+            console.log('分享失败:', err);
+        }
+    }
+    </script>
 </body>
-  </html>
+</html>
