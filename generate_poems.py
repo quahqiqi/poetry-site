@@ -1,16 +1,17 @@
 import json
 import os
 
-# 1. 指定 JSON 的路径（现在是在 poems 文件夹内）
+# 1. 路径设置
 json_path = 'poems/poems.json'
 
+# 检查 JSON 是否存在
 if not os.path.exists(json_path):
-    print(f"错误：找不到文件 {json_path}，请检查路径！")
+    print(f"错误：找不到 {json_path}")
 else:
     with open(json_path, 'r', encoding='utf-8') as f:
         poems = json.load(f)
 
-    # HTML 模板
+    # HTML 模板 - 修复了 OG 标签和分享逻辑
     template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -25,18 +26,19 @@ else:
     <meta property="og:type" content="article">
 
     <style>
-        body {{ font-family: "PingFang SC", "Microsoft YaHei", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }}
-        .share-btn {{ margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; }}
-        .share-btn:hover {{ background: #444; }}
+        body {{ font-family: "PingFang SC", sans-serif; padding: 40px; max-width: 600px; margin: auto; line-height: 1.8; color: #333; }}
+        img {{ width: 100%; border-radius: 8px; margin-bottom: 20px; }}
+        .share-btn {{ margin-top: 30px; padding: 12px 24px; background: #222; color: #fff; border: none; cursor: pointer; border-radius: 30px; font-size: 16px; width: 100%; }}
     </style>
 </head>
 <body>
     <article>
+        <img src="../{img}" alt="{title}">
         <h1>{title}</h1>
         <p style="white-space: pre-wrap;">{preview}</p>
     </article>
     
-    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / 社交平台</button>
+    <button class="share-btn" onclick="shareToSocial()">🔗 分享到 Instagram / Facebook</button>
 
     <script>
     async function shareToSocial() {{
@@ -45,17 +47,11 @@ else:
             text: "{preview}",
             url: window.location.href
         }};
-        
-        // 这里的路径 '../{img}' 表示从 poems 文件夹跳出来进入 images 文件夹
         const imageUrl = '../{img}'; 
-
         try {{
             const response = await fetch(imageUrl);
             const blob = await response.blob();
-            // 创建图片文件对象
             const file = new File([blob], '{slug}.jpg', {{ type: 'image/jpeg' }});
-
-            // 优先尝试调用原生分享面板（支持传图给 Instagram）
             if (navigator.canShare && navigator.canShare({{ files: [file] }})) {{
                 await navigator.share({{
                     files: [file],
@@ -63,14 +59,10 @@ else:
                     text: shareData.text + " " + shareData.url
                 }});
             }} else {{
-                // 降级方案：只分享链接
-                await navigator.share({{
-                    title: shareData.title,
-                    url: shareData.url
-                }});
+                await navigator.share({{ title: shareData.title, url: shareData.url }});
             }}
         }} catch (err) {{
-            console.log('分享失败或被取消:', err);
+            console.log('分享失败:', err);
         }}
     }}
     </script>
@@ -80,6 +72,7 @@ else:
 
     # 2. 批量生成 HTML
     for poem in poems:
+        # 修正这里的 format 逻辑
         html_content = template.format(
             title=poem['title'],
             preview=poem['preview'],
@@ -88,9 +81,9 @@ else:
             slug=poem['slug']
         )
         
-        # 将 HTML 生成在 poems/ 文件夹下
-        output_file = f"poems/{{poem['file']}}"
+        # --- 重点修复：这里的 output_file 不能有双大括号 ---
+        output_file = f"poems/{poem['file']}"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
 
-    print(f"✅ 完成！已更新 {len(poems)} 首诗歌页面到 poems/ 目录。")
+    print(f"✅ 大功告成！已重新生成 {len(poems)} 个正确的网页文件。")
