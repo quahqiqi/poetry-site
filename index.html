@@ -5,128 +5,104 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>一个青年的天马行空</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
-    /* === 1. 全局基础 === */
     :root {
       --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
-      --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
-      --sidebar-width: 280px;
+      --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --sidebar-w: 280px;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.25s; }
+    body { margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.3s; }
     body.dark { background: var(--bg-dark); color: var(--muted-dark); }
 
-    /* === 2. Header (复刻首页布局) === */
+    /* Header 修复：确保图标可见且对齐 */
     header {
-      position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: center;
-      padding: 12px 20px; background: rgba(253, 246, 227, 0.85); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: rgba(253, 246, 227, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
     }
-    body.dark header { background: rgba(20, 20, 20, 0.9); border-color: var(--border-dark); }
+    body.dark header { background: rgba(18, 18, 18, 0.9); border-color: #333; }
 
-    .icon-btn { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 8px; border-radius: 50%; cursor: pointer; color: inherit; display: flex; align-items: center; }
-    .menu-btn { left: 16px; } 
-    .search-btn { right: 16px; }
-    
-    .logo-title { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
-    .logo-title img { height: 44px; width: 44px; object-fit: cover; border-radius: 8px; }
-    .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--muted); }
-    body.dark .logo-title h1 { color: var(--muted-dark); }
+    .icon-btn { background: transparent; border: none; padding: 8px; cursor: pointer; color: var(--muted); display: flex; align-items: center; transition: 0.2s; }
+    body.dark .icon-btn { color: var(--muted-dark); }
+    .icon-btn svg { width: 24px; height: 24px; stroke-width: 2.2; stroke: currentColor; }
 
-    .search-panel { position: absolute; top: 100%; right: 16px; width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; z-index: 1300; margin-top: 8px; }
-    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; }
+    .logo-title { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; width: max-content; }
+    .logo-title img { height: 38px; width: 38px; border-radius: 6px; }
+    .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
 
-    /* === 3. Sidebar (按照截图 1:1 复刻样式) === */
-    .sidebar {
-      position: fixed; left: calc(-1 * var(--sidebar-width)); top: 0; height: 100%; width: var(--sidebar-width); 
-      padding: 20px 15px; background: #fdf6e3; border-right: 1px solid var(--border); 
-      transition: left .3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1250; overflow-y: auto;
-    }
+    .search-panel { position: absolute; top: 64px; right: 16px; width: 260px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; }
+
+    /* Sidebar：复刻图一效果 */
+    .sidebar { position: fixed; left: calc(-1 * var(--sidebar-w)); top: 0; height: 100%; width: var(--sidebar-w); background: var(--bg); border-right: 1px solid var(--border); transition: 0.3s; z-index: 1250; padding: 20px 14px; overflow-y: auto; }
     body.dark .sidebar { background: #1a1a1a; border-color: #333; }
     .sidebar.active { left: 0; }
     
     .nav-item {
-      display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 18px; margin: 4px 0;
-      border-radius: 12px; background: transparent; color: #6d5850; text-decoration: none; 
-      border: none; cursor: pointer; font-size: 1.05rem; font-family: inherit; transition: 0.2s;
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; margin-bottom: 6px;
+      border-radius: 10px; background: transparent; color: var(--muted); text-decoration: none; border: none; cursor: pointer; font-size: 1rem; font-family: inherit;
     }
-    body.dark .nav-item { color: #d4d4d4; }
-    .nav-item:hover, .nav-item.active { background: #efe7da; color: var(--accent); }
-    body.dark .nav-item:hover { background: rgba(255,255,255,0.05); }
+    body.dark .nav-item { color: #aaa; }
+    .nav-item:hover, .nav-item.active { background: #efe7da; color: var(--accent); font-weight: 700; }
+    body.dark .nav-item:hover { background: #2a2a2a; }
+    .nav-item svg { width: 20px; height: 20px; stroke-width: 2; fill: none; stroke: currentColor; }
 
-    .nav-item svg { width: 22px; height: 22px; stroke-width: 2px; stroke: currentColor; fill: none; opacity: 0.8; }
-    
-    /* 箭头图标 */
-    .chevron { margin-left: auto; width: 16px !important; height: 16px !important; transition: transform 0.3s; }
+    .chevron { margin-left: auto; width: 14px !important; transition: 0.3s; }
     .nav-item.open .chevron { transform: rotate(180deg); }
 
-    /* 标签容器 (带收起功能) */
-    .tag-box { 
-        max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-        display: flex; flex-wrap: wrap; gap: 8px; padding: 0 18px; 
-    }
-    .tag-box.show { max-height: 200px; padding: 10px 18px 20px; }
+    /* 标签折叠区域 */
+    .tag-box { max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }
+    .tag-box.show { max-height: 200px; margin: 10px 0 20px; }
+    .tag-pill { padding: 6px 14px; background: #f3eee3; border-radius: 20px; font-size: 0.9rem; color: #8c7e74; cursor: pointer; transition: 0.2s; }
+    body.dark .tag-pill { background: #2a2a2a; color: #999; }
+    .tag-pill:hover { background: #efe7da; color: var(--accent); }
 
-    .tag-pill { 
-        padding: 6px 14px; background: #f3eee3; border-radius: 20px; font-size: 0.9rem; 
-        color: #8c7e74; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
-    }
-    body.dark .tag-pill { background: #2a2a2a; color: #aaa; }
-    .tag-pill:hover { background: #efe7da; border-color: var(--accent); color: var(--accent); }
-
-    .divider { height: 1px; background: var(--border); margin: 15px 0; opacity: 0.5; }
-    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; }
+    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; backdrop-filter: blur(2px); }
     .backdrop.show { display: block; }
 
-    /* === 4. 主内容区 (首页保持显示 10 首) === */
-    main { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-    .intro { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-    .intro h2 { font-size: 1.3rem; margin: 0; color: var(--muted); }
+    main { max-width: 1000px; margin: 25px auto; padding: 0 16px; }
+    .intro { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .intro h2 { font-size: 1.2rem; margin: 0; color: var(--muted); }
     #latestBadge { font-size: 0.9rem; color: var(--accent); font-weight: bold; }
 
     #poemsGrid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-    .poem-card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+    .poem-card { background: var(--card); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; }
     body.dark .poem-card { background: var(--card-dark); box-shadow: none; border: 1px solid #333; }
-    .poem-card:hover { transform: translateY(-5px); }
+    .poem-card:hover { transform: translateY(-4px); }
     .poem-cover { width: 100%; height: 180px; object-fit: cover; }
-    .poem-body { padding: 15px; }
+    .poem-body { padding: 16px; }
     .poem-body h3 { margin: 0 0 8px; font-size: 1.1rem; }
     .poem-body h3 a { text-decoration: none; color: inherit; }
-    .poem-body p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; height: 2.8em; overflow: hidden; }
+    .poem-body p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; height: 3.2em; overflow: hidden; margin: 0; }
 
-    footer { text-align: center; padding: 40px 0; color: var(--muted); font-size: 0.85rem; }
+    footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }
   </style>
 </head>
 <body>
 
   <header>
-    <button class="icon-btn menu-btn" id="menuBtn">
+    <button class="icon-btn" id="menuBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
     <a href="index.html" class="logo-title">
         <img src="assets/img/logo.png" alt="logo">
         <h1>一个青年的天马行空</h1>
     </a>
-    <button class="icon-btn search-btn" id="searchBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <button class="icon-btn" id="searchBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索诗题..." /></div>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索..." /></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="nav-item active">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页
-    </a>
-    <a href="toc.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录
-    </a>
-    <a href="about.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>作者简介
-    </a>
+    <a href="index.html" class="nav-item active"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页</a>
+    <a href="toc.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录</a>
+    <a href="about.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>关于</a>
+    
+    <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
 
     <button class="nav-item" id="tagToggleBtn">
-        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-        标签
+        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
+        分类浏览
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="tag-box" id="tagBox">
@@ -135,24 +111,15 @@
         <span class="tag-pill" onclick="filterByTag('见我')">#见我</span>
     </div>
 
-    <div class="divider"></div>
-
-    <button id="randomBtn" class="nav-item">
-        <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首
-    </button>
-    <button id="darkModeBtn" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>切换深色模式
-    </button>
+    <button id="randomBtn" class="nav-item"><svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首</button>
+    <button id="darkBtn" class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>深色模式</button>
   </aside>
 
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <section class="intro">
-      <h2>最近更新</h2>
-      <div id="latestBadge">加载中...</div>
-    </section>
-    <section id="poemsGrid"></section>
+    <div class="intro"><h2>最新诗作</h2><div id="latestBadge">...</div></div>
+    <div id="poemsGrid"></div>
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
@@ -165,37 +132,19 @@
     const poemsGrid = document.getElementById('poemsGrid');
     let poemsList = [];
 
-    // 基础交互
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
     document.getElementById('searchBtn').onclick = () => { 
-        const sp = document.getElementById('searchPanel');
-        sp.style.display = sp.style.display === 'block' ? 'none' : 'block';
+        const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
     };
 
-    // 标签收起功能
-    tagToggleBtn.onclick = () => {
-        tagToggleBtn.classList.toggle('open');
-        tagBox.classList.toggle('show');
-    };
+    tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
+    document.getElementById('darkBtn').onclick = () => { document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); };
 
-    // 深色模式
-    document.getElementById('darkModeBtn').onclick = () => {
-        const isDark = document.body.classList.toggle('dark');
-        localStorage.setItem('site-dark', isDark ? '1' : '0');
-    };
-
-    // 随机
-    document.getElementById('randomBtn').onclick = () => {
-        if(poemsList.length) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
-    };
-
-    // 渲染
     function renderGrid(list) {
         poemsGrid.innerHTML = '';
         list.slice(0, 10).forEach(p => {
-            const card = document.createElement('div');
-            card.className = 'poem-card';
+            const card = document.createElement('div'); card.className = 'poem-card';
             card.innerHTML = `<a href="poems/${p.file}"><img class="poem-cover" src="${p.img}" onerror="this.src='assets/img/logo.png'"></a>
                 <div class="poem-body"><h3><a href="poems/${p.file}">${p.title}</a></h3><p>${p.preview}</p></div>`;
             poemsGrid.appendChild(card);
@@ -203,16 +152,12 @@
     }
 
     function filterByTag(tag) {
-        const filtered = poemsList.filter(p => p.tags && p.tags.includes(tag));
-        renderGrid(filtered);
+        renderGrid(poemsList.filter(p => p.tags && p.tags.includes(tag)));
         document.getElementById('latestBadge').innerText = "# " + tag;
         sidebar.classList.remove('active'); backdrop.classList.remove('show');
     }
 
-    document.getElementById('searchInput').oninput = (e) => {
-        const val = e.target.value.toLowerCase();
-        renderGrid(poemsList.filter(p => p.title.toLowerCase().includes(val)));
-    };
+    document.getElementById('randomBtn').onclick = () => { if(poemsList.length) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file; };
 
     async function init() {
         if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
@@ -222,9 +167,10 @@
             poemsList = await res.json();
             renderGrid(poemsList);
             if(poemsList[0]) document.getElementById('latestBadge').innerText = poemsList[0].title;
-        } catch(e) { console.error("Data error"); }
+        } catch(e) { console.error("Error"); }
     }
     init();
   </script>
 </body>
 </html>
+
