@@ -1,17 +1,23 @@
 import json
 import os
+import random
 
 # 1. 路径设置
 json_path = 'poems/poems.json'
 
 if not os.path.exists(json_path):
-    print(f"找不到 {json_path}")
-else:
-    with open(json_path, 'r', encoding='utf-8') as f:
-        poems = json.load(f)
+    print(f"错误：找不到 {json_path}，请确保文件位置正确。")
+    exit()
 
-    # --- 100% 还原首页风格的诗歌模板 ---
-    template = """<!DOCTYPE html>
+with open(json_path, 'r', encoding='utf-8') as f:
+    poems_data = json.load(f)
+
+# 提取所有诗歌的文件名列表，用于“随机一首”功能
+all_poem_files = [p['file'] for p in poems_data]
+poems_list_js = json.dumps(all_poem_files) # 转换为JS数组字符串
+
+# --- 2. 终极 HTML 模板 (完美复刻侧边栏 + 字体调节) ---
+template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
@@ -26,153 +32,311 @@ else:
   <meta property="og:type" content="article">
 
   <style>
-    /* 复制首页的全局变量和核心样式 */
+    /* === 全局变量 (与首页保持一致) === */
     :root{{
       --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
       --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
       --max-w: 700px; --sidebar-width: 280px;
+      --poem-font-size: 1.2rem; /* 默认正文字体大小 */
     }}
     *{{box-sizing:border-box}}
     html,body{{ margin:0; font-family: 'Noto Serif SC', serif; background:var(--bg); color:#222; transition: background .25s, color .25s; }}
     body.dark{{ background:var(--bg-dark); color:var(--muted-dark); }}
 
-    /* Header 样式 */
+    /* === Header 样式 === */
     header{{
       position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
-      padding:12px 20px; background: rgba(255,255,255,0.7); border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
+      padding:12px 20px; background: rgba(255,255,255,0.75); border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
     }}
     body.dark header{{ background: rgba(20,20,20,0.9); border-color:var(--border-dark); }}
     .icon-btn{{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; cursor:pointer; color:inherit; }}
-    .menu-btn{{ left:16px; }} .search-btn{{ right:16px; }}
+    .menu-btn{{ left:16px; }}
     .logo-title{{ display:flex; align-items:center; gap:10px; }}
     .logo-title img{{ height:36px; width:36px; object-fit:cover; border-radius:6px; }}
-    .logo-title h1{{ margin:0; font-size:1rem; color:var(--muted); }}
+    .logo-title h1{{ margin:0; font-size:1rem; color:var(--muted); font-weight: 700; }}
     body.dark .logo-title h1 {{ color: var(--muted-dark); }}
 
-    /* Sidebar 样式 */
+    /* === Sidebar 样式 (完美复刻) === */
     .sidebar{{
       position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
-      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; overflow-y: auto;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; overflow-y: auto; display: flex; flex-direction: column;
     }}
+    body.dark .sidebar{{ background:var(--bg-dark); border-color:var(--border-dark); }}
     .sidebar.active{{ left:0; }}
-    .nav-item {{ display:flex; align-items:center; gap:12px; width:100%; padding:12px; margin:6px 0; border-radius:8px; color:inherit; text-decoration:none; border:none; background:transparent; cursor:pointer; font-family: inherit; font-size:1rem; }}
-    .nav-item:hover {{ background: rgba(0,0,0,0.05); }}
-    .backdrop{{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }}
+    
+    /* 侧边栏按钮通用样式 */
+    .nav-item {{ 
+      display:flex; align-items:center; gap:12px; width:100%; padding:12px; margin:6px 0; 
+      border-radius:8px; color:inherit; text-decoration:none; border:none; background:transparent; 
+      cursor:pointer; font-family: inherit; font-size:1rem; text-align: left; transition: background 0.2s;
+    }}
+    .nav-item:hover {{ background: rgba(0,0,0,0.05); color: var(--accent); }}
+    body.dark .nav-item:hover {{ background: rgba(255,255,255,0.05); }}
+    /* SVG 图标样式，确保黑夜模式反色 */
+    .nav-item svg {{ width:22px; height:22px; flex-shrink: 0; stroke-width: 2px; stroke: currentColor; fill: none; }}
+
+    /* 侧边栏分割线 */
+    .sidebar-divider {{ border:0; border-top:1px solid var(--border); margin:15px 0; }}
+    body.dark .sidebar-divider {{ border-color: var(--border-dark); }}
+
+    /* 侧边栏标签样式 */
+    .sidebar-tag {{
+        display: inline-block; font-size: 0.85rem; padding: 6px 12px; 
+        background: rgba(0,0,0,0.06); border-radius: 15px; color: var(--muted); 
+        text-decoration: none; margin: 5px; transition: all 0.2s;
+    }}
+    body.dark .sidebar-tag {{ background: rgba(255,255,255,0.1); color: var(--muted-dark); }}
+    .sidebar-tag:hover {{ background: var(--accent); color: #fff!important; }}
+
+    /* 字体大小调节控件 */
+    .font-control-group {{ display: flex; align-items: center; justify-content: space-between; padding: 5px 12px; background: rgba(0,0,0,0.03); border-radius: 8px; margin-top: 10px; }}
+    body.dark .font-control-group {{ background: rgba(255,255,255,0.05); }}
+    .font-btn {{ padding: 8px 15px; border: 1px solid var(--border); background: var(--bg); color: inherit; border-radius: 6px; cursor: pointer; font-family: inherit; }}
+    body.dark .font-btn {{ border-color: var(--border-dark); background: var(--card-dark); }}
+    .font-btn:hover {{ border-color: var(--accent); color: var(--accent); }}
+
+    .backdrop{{ position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; z-index:1240; backdrop-filter: blur(2px); }}
     .backdrop.show{{ display:block; }}
 
-    /* 搜索面板 */
-    .search-panel{{
-      position:absolute; top:calc(100% + 10px); right:16px; width:300px; background:var(--card); border-radius:12px; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,0.1); display:none; z-index:1300;
-    }}
-    .search-panel input{{ width:100%; padding:10px; border-radius:20px; border:1px solid var(--border); outline:none; }}
-
-    /* 诗歌正文样式（保留你喜欢的楷体信纸感） */
+    /* === 正文内容样式 === */
     main {{
-      max-width: var(--max-w); margin: 30px auto; padding: 0 20px;
-      animation: fadeInUp 0.8s ease forwards;
+      max-width: var(--max-w); margin: 40px auto; padding: 0 25px;
+      animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0;
     }}
-    @keyframes fadeInUp {{ from {{ opacity: 0; transform: translateY(20px); }} to {{ opacity: 1; transform: translateY(0); }} }}
+    @keyframes fadeInUp {{ from {{ opacity: 0; transform: translateY(30px); }} to {{ opacity: 1; transform: translateY(0); }} }}
     
-    .poem-paper {{
-      font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      line-height: 1.8; font-size: 1.25rem;
+    .poem-container {{
+      font-family: "STKaiti", "华文楷体", "KaiTi", serif; /* 保持你喜欢的信纸字体 */
     }}
-    .poem-image {{ width:100%; border-radius:12px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }}
-    .actions {{ display: flex; gap: 15px; margin: 40px 0; }}
-    .actions button {{ background: var(--border); border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-family: inherit; }}
+    .poem-title {{ font-size: 2.4rem; margin-bottom: 15px; color: var(--accent); text-align: center; }}
+    .poem-meta {{ text-align:center; color:var(--muted); font-size: 0.95rem; margin-bottom: 30px; opacity: 0.8; }}
+    
+    .poem-image {{ width:100%; border-radius:16px; margin-bottom: 35px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }}
+    body.dark .poem-image {{ opacity: 0.9; }}
+
+    /* 正文区域，应用动态字体大小 */
+    .poem-body {{ 
+        white-space: pre-wrap; line-height: 2; 
+        font-size: var(--poem-font-size); /* 关键：使用变量 */
+        color: #333; transition: font-size 0.3s ease;
+    }}
+    body.dark .poem-body {{ color: #ccc; }}
+
+    .actions {{ display: flex; justify-content: center; gap: 20px; margin: 50px 0; }}
+    .action-btn {{ 
+        background: transparent; border: 1px solid var(--accent); color: var(--accent); 
+        padding: 12px 30px; border-radius: 30px; cursor: pointer; font-family: inherit; font-size: 1rem;
+        display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }}
+    .action-btn:hover {{ background: var(--accent); color: #fff; box-shadow: 0 4px 12px rgba(184, 156, 122, 0.3); }}
+    .action-btn svg {{ width: 20px; height: 20px; }}
+
   </style>
 </head>
 <body>
 
   <header>
-    <button class="icon-btn menu-btn" id="menuBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
-    <div class="logo-title"><img src="../assets/img/logo.png" alt="logo"><h1>一个青年的天马行空</h1></div>
-    <button class="icon-btn search-btn" id="searchBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜搜其他诗句..." /></div>
+    <button class="icon-btn menu-btn" id="menuBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <a href="../index.html" class="logo-title" style="text-decoration: none;">
+        <img src="../assets/img/logo.png" alt="logo">
+        <h1>一个青年的天马行空</h1>
+    </a>
+    <div style="width: 40px;"></div> 
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <a href="../index.html" class="nav-item">🏠 首页</a>
-    <a href="../toc.html" class="nav-item">📜 目录</a>
-    <button id="toggleDarkMode" class="nav-item">🌙 切换模式</button>
-    <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
-    <div style="padding:10px; font-size:0.9rem; color:var(--muted);">标签预览：</div>
-    <div id="tagPreview" style="display:flex; flex-wrap:wrap; gap:5px; padding:0 10px;">{tags_html}</div>
+    <div>
+      <a href="../index.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
+        首页
+      </a>
+      <a href="../toc.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+        目录
+      </a>
+      <a href="../about.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
+        作者简介
+      </a>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <div>
+      <button id="toggleDarkMode" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <span id="darkModeText">夜间模式</span>
+      </button>
+      <button id="randomPoemBtn" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
+        随机一首
+      </button>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <div style="padding: 0 12px;">
+        <div style="font-size:0.9rem; color:var(--muted); margin-bottom: 10px;">分类浏览：</div>
+        <div style="display: flex; flex-wrap: wrap;">
+            <a href="../index.html?q=见人" class="sidebar-tag">#见人</a>
+            <a href="../index.html?q=见物" class="sidebar-tag">#见物</a>
+            <a href="../index.html?q=见我" class="sidebar-tag">#见我</a>
+        </div>
+    </div>
+
+    <hr class="sidebar-divider">
+
+    <div style="padding: 0 12px; margin-top: auto;"> <div style="font-size:0.9rem; color:var(--muted); margin-bottom: 5px;">字号调节：</div>
+        <div class="font-control-group">
+            <button class="font-btn" id="fontDecrease" aria-label="减小字号">A-</button>
+            <span style="font-size: 0.9rem; color: var(--muted);">阅读体验</span>
+            <button class="font-btn" id="fontIncrease" aria-label="增大字号">A+</button>
+        </div>
+    </div>
+
   </aside>
   <div class="backdrop" id="backdrop"></div>
 
-  <main class="poem-paper">
-    <h1 style="font-size: 2.2rem; margin-bottom: 10px;">{title}</h1>
-    <div style="color:var(--muted); font-size: 0.9rem; margin-bottom: 20px;">分类：{tags_str}</div>
-    
-    <img src="../{img}" class="poem-image" alt="{title}">
+  <main>
+    <article class="poem-container">
+        <h1 class="poem-title">{title}</h1>
+        <div class="poem-meta">
+            分类：{tags_str}
+        </div>
+        
+        <img src="../{img}" class="poem-image" alt="{title} 配图">
 
-    <div class="poem-body">{full_text}</div>
+        <div class="poem-body" id="poemBody">{full_text}</div>
 
-    <div class="actions">
-      <button onclick="alert('感谢你的点赞！')">👍 赞一个</button>
-      <button onclick="sharePage()">🔗 分享</button>
-    </div>
+        <div class="actions">
+          <button class="action-btn" onclick="handleLike(this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+            喜欢
+          </button>
+          <button class="action-btn" onclick="sharePage()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            分享
+          </button>
+        </div>
+    </article>
   </main>
 
   <script>
-    // 基础交互逻辑
+    // === 1. 侧边栏与交互逻辑 ===
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
-    const searchBtn = document.getElementById('searchBtn');
-    const searchPanel = document.getElementById('searchPanel');
-    const searchInput = document.getElementById('searchInput');
+    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
+    const darkModeText = document.getElementById('darkModeText');
 
+    // 打开/关闭侧边栏
     menuBtn.onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
-    backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); searchPanel.style.display='none'; }};
-    searchBtn.onclick = () => {{ searchPanel.style.display = searchPanel.style.display === 'block' ? 'none' : 'block'; searchInput.focus(); }};
+    backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }};
 
-    // 搜索逻辑：跳转回首页筛选
-    searchInput.onkeypress = (e) => {{
-      if(e.key === 'Enter') window.location.href = '../index.html?q=' + encodeURIComponent(searchInput.value);
+    // === 2. 夜间模式 (带记忆功能) ===
+    function updateDarkModeUI(isDark) {{
+        if (isDark) {{
+            document.body.classList.add('dark');
+            darkModeText.innerText = "日间模式";
+        }} else {{
+            document.body.classList.remove('dark');
+            darkModeText.innerText = "夜间模式";
+        }}
+    }}
+
+    toggleDarkModeBtn.onclick = () => {{
+        const isDark = document.body.classList.toggle('dark');
+        localStorage.setItem('site-dark', isDark ? '1' : '0');
+        updateDarkModeUI(isDark);
     }};
 
-    // 夜间模式
-    document.getElementById('toggleDarkMode').onclick = () => {{
-      const isDark = document.body.classList.toggle('dark');
-      localStorage.setItem('site-dark', isDark ? '1' : '0');
-    }};
-    if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
+    // 初始化检查夜间模式
+    if(localStorage.getItem('site-dark')==='1') {{ updateDarkModeUI(true); }}
 
-    // 分享功能
+
+    // === 3. ✨ 字体大小调节 (带记忆功能) ===
+    const fontDecreaseBtn = document.getElementById('fontDecrease');
+    const fontIncreaseBtn = document.getElementById('fontIncrease');
+    const rootElement = document.documentElement;
+    // 默认大小 1.2rem，每次调节 0.1rem，设置最大最小值
+    let currentFontSize = parseFloat(localStorage.getItem('poem-font-size')) || 1.2;
+    const minFontSize = 1.0;
+    const maxFontSize = 1.8;
+
+    function updateFontSize(size) {{
+        rootElement.style.setProperty('--poem-font-size', size + 'rem');
+        localStorage.setItem('poem-font-size', size);
+        currentFontSize = size;
+    }}
+
+    // 初始化字体大小
+    updateFontSize(currentFontSize);
+
+    fontDecreaseBtn.onclick = () => {{
+        if (currentFontSize > minFontSize) {{ updateFontSize((currentFontSize - 0.1).toFixed(1)); }}
+    }};
+    fontIncreaseBtn.onclick = () => {{
+        if (currentFontSize < maxFontSize) {{ updateFontSize((currentFontSize + 0.1).toFixed(1)); }}
+    }};
+
+
+    // === 4. 随机一首功能 ===
+    // 这里注入了所有诗歌文件名的列表
+    const allPoems = {poems_list_js}; 
+    document.getElementById('randomPoemBtn').onclick = () => {{
+        if (allPoems && allPoems.length > 0) {{
+            // 过滤掉当前页面，避免随机到自己
+            const currentFile = window.location.pathname.split('/').pop();
+            const otherPoems = allPoems.filter(p => p !== currentFile);
+            if (otherPoems.length > 0) {{
+                const randomFile = otherPoems[Math.floor(Math.random() * otherPoems.length)];
+                window.location.href = randomFile;
+            }}
+        }}
+    }};
+
+    // === 5. 分享与点赞交互 ===
     async function sharePage() {{
       if (navigator.share) {{
-        navigator.share({{ title: '{title}', url: window.location.href }});
-      }} else {{
-        alert('请复制浏览器地址栏链接分享给好友');
-      }}
+        try {{ await navigator.share({{ title: '{title}', url: window.location.href }}); }}
+        catch (err) {{ console.log('分享取消'); }}
+      }} else {{ alert('请复制浏览器链接分享'); }}
+    }}
+
+    function handleLike(btn) {{
+        btn.innerHTML = '❤️ 已喜欢';
+        btn.style.color = '#e74c3c'; btn.style.borderColor = '#e74c3c';
+        btn.disabled = true;
+        alert('谢谢你的喜欢！(这里可以对接后端记录数据)');
     }}
   </script>
 </body>
 </html>
 """
 
-    # 2. 批量生成
-    for poem in poems:
-        full_text = poem.get('content', poem['preview'])
-        tags_list = poem.get('tags', [])
-        tags_str = " #".join(tags_list)
-        # 生成侧边栏的标签预览链接
-        tags_html = "".join([f'<a href="../index.html?tag={t}" style="text-decoration:none; font-size:0.8rem; background:rgba(0,0,0,0.05); padding:4px 8px; border-radius:10px; color:var(--muted);">#{t}</a>' for t in tags_list])
+# --- 3. 批量生成所有页面 ---
+print(f"开始生成 {len(poems_data)} 首诗歌页面...")
+for poem in poems_data:
+    # 优先使用 content 字段，没有则用 preview 兜底
+    full_text = poem.get('content', poem['preview'])
+    # 处理标签显示
+    tags = poem.get('tags', [])
+    tags_str = " / ".join(tags) if tags else "暂无分类"
 
-        html_content = template.format(
-            title=poem['title'],
-            preview=poem['preview'][:30],
-            full_text=full_text,
-            img=poem['img'],
-            file=poem['file'],
-            tags_str=tags_str,
-            tags_html=tags_html
-        )
-        
-        output_file = f"poems/{poem['file']}"
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(html_content)
+    html_content = template.format(
+        title=poem['title'],
+        preview=poem['preview'][:50].replace('\n', ' '), # 预览图优化
+        full_text=full_text,
+        img=poem['img'],
+        file=poem['file'],
+        tags_str=tags_str,
+        poems_list_js=poems_list_js # 注入JS数据
+    )
+    
+    output_file = f"poems/{poem['file']}"
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(html_content)
 
-    print(f"✅ 导航同步完成！首页风格已应用到所有诗歌页面。")
+print(f"✅ 大功告成！所有页面已更新，侧边栏和字体调节功能已就位。")
