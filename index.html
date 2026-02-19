@@ -4,160 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>一个青年的天马行空</title>
-  <link rel="icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* === 1. 全局变量 (回归原本字号感觉) === */
-    :root{
+    /* === 1. 全局基础 === */
+    :root {
       --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
       --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
-      --max-w: 1100px; --sidebar-width: 280px;
+      --sidebar-width: 280px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased;}
-    body{ background:var(--bg); color:#222; transition: background .25s, color .25s; line-height: 1.6; }
-    body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.25s; }
+    body.dark { background: var(--bg-dark); color: var(--muted-dark); }
 
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    main { animation: fadeInUp 0.7s ease-out forwards; }
-
-    /* === 2. Header (绝对对称布局) === */
-    header{
-      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
-      padding:12px 20px; background: rgba(253,246,227,0.8); border-bottom:1px solid var(--border); backdrop-filter: blur(10px);
+    /* === 2. Header (复刻首页布局) === */
+    header {
+      position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: center;
+      padding: 12px 20px; background: rgba(253, 246, 227, 0.85); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px);
     }
-    body.dark header{ background: rgba(18,18,18,0.9); border-color:var(--border-dark); }
+    body.dark header { background: rgba(20, 20, 20, 0.9); border-color: var(--border-dark); }
 
-    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer; color:inherit; display:flex; align-items:center; }
-    .menu-btn{ left:16px; } 
-    .search-btn{ right:16px; }
+    .icon-btn { position: absolute; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 8px; border-radius: 50%; cursor: pointer; color: inherit; display: flex; align-items: center; }
+    .menu-btn { left: 16px; } 
+    .search-btn { right: 16px; }
     
-    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; text-decoration: none; }
-    .logo-title img{ height:42px; width:42px; object-fit:cover; border-radius:8px; }
-    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); letter-spacing: 0.5px; }
-    body.dark .logo-title h1{ color:var(--muted-dark); }
+    .logo-title { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
+    .logo-title img { height: 44px; width: 44px; object-fit: cover; border-radius: 8px; }
+    .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--muted); }
+    body.dark .logo-title h1 { color: var(--muted-dark); }
 
-    /* === 3. Search Panel === */
-    .search-panel{
-      position:absolute; top:calc(100% + 10px); right:16px; width:300px; max-width:calc(100% - 40px);
-      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08); display:none; z-index:1300;
-    }
-    body.dark .search-panel{ background:var(--card-dark); border-color:var(--border-dark); }
-    .search-panel input{ width:100%; padding:10px 15px; border-radius:6px; border:none; background:rgba(0,0,0,0.04); color:inherit; outline:none; font-family: inherit; }
+    .search-panel { position: absolute; top: 100%; right: 16px; width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; z-index: 1300; margin-top: 8px; }
+    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; }
 
-    /* === 4. Sidebar (极简风) === */
-    .sidebar{
-      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:24px 20px;
-      background:var(--bg); border-right:1px solid var(--border); transition:left .3s cubic-bezier(0.4, 0, 0.2, 1); z-index:1250;
+    /* === 3. Sidebar (按照截图 1:1 复刻样式) === */
+    .sidebar {
+      position: fixed; left: calc(-1 * var(--sidebar-width)); top: 0; height: 100%; width: var(--sidebar-width); 
+      padding: 20px 15px; background: #fdf6e3; border-right: 1px solid var(--border); 
+      transition: left .3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1250; overflow-y: auto;
     }
-    body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
-    .sidebar.active{ left:0; }
+    body.dark .sidebar { background: #1a1a1a; border-color: #333; }
+    .sidebar.active { left: 0; }
     
     .nav-item {
-      display:flex; align-items:center; gap:12px; width:100%; padding:12px 15px; margin:4px 0;
-      border-radius:8px; background:transparent; color:inherit; text-decoration:none; 
-      border:none; cursor:pointer; font-size:1rem; font-family: inherit; transition: 0.2s;
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 18px; margin: 4px 0;
+      border-radius: 12px; background: transparent; color: #6d5850; text-decoration: none; 
+      border: none; cursor: pointer; font-size: 1.05rem; font-family: inherit; transition: 0.2s;
     }
-    /* 侧边栏图标 */
-    .nav-item svg { width:18px; height:18px; flex-shrink: 0; stroke-width: 2px; stroke: currentColor; fill: none; opacity: 0.7; }
-    .nav-item:hover { background: rgba(184,156,122,0.1); color: var(--accent); }
-    .nav-item.active { color: var(--accent); font-weight: 700; background: rgba(184,156,122,0.05); }
+    body.dark .nav-item { color: #d4d4d4; }
+    .nav-item:hover, .nav-item.active { background: #efe7da; color: var(--accent); }
+    body.dark .nav-item:hover { background: rgba(255,255,255,0.05); }
 
-    .tag-section-title { padding: 20px 15px 10px; font-size: 0.8rem; color: var(--muted); letter-spacing: 1px; font-weight: 700; text-transform: uppercase; opacity: 0.6; }
+    .nav-item svg { width: 22px; height: 22px; stroke-width: 2px; stroke: currentColor; fill: none; opacity: 0.8; }
     
-    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.3); display:none; z-index:1240; backdrop-filter: blur(2px); }
-    .backdrop.show{ display:block; }
+    /* 箭头图标 */
+    .chevron { margin-left: auto; width: 16px !important; height: 16px !important; transition: transform 0.3s; }
+    .nav-item.open .chevron { transform: rotate(180deg); }
 
-    /* === 5. Content (回归原本网格感) === */
-    main{ max-width:var(--max-w); margin:30px auto; padding:0 20px; }
-    .intro{ margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; display:flex; justify-content:space-between; align-items:flex-end; }
-    body.dark .intro{ border-color: var(--border-dark); }
-    .intro h2{ margin:0; font-size:1.4rem; color: var(--accent); }
-    .intro p{ margin:5px 0 0; color:var(--muted); font-size:0.9rem; }
-    .latest-badge { font-size: 0.85rem; color: var(--accent); font-weight: 700; }
+    /* 标签容器 (带收起功能) */
+    .tag-box { 
+        max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        display: flex; flex-wrap: wrap; gap: 8px; padding: 0 18px; 
+    }
+    .tag-box.show { max-height: 200px; padding: 10px 18px 20px; }
 
-    #poemsGrid{ display:grid; gap:25px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-    .poem-card{ background:var(--card); border-radius:4px; overflow:hidden; transition: 0.3s; border: 1px solid transparent; }
-    body.dark .poem-card{ background:var(--card-dark); }
-    .poem-card:hover{ transform: translateY(-4px); border-color: var(--accent); }
-    
-    .poem-cover{ width:100%; height:180px; object-fit:cover; display:block; filter: grayscale(10%); transition: 0.5s; }
-    .poem-card:hover .poem-cover{ filter: grayscale(0%); }
-    
-    .poem-body{ padding:18px; }
-    .poem-body h3{ margin:0 0 10px; font-size:1.1rem; line-height: 1.4; }
-    .poem-body h3 a { text-decoration:none; color:inherit; }
-    .poem-body p{ margin:0; color:var(--muted); font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.7; }
-    .poem-meta{ margin-top:15px; font-size:0.8rem; color:var(--accent); text-transform: uppercase; letter-spacing: 1px; }
-    
-    footer{ margin:60px auto 30px; text-align:center; color:var(--muted); font-size:0.85rem; letter-spacing: 1px; }
+    .tag-pill { 
+        padding: 6px 14px; background: #f3eee3; border-radius: 20px; font-size: 0.9rem; 
+        color: #8c7e74; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+    }
+    body.dark .tag-pill { background: #2a2a2a; color: #aaa; }
+    .tag-pill:hover { background: #efe7da; border-color: var(--accent); color: var(--accent); }
+
+    .divider { height: 1px; background: var(--border); margin: 15px 0; opacity: 0.5; }
+    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; }
+    .backdrop.show { display: block; }
+
+    /* === 4. 主内容区 (首页保持显示 10 首) === */
+    main { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+    .intro { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+    .intro h2 { font-size: 1.3rem; margin: 0; color: var(--muted); }
+    #latestBadge { font-size: 0.9rem; color: var(--accent); font-weight: bold; }
+
+    #poemsGrid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .poem-card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+    body.dark .poem-card { background: var(--card-dark); box-shadow: none; border: 1px solid #333; }
+    .poem-card:hover { transform: translateY(-5px); }
+    .poem-cover { width: 100%; height: 180px; object-fit: cover; }
+    .poem-body { padding: 15px; }
+    .poem-body h3 { margin: 0 0 8px; font-size: 1.1rem; }
+    .poem-body h3 a { text-decoration: none; color: inherit; }
+    .poem-body p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; height: 2.8em; overflow: hidden; }
+
+    footer { text-align: center; padding: 40px 0; color: var(--muted); font-size: 0.85rem; }
   </style>
 </head>
 <body>
 
   <header>
     <button class="icon-btn menu-btn" id="menuBtn">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
-    
     <a href="index.html" class="logo-title">
         <img src="assets/img/logo.png" alt="logo">
         <h1>一个青年的天马行空</h1>
     </a>
-    
     <button class="icon-btn search-btn" id="searchBtn">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索关键词..." autocomplete="off"/></div>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索诗题..." /></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <div style="margin-bottom:20px">
-      <a href="index.html" class="nav-item active">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-        首页
-      </a>
-      <a href="toc.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>
-        目录
-      </a>
-      <a href="about.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        关于
-      </a>
+    <a href="index.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页
+    </a>
+    <a href="toc.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录
+    </a>
+    <a href="about.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>作者简介
+    </a>
 
-      <div class="tag-section-title">分类</div>
-      <button class="nav-item" onclick="filterByTag('见人')"># 见人</button>
-      <button class="nav-item" onclick="filterByTag('见物')"># 见物</button>
-      <button class="nav-item" onclick="filterByTag('见我')"># 见我</button>
-
-      <hr style="border:none; border-top:1px solid var(--border); margin:20px 0; opacity:0.5;">
-
-      <button id="randomPoemBtn" class="nav-item">
-        <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>
-        随机读一首
-      </button>
-
-      <button id="toggleDarkMode" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        切换深色模式
-      </button>
+    <button class="nav-item" id="tagToggleBtn">
+        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+        标签
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="tag-box" id="tagBox">
+        <span class="tag-pill" onclick="filterByTag('见人')">#见人</span>
+        <span class="tag-pill" onclick="filterByTag('见物')">#见物</span>
+        <span class="tag-pill" onclick="filterByTag('见我')">#见我</span>
     </div>
+
+    <div class="divider"></div>
+
+    <button id="randomBtn" class="nav-item">
+        <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首
+    </button>
+    <button id="darkModeBtn" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>切换深色模式
+    </button>
   </aside>
 
   <div class="backdrop" id="backdrop"></div>
 
   <main>
     <section class="intro">
-      <div>
-        <h2>最近更新</h2>
-        <p>每一段文字都是一次精神的远游。</p>
-      </div>
-      <div id="latestBadge" class="latest-badge">Loading...</div>
+      <h2>最近更新</h2>
+      <div id="latestBadge">加载中...</div>
     </section>
-    
     <section id="poemsGrid"></section>
   </main>
 
@@ -166,85 +160,70 @@
   <script>
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
-    const searchPanel = document.getElementById('searchPanel');
-    const searchInput = document.getElementById('searchInput');
+    const tagBox = document.getElementById('tagBox');
+    const tagToggleBtn = document.getElementById('tagToggleBtn');
     const poemsGrid = document.getElementById('poemsGrid');
-    const latestBadge = document.getElementById('latestBadge');
-
     let poemsList = [];
 
-    // 交互逻辑
+    // 基础交互
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
-    document.getElementById('searchBtn').onclick = () => { searchPanel.style.display = searchPanel.style.display==='block'?'none':'block'; searchInput.focus(); };
-    backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); searchPanel.style.display='none'; };
-
-    document.getElementById('toggleDarkMode').onclick = () => {
-      const isDark = document.body.classList.toggle('dark');
-      localStorage.setItem('site-dark', isDark?'1':'0');
+    backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
+    document.getElementById('searchBtn').onclick = () => { 
+        const sp = document.getElementById('searchPanel');
+        sp.style.display = sp.style.display === 'block' ? 'none' : 'block';
     };
 
-    document.getElementById('randomPoemBtn').onclick = () => {
-      if(poemsList.length > 0) {
-        const p = poemsList[Math.floor(Math.random()*poemsList.length)];
-        window.location.href = 'poems/' + p.file;
-      }
+    // 标签收起功能
+    tagToggleBtn.onclick = () => {
+        tagToggleBtn.classList.toggle('open');
+        tagBox.classList.toggle('show');
     };
 
-    // 搜索过滤
-    searchInput.onkeyup = () => renderGrid(poemsList.filter(p => 
-      (p.title + p.preview).toLowerCase().includes(searchInput.value.toLowerCase())
-    ).slice(0, 10));
+    // 深色模式
+    document.getElementById('darkModeBtn').onclick = () => {
+        const isDark = document.body.classList.toggle('dark');
+        localStorage.setItem('site-dark', isDark ? '1' : '0');
+    };
+
+    // 随机
+    document.getElementById('randomBtn').onclick = () => {
+        if(poemsList.length) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
+    };
+
+    // 渲染
+    function renderGrid(list) {
+        poemsGrid.innerHTML = '';
+        list.slice(0, 10).forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'poem-card';
+            card.innerHTML = `<a href="poems/${p.file}"><img class="poem-cover" src="${p.img}" onerror="this.src='assets/img/logo.png'"></a>
+                <div class="poem-body"><h3><a href="poems/${p.file}">${p.title}</a></h3><p>${p.preview}</p></div>`;
+            poemsGrid.appendChild(card);
+        });
+    }
 
     function filterByTag(tag) {
-      const filtered = poemsList.filter(p => p.tags && p.tags.includes(tag));
-      renderGrid(filtered.slice(0, 10));
-      latestBadge.innerText = "# " + tag;
-      sidebar.classList.remove('active');
-      backdrop.classList.remove('show');
+        const filtered = poemsList.filter(p => p.tags && p.tags.includes(tag));
+        renderGrid(filtered);
+        document.getElementById('latestBadge').innerText = "# " + tag;
+        sidebar.classList.remove('active'); backdrop.classList.remove('show');
     }
 
-    // 核心渲染：只取前 10 首
-    function renderGrid(list){
-      poemsGrid.innerHTML = '';
-      if(list.length === 0) { poemsGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;padding:50px;opacity:0.5">暂无相关内容</p>'; return; }
-      
-      list.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'poem-card';
-        card.innerHTML = `
-          <a href="poems/${p.file}">
-            <img class="poem-cover" src="${p.img}" onerror="this.src='assets/img/logo.png'">
-          </a>
-          <div class="poem-body">
-            <h3><a href="poems/${p.file}">${p.title}</a></h3>
-            <p>${p.preview}</p>
-            <div class="poem-meta">${p.tags ? p.tags[0] : 'POEM'}</div>
-          </div>
-        `;
-        poemsGrid.appendChild(card);
-      });
-    }
+    document.getElementById('searchInput').oninput = (e) => {
+        const val = e.target.value.toLowerCase();
+        renderGrid(poemsList.filter(p => p.title.toLowerCase().includes(val)));
+    };
 
     async function init() {
-      try {
-        const res = await fetch('poems/poems.json?v=' + Date.now());
-        poemsList = await res.json();
-        
-        // 1. 处理 URL 参数 (支持 ?q=见人)
-        const params = new URLSearchParams(window.location.search);
-        const query = params.get('q');
-        
-        if(query) {
-            filterByTag(query);
-        } else {
-            renderGrid(poemsList.slice(0, 10)); // 默认只展示 10 首
-            if(poemsList[0]) latestBadge.innerText = poemsList[0].title;
-        }
-      } catch(e) { latestBadge.innerText = "数据同步失败"; }
+        if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
+        document.getElementById('year').innerText = new Date().getFullYear();
+        try {
+            const res = await fetch('poems/poems.json?v=' + Date.now());
+            poemsList = await res.json();
+            renderGrid(poemsList);
+            if(poemsList[0]) document.getElementById('latestBadge').innerText = poemsList[0].title;
+        } catch(e) { console.error("Data error"); }
     }
-
-    if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
-    document.getElementById('year').innerText = new Date().getFullYear();
     init();
   </script>
 </body>
