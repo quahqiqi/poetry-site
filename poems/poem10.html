@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>血 | 一个青年的天马行空</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   
   <meta property="og:title" content="血">
   <meta property="og:description" content="我受伤了，心里长出数道裂痕...">
@@ -12,81 +13,128 @@
   <meta property="og:type" content="article">
 
   <style>
-    body {
+    /* 复制首页的全局变量和核心样式 */
+    :root{
+      --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
+      --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
+      --max-w: 700px; --sidebar-width: 280px;
+    }
+    *{box-sizing:border-box}
+    html,body{ margin:0; font-family: 'Noto Serif SC', serif; background:var(--bg); color:#222; transition: background .25s, color .25s; }
+    body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
+
+    /* Header 样式 */
+    header{
+      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
+      padding:12px 20px; background: rgba(255,255,255,0.7); border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
+    }
+    body.dark header{ background: rgba(20,20,20,0.9); border-color:var(--border-dark); }
+    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; cursor:pointer; color:inherit; }
+    .menu-btn{ left:16px; } .search-btn{ right:16px; }
+    .logo-title{ display:flex; align-items:center; gap:10px; }
+    .logo-title img{ height:36px; width:36px; object-fit:cover; border-radius:6px; }
+    .logo-title h1{ margin:0; font-size:1rem; color:var(--muted); }
+    body.dark .logo-title h1 { color: var(--muted-dark); }
+
+    /* Sidebar 样式 */
+    .sidebar{
+      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; overflow-y: auto;
+    }
+    .sidebar.active{ left:0; }
+    .nav-item { display:flex; align-items:center; gap:12px; width:100%; padding:12px; margin:6px 0; border-radius:8px; color:inherit; text-decoration:none; border:none; background:transparent; cursor:pointer; font-family: inherit; font-size:1rem; }
+    .nav-item:hover { background: rgba(0,0,0,0.05); }
+    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
+    .backdrop.show{ display:block; }
+
+    /* 搜索面板 */
+    .search-panel{
+      position:absolute; top:calc(100% + 10px); right:16px; width:300px; background:var(--card); border-radius:12px; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,0.1); display:none; z-index:1300;
+    }
+    .search-panel input{ width:100%; padding:10px; border-radius:20px; border:1px solid var(--border); outline:none; }
+
+    /* 诗歌正文样式（保留你喜欢的楷体信纸感） */
+    main {
+      max-width: var(--max-w); margin: 30px auto; padding: 0 20px;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .poem-paper {
       font-family: "STKaiti", "华文楷体", "KaiTi", serif;
-      background-color: #f5f0e6;
-      color: #333;
-      padding: 1.5em;
-      max-width: 700px;
-      margin: auto;
+      line-height: 1.8; font-size: 1.25rem;
     }
-    .poem-title {
-      font-size: 1.8em;
-      margin-bottom: 0.5em;
-    }
-    .poem-meta {
-      font-size: 0.9em;
-      color: #777;
-      margin-bottom: 1em;
-    }
-    .poem-body {
-      white-space: pre-wrap;
-      line-height: 1.8em;
-      margin-bottom: 2em;
-      font-size: 1.2em;
-    }
-    .poem-image {
-      width: 100%;
-      max-height: 400px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin: 1em 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .actions {
-      display: flex;
-      gap: 1em;
-      margin-bottom: 2em;
-    }
-    .actions button {
-      background-color: #e6dccb;
-      color: #6b4e2e;
-      border: 1px solid #cbb89d;
-      padding: 0.6em 1.2em;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .nav-links {
-      display: flex;
-      justify-content: space-between;
-      margin: 2em 0;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #6b4e2e;
-      background-color: #e6dccb;
-      padding: 0.5em 1em;
-      border-radius: 6px;
-    }
+    .poem-image { width:100%; border-radius:12px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .actions { display: flex; gap: 15px; margin: 40px 0; }
+    .actions button { background: var(--border); border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-family: inherit; }
   </style>
 </head>
 <body>
-  <h1 class="poem-title">血</h1>
-  <div class="poem-meta">创作日期：2026年 ｜ 标签：哲思</div>
 
-  <img src="../images/poem10.jpg" alt="血" class="poem-image" />
+  <header>
+    <button class="icon-btn menu-btn" id="menuBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+    <div class="logo-title"><img src="../assets/img/logo.png" alt="logo"><h1>一个青年的天马行空</h1></div>
+    <button class="icon-btn search-btn" id="searchBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜搜其他诗句..." /></div>
+  </header>
 
-  <div class="poem-body">我受伤了，心里长出数道裂痕...</div>
+  <aside class="sidebar" id="sidebar">
+    <a href="../index.html" class="nav-item">🏠 首页</a>
+    <a href="../toc.html" class="nav-item">📜 目录</a>
+    <button id="toggleDarkMode" class="nav-item">🌙 切换模式</button>
+    <hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">
+    <div style="padding:10px; font-size:0.9rem; color:var(--muted);">标签预览：</div>
+    <div id="tagPreview" style="display:flex; flex-wrap:wrap; gap:5px; padding:0 10px;"><a href="../index.html?tag=哲思" style="text-decoration:none; font-size:0.8rem; background:rgba(0,0,0,0.05); padding:4px 8px; border-radius:10px; color:var(--muted);">#哲思</a></div>
+  </aside>
+  <div class="backdrop" id="backdrop"></div>
 
-  <div class="actions">
-    <button onclick="alert('谢谢你的喜欢！')">👍 点赞</button>
-    <button onclick="navigator.share ? navigator.share({ title: '血', url: location.href }) : alert('请手动复制链接')">🔗 分享</button>
-  </div>
+  <main class="poem-paper">
+    <h1 style="font-size: 2.2rem; margin-bottom: 10px;">血</h1>
+    <div style="color:var(--muted); font-size: 0.9rem; margin-bottom: 20px;">分类：哲思</div>
+    
+    <img src="../images/poem10.jpg" class="poem-image" alt="血">
 
-  <div class="nav-links">
-    <a href="../index.html">← 返回首页</a>
-    <a href="https://quahqiqi.github.io/poetry-site/toc.html">目录 →</a>
-  </div>
+    <div class="poem-body">我受伤了，心里长出数道裂痕...</div>
+
+    <div class="actions">
+      <button onclick="alert('感谢你的点赞！')">👍 赞一个</button>
+      <button onclick="sharePage()">🔗 分享</button>
+    </div>
+  </main>
+
+  <script>
+    // 基础交互逻辑
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('backdrop');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchPanel = document.getElementById('searchPanel');
+    const searchInput = document.getElementById('searchInput');
+
+    menuBtn.onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
+    backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); searchPanel.style.display='none'; };
+    searchBtn.onclick = () => { searchPanel.style.display = searchPanel.style.display === 'block' ? 'none' : 'block'; searchInput.focus(); };
+
+    // 搜索逻辑：跳转回首页筛选
+    searchInput.onkeypress = (e) => {
+      if(e.key === 'Enter') window.location.href = '../index.html?q=' + encodeURIComponent(searchInput.value);
+    };
+
+    // 夜间模式
+    document.getElementById('toggleDarkMode').onclick = () => {
+      const isDark = document.body.classList.toggle('dark');
+      localStorage.setItem('site-dark', isDark ? '1' : '0');
+    };
+    if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
+
+    // 分享功能
+    async function sharePage() {
+      if (navigator.share) {
+        navigator.share({ title: '血', url: window.location.href });
+      } else {
+        alert('请复制浏览器地址栏链接分享给好友');
+      }
+    }
+  </script>
 </body>
 </html>
