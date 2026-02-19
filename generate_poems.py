@@ -11,11 +11,14 @@ if not os.path.exists(json_path):
 with open(json_path, 'r', encoding='utf-8') as f:
     poems_data = json.load(f)
 
-# 转换JS数组字符串（用于随机功能）
+# 提取用于搜索和随机的数据
+# 我们需要把所有诗的标题和文件名传给前端，让它可以做下拉搜索
+search_data = [{"title": p['title'], "file": p['file']} for p in poems_data]
+search_data_js = json.dumps(search_data)
 all_poem_files = [p['file'] for p in poems_data]
 poems_list_js = json.dumps(all_poem_files)
 
-# === 2. 1:1 完美复刻首页的模板 ===
+# === 2. 模板 ===
 template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -36,7 +39,7 @@ template = """<!DOCTYPE html>
     body {{ margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.3s; }}
     body.dark {{ background: var(--bg-dark); color: var(--muted-dark); }}
 
-    /* === 2. 顶部 Header (绝对居中与对称布局) === */
+    /* === 2. 顶部 Header === */
     header {{
       position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px; background: rgba(253, 246, 227, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
@@ -50,6 +53,17 @@ template = """<!DOCTYPE html>
     .logo-title {{ position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; width: max-content; }}
     .logo-title img {{ height: 38px; width: 38px; border-radius: 6px; }}
     .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }}
+
+    /* ✨ 诗页的搜索下拉框样式 ✨ */
+    .search-panel {{ position: absolute; top: 64px; right: 16px; width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1300; }}
+    body.dark .search-panel {{ background: var(--card-dark); border-color: var(--border-dark); }}
+    .search-panel input {{ width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }}
+    body.dark .search-panel input {{ background: rgba(255,255,255,0.05); }}
+    
+    .search-results {{ max-height: 250px; overflow-y: auto; margin-top: 5px; display: none; }}
+    .search-result-item {{ display: block; padding: 10px; color: var(--muted); text-decoration: none; font-size: 0.95rem; border-radius: 6px; transition: 0.2s; }}
+    body.dark .search-result-item {{ color: var(--muted-dark); }}
+    .search-result-item:hover {{ background: rgba(184, 156, 122, 0.1); color: var(--accent); }}
 
     /* === 3. 完美侧边栏 Sidebar === */
     .sidebar {{ position: fixed; left: calc(-1 * var(--sidebar-w)); top: 0; height: 100%; width: var(--sidebar-w); background: var(--bg); border-right: 1px solid var(--border); transition: 0.3s; z-index: 1250; padding: 20px 14px; overflow-y: auto; }}
@@ -65,7 +79,6 @@ template = """<!DOCTYPE html>
     body.dark .nav-item:hover {{ background: #2a2a2a; }}
     .nav-item svg {{ width: 20px; height: 20px; stroke-width: 2; fill: none; stroke: currentColor; }}
 
-    /* 标签折叠功能 */
     .chevron {{ margin-left: auto; width: 14px !important; transition: 0.3s; }}
     .nav-item.open .chevron {{ transform: rotate(180deg); }}
     .tag-box {{ max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }}
@@ -118,9 +131,14 @@ template = """<!DOCTYPE html>
         <img src="../assets/img/logo.png" alt="logo">
         <h1>一个青年的天马行空</h1>
     </a>
-    <a href="../index.html" class="icon-btn" id="searchBtn">
+    
+    <button class="icon-btn" id="searchBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-    </a>
+    </button>
+    <div class="search-panel" id="searchPanel">
+        <input id="searchInput" type="text" placeholder="输入诗题查找..." autocomplete="off" />
+        <div class="search-results" id="searchResults"></div>
+    </div>
   </header>
 
   <aside class="sidebar" id="sidebar">
@@ -194,11 +212,40 @@ template = """<!DOCTYPE html>
     const backdrop = document.getElementById('backdrop');
     const tagBox = document.getElementById('tagBox');
     const tagToggleBtn = document.getElementById('tagToggleBtn');
+    const searchPanel = document.getElementById('searchPanel');
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    
+    // 注入全部诗歌数据供搜索和随机使用
+    const searchData = {search_data_js};
     const allPoems = {poems_list_js};
 
     document.getElementById('menuBtn').onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
-    backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }};
+    backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); searchPanel.style.display='none'; }};
     tagToggleBtn.onclick = () => {{ tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); }};
+
+    // ✨ 诗页本地搜索逻辑 ✨
+    document.getElementById('searchBtn').onclick = () => {{
+        searchPanel.style.display = searchPanel.style.display === 'block' ? 'none' : 'block';
+        if (searchPanel.style.display === 'block') searchInput.focus();
+    }};
+
+    searchInput.oninput = (e) => {{
+        const val = e.target.value.toLowerCase().trim();
+        if (!val) {{
+            searchResults.style.display = 'none';
+            return;
+        }}
+        const matches = searchData.filter(p => p.title.toLowerCase().includes(val));
+        
+        if (matches.length > 0) {{
+            searchResults.innerHTML = matches.map(m => `<a href="${{m.file}}" class="search-result-item">📄 ${{m.title}}</a>`).join('');
+            searchResults.style.display = 'block';
+        }} else {{
+            searchResults.innerHTML = '<div style="padding:10px; color:#999; text-align:center; font-size:0.9rem;">未找到相关诗歌</div>';
+            searchResults.style.display = 'block';
+        }}
+    }};
 
     document.getElementById('darkBtn').onclick = () => {{
         const isDark = document.body.classList.toggle('dark');
@@ -269,6 +316,7 @@ for i, poem in enumerate(poems_data):
         file=poem['file'],
         tags_str=tags_str,
         poems_list_js=poems_list_js,
+        search_data_js=search_data_js,
         prev_html=prev_html,
         next_html=next_html
     )
@@ -276,4 +324,4 @@ for i, poem in enumerate(poems_data):
     with open(f"poems/{poem['file']}", 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print("✅ 诗歌详情页全站适配完成！")
+print("✅ 诗歌详情页全站适配完成，本地搜索功能已就位！")
