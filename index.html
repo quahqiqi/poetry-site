@@ -136,6 +136,7 @@
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
     document.getElementById('searchBtn').onclick = () => { 
         const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
+        if(sp.style.display === 'block') document.getElementById('searchInput').focus();
     };
 
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
@@ -143,6 +144,7 @@
 
     function renderGrid(list) {
         poemsGrid.innerHTML = '';
+        if (list.length === 0) { poemsGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">暂无结果</p>'; return; }
         list.slice(0, 10).forEach(p => {
             const card = document.createElement('div'); card.className = 'poem-card';
             card.innerHTML = `<a href="poems/${p.file}"><img class="poem-cover" src="${p.img}" onerror="this.src='assets/img/logo.png'"></a>
@@ -157,6 +159,12 @@
         sidebar.classList.remove('active'); backdrop.classList.remove('show');
     }
 
+    // ==== ✨ 这里是修复的搜索功能逻辑 ====
+    document.getElementById('searchInput').oninput = (e) => {
+        const val = e.target.value.toLowerCase();
+        renderGrid(poemsList.filter(p => (p.title + p.preview).toLowerCase().includes(val)));
+    };
+
     document.getElementById('randomBtn').onclick = () => { if(poemsList.length) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file; };
 
     async function init() {
@@ -165,12 +173,18 @@
         try {
             const res = await fetch('poems/poems.json?v=' + Date.now());
             poemsList = await res.json();
-            renderGrid(poemsList);
-            if(poemsList[0]) document.getElementById('latestBadge').innerText = poemsList[0].title;
+            
+            // 兼容从诗歌详情页带参数 ?q=xxx 返回首页搜索
+            const params = new URLSearchParams(window.location.search);
+            if(params.get('q')) {
+                filterByTag(params.get('q'));
+            } else {
+                renderGrid(poemsList);
+                if(poemsList[0]) document.getElementById('latestBadge').innerText = poemsList[0].title;
+            }
         } catch(e) { console.error("Error"); }
     }
     init();
   </script>
 </body>
 </html>
-
