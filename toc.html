@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* === 1. 全局变量与基础 === */
+    /* === 1. 全局与变量 === */
     :root{
       --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
       --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
@@ -24,146 +24,156 @@
 
     /* === 2. 完美对齐的 Header === */
     header{
-      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
-      padding:12px 20px; background: rgba(253,246,227,0.8); border-bottom:1px solid var(--border); backdrop-filter: blur(10px);
+      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:space-between;
+      padding:10px 16px; background: rgba(253,246,227,0.9); border-bottom:1px solid var(--border); backdrop-filter: blur(10px); height:64px;
     }
     body.dark header{ background: rgba(18,18,18,0.9); border-color:var(--border-dark); }
 
-    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer; color:inherit; display:flex; align-items:center; }
-    .menu-btn{ left:16px; } 
-    .search-btn{ right:16px; }
+    .icon-btn{ background:transparent; border:none; padding:8px; cursor:pointer; color:var(--muted); display:flex; align-items:center; transition:0.2s; }
+    body.dark .icon-btn{ color:var(--muted-dark); }
+    .icon-btn svg{ width:24px; height:24px; stroke-width:2.2; stroke:currentColor; }
     
-    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; text-decoration: none; }
-    .logo-title img{ height:42px; width:42px; object-fit:cover; border-radius:8px; }
-    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); letter-spacing: 0.5px; }
-    body.dark .logo-title h1{ color:var(--muted-dark); }
+    .logo-title{ position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:8px; text-decoration: none; color:inherit; width:max-content; }
+    .logo-title img{ height:38px; width:38px; border-radius:6px; }
+    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; white-space:nowrap; }
 
     .search-panel{
-      position:absolute; top:calc(100% + 10px); right:16px; width:300px; max-width:calc(100% - 40px);
-      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08); display:none; z-index:1300;
+      position:absolute; top:64px; right:16px; width:260px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:8px; display:none; box-shadow:0 10px 20px rgba(0,0,0,0.1); z-index:1300;
     }
     body.dark .search-panel{ background:var(--card-dark); border-color:var(--border-dark); }
-    .search-panel input{ width:100%; padding:10px 15px; border-radius:6px; border:none; background:rgba(0,0,0,0.04); color:inherit; outline:none; font-family: inherit; }
+    .search-panel input{ width:100%; padding:10px; border:none; background:rgba(0,0,0,0.05); border-radius:6px; outline:none; font-family:inherit; color:inherit; }
 
-    /* === 3. Sidebar (与首页严格一致) === */
+    /* === 3. Sidebar === */
     .sidebar{
-      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:24px 20px;
+      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px 14px;
       background:var(--bg); border-right:1px solid var(--border); transition:left .3s cubic-bezier(0.4, 0, 0.2, 1); z-index:1250; overflow-y:auto;
     }
-    body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
+    body.dark .sidebar{ background:#1a1a1a; border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
     
     .nav-item {
-      display:flex; align-items:center; gap:12px; width:100%; padding:12px 15px; margin:4px 0;
-      border-radius:8px; background:transparent; color:inherit; text-decoration:none; 
-      border:none; cursor:pointer; font-size:1rem; font-family: inherit; transition: 0.2s;
+      display:flex; align-items:center; gap:12px; width:100%; padding:12px 16px; margin-bottom:6px;
+      border-radius:10px; background:transparent; color:var(--muted); text-decoration:none; border:none; cursor:pointer; font-size:1rem; font-family:inherit; transition:0.2s;
     }
-    .nav-item svg { width:18px; height:18px; flex-shrink: 0; stroke-width: 2px; stroke: currentColor; fill: none; opacity: 0.7; }
-    .nav-item:hover { background: rgba(184,156,122,0.1); color: var(--accent); }
-    .nav-item.active { color: var(--accent); font-weight: 700; background: rgba(184,156,122,0.05); }
+    body.dark .nav-item { color:#aaa; }
+    .nav-item:hover, .nav-item.active { background:#efe7da; color:var(--accent); font-weight:700; }
+    body.dark .nav-item:hover { background:#2a2a2a; }
+    .nav-item svg { width:20px; height:20px; stroke-width:2; fill:none; stroke:currentColor; }
 
-    /* 标签折叠 */
-    .chevron { margin-left: auto; width: 14px !important; transition: 0.3s; }
-    .nav-item.open .chevron { transform: rotate(180deg); }
-    .tag-box { max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }
-    .tag-box.show { max-height: 200px; margin: 10px 0 20px; }
-    .tag-pill { padding: 6px 14px; background: rgba(0,0,0,0.04); border-radius: 20px; font-size: 0.9rem; color: var(--muted); cursor: pointer; transition: 0.2s; text-decoration:none; }
-    body.dark .tag-pill { background: rgba(255,255,255,0.05); color: #999; }
-    .tag-pill:hover { background: rgba(184,156,122,0.15); color: var(--accent); }
+    .chevron { margin-left:auto; width:14px !important; transition:0.3s; }
+    .nav-item.open .chevron { transform:rotate(180deg); }
+    .tag-box { max-height:0; overflow:hidden; transition:0.3s; display:flex; flex-wrap:wrap; gap:8px; padding-left:16px; }
+    .tag-box.show { max-height:200px; margin:10px 0 20px; }
+    .tag-pill { padding:6px 14px; background:#f3eee3; border-radius:20px; font-size:0.9rem; color:#8c7e74; cursor:pointer; transition:0.2s; text-decoration:none; }
+    body.dark .tag-pill { background:#2a2a2a; color:#999; }
+    .tag-pill:hover { background:#efe7da; color:var(--accent); }
 
-    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.3); display:none; z-index:1240; backdrop-filter: blur(2px); }
+    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.3); display:none; z-index:1240; backdrop-filter:blur(2px); }
     .backdrop.show{ display:block; }
 
-    /* === 4. 目录专属样式 (虚线列表) === */
+    /* === 4. 目录专属排版 (纸质书质感) === */
     main{ max-width:var(--max-w); margin:40px auto; padding:0 20px; min-height: 60vh; }
-    .page-title { font-size: 1.8rem; color: var(--accent); text-align: center; margin-bottom: 40px; letter-spacing: 2px; }
     
-    .toc-list { list-style: none; padding: 0; margin: 0; }
-    .toc-item { 
-        display: flex; justify-content: space-between; align-items: baseline; 
-        padding: 16px 10px; border-bottom: 1px dashed var(--border); transition: 0.3s; 
+    /* 卷首语 */
+    .epigraph { text-align: center; margin-bottom: 50px; }
+    .page-title { font-size: 2rem; color: var(--accent); margin: 0 0 10px 0; letter-spacing: 4px; }
+    .epigraph-text { font-size: 0.95rem; color: var(--muted); font-style: italic; opacity: 0.8; }
+
+    /* 卷名（总标签） */
+    .volume-header {
+        text-align: center; margin: 50px 0 25px; display: flex; align-items: center; justify-content: center; gap: 15px;
     }
-    body.dark .toc-item { border-color: var(--border-dark); }
-    .toc-item:hover { transform: translateX(5px); background: rgba(184,156,122,0.03); border-radius: 8px; border-bottom-color: transparent; }
+    .volume-header span { font-size: 1.15rem; font-weight: 700; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+    body.dark .volume-header span { color: var(--muted-dark); }
+    .volume-header::before, .volume-header::after { content: ''; height: 1px; width: 40px; background: var(--accent); opacity: 0.5; }
+
+    /* 目录列表结构 */
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-item { display: flex; align-items: baseline; padding: 12px 0; transition: 0.2s; }
+    .toc-item:hover { opacity: 0.8; transform: translateX(3px); }
     
-    .toc-link { text-decoration: none; color: inherit; font-size: 1.1rem; flex: 1; font-weight: 700; }
-    .toc-link:hover { color: var(--accent); }
+    /* 编号 */
+    .toc-num { font-size: 0.9rem; color: var(--accent); opacity: 0.7; margin-right: 15px; font-family: serif; min-width: 20px; }
     
-    .toc-meta { font-size: 0.85rem; color: var(--muted); opacity: 0.8; margin-left: 15px; white-space: nowrap; }
-    .toc-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; background: rgba(184,156,122,0.1); color: var(--accent); font-size: 0.8rem; margin-left: 10px; }
+    /* 标题 */
+    .toc-title { text-decoration: none; color: inherit; font-size: 1.1rem; font-weight: 700; white-space: nowrap; }
+    
+    /* 虚线引线 (精华所在) */
+    .toc-leader { flex-grow: 1; border-bottom: 2px dotted var(--border); margin: 0 15px; opacity: 0.6; position: relative; top: -4px; min-width: 20px; }
+    body.dark .toc-leader { border-color: #555; }
+    
+    /* 副标签区 */
+    .toc-subtags { display: flex; gap: 6px; }
+    .sub-tag { font-size: 0.75rem; color: var(--muted); background: rgba(0,0,0,0.03); padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+    body.dark .sub-tag { background: rgba(255,255,255,0.05); color: #aaa; }
 
     .empty-state { text-align: center; color: var(--muted); padding: 50px; opacity: 0.6; }
-
     footer{ margin:60px auto 30px; text-align:center; color:var(--muted); font-size:0.85rem; letter-spacing: 1px; }
 
-    /* 手机端适配目录布局 */
-    @media (max-width: 600px) {
-        .toc-item { flex-direction: column; align-items: flex-start; gap: 8px; }
-        .toc-meta { margin-left: 0; }
+    /* 手机端适配：避免虚线被挤没 */
+    @media (max-width: 500px) {
+        .toc-leader { margin: 0 8px; }
+        .toc-subtags { display: none; } /* 手机屏幕太窄，自动隐藏副标签保持清爽 */
     }
   </style>
 </head>
 <body>
 
   <header>
-    <button class="icon-btn menu-btn" id="menuBtn">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    <button class="icon-btn" id="menuBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
     <a href="index.html" class="logo-title">
         <img src="assets/img/logo.png" alt="logo">
         <h1>一个青年的天马行空</h1>
     </a>
-    <button class="icon-btn search-btn" id="searchBtn">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <button class="icon-btn" id="searchBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
     <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="在目录中搜索..." autocomplete="off"/></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <div style="margin-bottom:20px">
-      <a href="index.html" class="nav-item">
+    <a href="index.html" class="nav-item">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页
-      </a>
-      <a href="toc.html" class="nav-item active">
+    </a>
+    <a href="toc.html" class="nav-item active">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录
-      </a>
-      <a href="about.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>关于
-      </a>
+    </a>
+    <a href="about.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>作者简介
+    </a>
+    
+    <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
 
-      <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
-
-      <button class="nav-item" id="tagToggleBtn">
-          <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
-          分类浏览
-          <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </button>
-      <div class="tag-box" id="tagBox">
-          <a href="index.html?q=见人" class="tag-pill">#见人</a>
-          <a href="index.html?q=见物" class="tag-pill">#见物</a>
-          <a href="index.html?q=见我" class="tag-pill">#见我</a>
-      </div>
-
-      <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
-
-      <button id="randomPoemBtn" class="nav-item">
-        <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首
-      </button>
-      <button id="toggleDarkMode" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>切换深色模式
-      </button>
+    <button class="nav-item" id="tagToggleBtn">
+        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
+        分类浏览
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <div class="tag-box" id="tagBox">
+        <a href="index.html?q=见人" class="tag-pill">#见人</a>
+        <a href="index.html?q=见物" class="tag-pill">#见物</a>
+        <a href="index.html?q=见我" class="tag-pill">#见我</a>
     </div>
+
+    <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
+
+    <button id="randomPoemBtn" class="nav-item"><svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首</button>
+    <button id="toggleDarkMode" class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>深色模式</button>
   </aside>
 
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <h1 class="page-title">全部诗作</h1>
+    <div class="epigraph">
+        <h1 class="page-title">全部诗卷</h1>
+        <div class="epigraph-text">“把沿途的叹息，折叠成这里的行距”</div>
+    </div>
     
-    <ul class="toc-list" id="tocList">
-        <li class="empty-state">正在展开诗卷...</li>
-    </ul>
+    <div id="tocContainer">
+        <div class="empty-state">正在展开诗卷...</div>
+    </div>
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
@@ -173,11 +183,15 @@
     const backdrop = document.getElementById('backdrop');
     const searchPanel = document.getElementById('searchPanel');
     const searchInput = document.getElementById('searchInput');
-    const tocList = document.getElementById('tocList');
+    const tocContainer = document.getElementById('tocContainer');
     const tagBox = document.getElementById('tagBox');
     const tagToggleBtn = document.getElementById('tagToggleBtn');
     
     let poemsList = [];
+    
+    // 定义总标签（卷名），严格按这个顺序渲染
+    const primaryCategories = ['见我', '见人', '见物'];
+    const volumeNames = { '见我': '卷一', '见人': '卷二', '见物': '卷三', '拾遗': '卷外' };
 
     // === 基础交互逻辑 ===
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
@@ -197,39 +211,81 @@
       if(poemsList.length > 0) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
     };
 
-    // === 渲染目录列表 ===
+    // === 渲染核心：总副标签分离 & 虚线排版 ===
     function renderTOC(list) {
-        tocList.innerHTML = '';
+        tocContainer.innerHTML = '';
         if(list.length === 0) { 
-            tocList.innerHTML = '<li class="empty-state">没有找到相关诗歌...</li>'; 
+            tocContainer.innerHTML = '<div class="empty-state">没有找到相关诗卷...</div>'; 
             return; 
         }
         
-        list.forEach((p, index) => {
-            const li = document.createElement('li');
-            li.className = 'toc-item';
+        // 分卷容器
+        const groups = { '见我': [], '见人': [], '见物': [], '拾遗': [] };
+        
+        // 遍历所有诗作，进行分类与提取副标签
+        list.forEach((p, idx) => {
+            let primary = '拾遗'; // 默认卷外
+            let subTags = [];
             
-            // 如果没有标签，默认给一个空字符串
-            const tagHtml = (p.tags && p.tags.length > 0) ? `<span class="toc-tag">#${p.tags[0]}</span>` : '';
+            if (p.tags && p.tags.length > 0) {
+                // 找找有没有匹配的总标签
+                const found = p.tags.find(t => primaryCategories.includes(t));
+                if (found) {
+                    primary = found;
+                    // 剩下的就是副标签
+                    subTags = p.tags.filter(t => t !== found);
+                } else {
+                    subTags = [...p.tags];
+                }
+            }
             
-            // 目录编号，例如 01, 02...
-            const num = (list.length - index).toString().padStart(2, '0');
+            // 全局倒序编号
+            const globalNum = String(list.length - idx).padStart(2, '0');
+            
+            groups[primary].push({
+                ...p,
+                _subTags: subTags,
+                _num: globalNum
+            });
+        });
 
-            li.innerHTML = `
-                <a href="poems/${p.file}" class="toc-link">
-                    <span style="color:var(--border); margin-right:15px; font-family:serif;">${num}.</span> 
-                    ${p.title}
-                </a>
-                <div class="toc-meta">
-                    ${tagHtml}
-                </div>
-            `;
-            tocList.appendChild(li);
+        // 按设定好的卷序渲染页面
+        ['见我', '见人', '见物', '拾遗'].forEach(cat => {
+            if (groups[cat].length === 0) return; // 这个卷没内容就跳过
+
+            // 渲染卷首 Header
+            const volHeader = document.createElement('div');
+            volHeader.className = 'volume-header';
+            volHeader.innerHTML = `<span>${volumeNames[cat]} · ${cat}</span>`;
+            tocContainer.appendChild(volHeader);
+
+            // 渲染卷内列表
+            const ul = document.createElement('ul');
+            ul.className = 'toc-list';
+
+            groups[cat].forEach(p => {
+                const li = document.createElement('li');
+                li.className = 'toc-item';
+                
+                // 最多显示2个副标签，保持版面干净
+                const subTagsHtml = p._subTags.slice(0, 2).map(t => `<span class="sub-tag">${t}</span>`).join('');
+
+                li.innerHTML = `
+                    <span class="toc-num">${p._num}</span>
+                    <a href="poems/${p.file}" class="toc-title">${p.title}</a>
+                    <div class="toc-leader"></div>
+                    <div class="toc-subtags">
+                        ${subTagsHtml}
+                    </div>
+                `;
+                ul.appendChild(li);
+            });
+            tocContainer.appendChild(ul);
         });
     }
 
     // === 目录页实时搜索 ===
-    searchInput.onkeyup = () => {
+    searchInput.oninput = () => {
         const val = searchInput.value.toLowerCase().trim();
         const filtered = poemsList.filter(p => 
             p.title.toLowerCase().includes(val) || 
@@ -238,17 +294,14 @@
         renderTOC(filtered);
     };
 
-    // === 初始化加载数据 ===
+    // === 初始化加载 ===
     async function init() {
       try {
         const res = await fetch('poems/poems.json?v=' + Date.now());
         poemsList = await res.json();
-        
-        // 渲染完整目录
         renderTOC(poemsList);
-        
       } catch(e) { 
-        tocList.innerHTML = '<li class="empty-state">诗卷加载失败，请刷新重试</li>'; 
+        tocContainer.innerHTML = '<div class="empty-state">诗卷加载失败，请刷新重试</div>'; 
       }
     }
 
