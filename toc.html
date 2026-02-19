@@ -3,173 +3,167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>目录 - 一个青年的天马行空</title>
+  <title>目录 | 一个青年的天马行空</title>
   <link rel="icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* === 1. 全局变量 === */
+    /* === 1. 全局变量与基础 === */
     :root{
       --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
       --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
-      --max-w: 1100px; --sidebar-width: 280px;
+      --max-w: 800px; --sidebar-width: 280px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', serif;}
-    body{ background:var(--bg); color:#222; transition: background .25s, color .25s; }
+    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased;}
+    body{ background:var(--bg); color:#222; transition: background .25s, color .25s; line-height: 1.6; }
     body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
 
-    /* 动画 */
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    main { animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    main { animation: fadeInUp 0.7s ease-out forwards; }
 
-    /* === 2. Header === */
+    /* === 2. 完美对齐的 Header === */
     header{
       position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:center;
-      padding:12px 20px; background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
-      border-bottom:1px solid var(--border); backdrop-filter: blur(8px);
+      padding:12px 20px; background: rgba(253,246,227,0.8); border-bottom:1px solid var(--border); backdrop-filter: blur(10px);
     }
-    body.dark header{ background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(20,20,20,0.95)); border-color:var(--border-dark); }
+    body.dark header{ background: rgba(18,18,18,0.9); border-color:var(--border-dark); }
 
-    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer; color:inherit; }
-    .menu-btn{ left:16px; } .search-btn{ right:16px; }
-    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; }
-    .logo-title img{ height:44px; width:44px; object-fit:cover; border-radius:8px; }
-    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); }
+    .icon-btn{ position:absolute; top:50%; transform:translateY(-50%); background:transparent; border:none; padding:8px; border-radius:50%; cursor:pointer; color:inherit; display:flex; align-items:center; }
+    .menu-btn{ left:16px; } 
+    .search-btn{ right:16px; }
+    
+    .logo-title{ display:flex; align-items:center; justify-content:center; gap:10px; text-decoration: none; }
+    .logo-title img{ height:42px; width:42px; object-fit:cover; border-radius:8px; }
+    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; color:var(--muted); letter-spacing: 0.5px; }
     body.dark .logo-title h1{ color:var(--muted-dark); }
 
-    /* === 3. Search Panel (即时下拉搜索) === */
     .search-panel{
-      position:absolute; top:calc(100% + 10px); right:16px; width:320px; max-width:calc(100% - 40px);
-      background:rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-radius:16px; padding:10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1); display:none; z-index:1300;
+      position:absolute; top:calc(100% + 10px); right:16px; width:300px; max-width:calc(100% - 40px);
+      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08); display:none; z-index:1300;
     }
-    body.dark .search-panel{ background:rgba(30,30,30,0.95); border:1px solid rgba(255,255,255,0.1); }
-    .search-panel input{ width:100%; padding:12px 18px; border-radius:99px; border:none; background:rgba(0,0,0,0.05); color:inherit; outline:none; }
-    body.dark .search-panel input{ background:rgba(255,255,255,0.1); }
+    body.dark .search-panel{ background:var(--card-dark); border-color:var(--border-dark); }
+    .search-panel input{ width:100%; padding:10px 15px; border-radius:6px; border:none; background:rgba(0,0,0,0.04); color:inherit; outline:none; font-family: inherit; }
 
-    /* 下拉结果样式 */
-    .search-results-list { margin-top: 10px; max-height: 300px; overflow-y: auto; display: none; border-top: 1px solid rgba(0,0,0,0.05); }
-    .search-results-list.has-results { display: block; }
-    .search-item { display: flex; align-items: center; gap: 10px; padding: 10px; text-decoration: none; color: inherit; border-radius: 8px; }
-    .search-item:hover { background: rgba(0,0,0,0.05); }
-    body.dark .search-item:hover { background: rgba(255,255,255,0.05); }
-    .search-item img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; background:#eee; }
-    .search-item div { flex:1; min-width:0; }
-    .search-item h4 { margin:0; font-size:0.95rem; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .search-item p { margin:0; font-size:0.8rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-    /* === 4. Sidebar (标准化) === */
+    /* === 3. Sidebar (与首页严格一致) === */
     .sidebar{
-      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px;
-      background:var(--bg); border-right:1px solid var(--border); transition:left .28s ease; z-index:1250; overflow-y: auto;
+      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:24px 20px;
+      background:var(--bg); border-right:1px solid var(--border); transition:left .3s cubic-bezier(0.4, 0, 0.2, 1); z-index:1250; overflow-y:auto;
     }
     body.dark .sidebar{ background:var(--bg-dark); border-color:var(--border-dark); }
     .sidebar.active{ left:0; }
     
     .nav-item {
-      display:flex; align-items:center; gap:12px; width:100%; padding:12px; margin:6px 0;
+      display:flex; align-items:center; gap:12px; width:100%; padding:12px 15px; margin:4px 0;
       border-radius:8px; background:transparent; color:inherit; text-decoration:none; 
-      border:none; cursor:pointer; font-size:1rem; font-family: inherit; text-align: left;
-      transition: background 0.2s;
+      border:none; cursor:pointer; font-size:1rem; font-family: inherit; transition: 0.2s;
     }
-    .nav-item svg { width:22px; height:22px; flex-shrink: 0; stroke-width: 2px; }
-    .nav-item:hover, .nav-item.open { background: rgba(0,0,0,0.05); color: var(--accent); }
-    body.dark .nav-item:hover, body.dark .nav-item.open { background: rgba(255,255,255,0.05); }
-    .nav-item.active { background: rgba(0,0,0,0.05); color: var(--accent); font-weight: 600; }
-    body.dark .nav-item.active { background: rgba(255,255,255,0.08); }
+    .nav-item svg { width:18px; height:18px; flex-shrink: 0; stroke-width: 2px; stroke: currentColor; fill: none; opacity: 0.7; }
+    .nav-item:hover { background: rgba(184,156,122,0.1); color: var(--accent); }
+    .nav-item.active { color: var(--accent); font-weight: 700; background: rgba(184,156,122,0.05); }
 
-    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.35); display:none; z-index:1240; }
+    /* 标签折叠 */
+    .chevron { margin-left: auto; width: 14px !important; transition: 0.3s; }
+    .nav-item.open .chevron { transform: rotate(180deg); }
+    .tag-box { max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }
+    .tag-box.show { max-height: 200px; margin: 10px 0 20px; }
+    .tag-pill { padding: 6px 14px; background: rgba(0,0,0,0.04); border-radius: 20px; font-size: 0.9rem; color: var(--muted); cursor: pointer; transition: 0.2s; text-decoration:none; }
+    body.dark .tag-pill { background: rgba(255,255,255,0.05); color: #999; }
+    .tag-pill:hover { background: rgba(184,156,122,0.15); color: var(--accent); }
+
+    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.3); display:none; z-index:1240; backdrop-filter: blur(2px); }
     .backdrop.show{ display:block; }
 
-    .tag-cloud-container { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; padding-left: 12px; }
-    .tag-cloud-container.open { max-height: 500px; margin-bottom: 10px; }
-    .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .tag-btn { font-size: 0.85rem; padding: 4px 10px; background: rgba(0,0,0,0.04); border-radius: 12px; cursor: pointer; color: var(--muted); border: 1px solid transparent; }
-    body.dark .tag-btn { background: rgba(255,255,255,0.08); color: var(--muted-dark); }
-    .chevron-icon { margin-left: auto; transition: transform 0.3s; width:16px!important; height:16px!important; opacity: 0.6; }
-    .nav-item.open .chevron-icon { transform: rotate(180deg); }
-
-    /* === 5. Content === */
-    main{ max-width:var(--max-w); margin:24px auto; padding:0 16px; }
-    .toc-header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px dashed var(--border); }
-    .toc-header h2 { margin: 0 0 8px 0; font-size: 1.6rem; color: var(--muted); font-weight: normal; }
-    .toc-header p { margin: 0; font-size: 0.95rem; color: var(--accent); letter-spacing: 1px; }
-
-    .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
-    .toc-item {
-      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-      padding: 16px 20px; background: var(--card); border-radius: 8px;
-      text-decoration: none; color: var(--text); border: 1px solid transparent;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: all 0.3s; position: relative;
+    /* === 4. 目录专属样式 (虚线列表) === */
+    main{ max-width:var(--max-w); margin:40px auto; padding:0 20px; min-height: 60vh; }
+    .page-title { font-size: 1.8rem; color: var(--accent); text-align: center; margin-bottom: 40px; letter-spacing: 2px; }
+    
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-item { 
+        display: flex; justify-content: space-between; align-items: baseline; 
+        padding: 16px 10px; border-bottom: 1px dashed var(--border); transition: 0.3s; 
     }
-    body.dark .toc-item { background: var(--card-dark); border-color: rgba(255,255,255,0.03); }
-    .toc-item:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.06); border-color: var(--accent); z-index: 2; }
-    .toc-num { font-size: 0.85rem; color: var(--accent); opacity: 0.6; font-weight: 700; margin-bottom: 6px; }
-    .toc-title { font-size: 1.05rem; font-weight: 700; line-height: 1.4; color: var(--muted); transition: color 0.2s; }
-    body.dark .toc-title { color: var(--muted-dark); }
-    .toc-item:hover .toc-title { color: var(--accent); }
+    body.dark .toc-item { border-color: var(--border-dark); }
+    .toc-item:hover { transform: translateX(5px); background: rgba(184,156,122,0.03); border-radius: 8px; border-bottom-color: transparent; }
+    
+    .toc-link { text-decoration: none; color: inherit; font-size: 1.1rem; flex: 1; font-weight: 700; }
+    .toc-link:hover { color: var(--accent); }
+    
+    .toc-meta { font-size: 0.85rem; color: var(--muted); opacity: 0.8; margin-left: 15px; white-space: nowrap; }
+    .toc-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; background: rgba(184,156,122,0.1); color: var(--accent); font-size: 0.8rem; margin-left: 10px; }
 
-    footer{ margin:40px auto; text-align:center; color:var(--muted); font-size:0.9rem; opacity:0.8; }
+    .empty-state { text-align: center; color: var(--muted); padding: 50px; opacity: 0.6; }
+
+    footer{ margin:60px auto 30px; text-align:center; color:var(--muted); font-size:0.85rem; letter-spacing: 1px; }
+
+    /* 手机端适配目录布局 */
+    @media (max-width: 600px) {
+        .toc-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+        .toc-meta { margin-left: 0; }
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <button class="icon-btn menu-btn" id="menuBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
-    <div class="logo-title"><img src="assets/img/logo.png" alt="logo"><h1>一个青年的天马行空</h1></div>
-    <button class="icon-btn search-btn" id="searchBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
-    
-    <div class="search-panel" id="searchPanel">
-      <input id="searchInput" type="text" placeholder="输入关键词，即时搜索..." autocomplete="off"/>
-      <div id="searchResults" class="search-results-list"></div>
-    </div>
+    <button class="icon-btn menu-btn" id="menuBtn">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <a href="index.html" class="logo-title">
+        <img src="assets/img/logo.png" alt="logo">
+        <h1>一个青年的天马行空</h1>
+    </a>
+    <button class="icon-btn search-btn" id="searchBtn">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </button>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="在目录中搜索..." autocomplete="off"/></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
-    <div style="margin-bottom:12px">
+    <div style="margin-bottom:20px">
       <a href="index.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5L12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h3v-6h6v6h3a1 1 0 0 0 1-1v-9"/></svg>
-        首页
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页
       </a>
       <a href="toc.html" class="nav-item active">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
-        目录
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录
       </a>
       <a href="about.html" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
-        作者简介
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>关于
       </a>
-      <button class="nav-item open" onclick="toggleTags(this)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-        标签
-        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>
+
+      <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
+
+      <button class="nav-item" id="tagToggleBtn">
+          <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
+          分类浏览
+          <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
-      <div id="tagCloudContainer" class="tag-cloud-container open">
-        <div id="tagCloud" class="tag-cloud"><span style="font-size:0.8rem;color:var(--muted);">加载中...</span></div>
+      <div class="tag-box" id="tagBox">
+          <a href="index.html?q=见人" class="tag-pill">#见人</a>
+          <a href="index.html?q=见物" class="tag-pill">#见物</a>
+          <a href="index.html?q=见我" class="tag-pill">#见我</a>
       </div>
-    </div>
-    <hr style="border-top:1px solid var(--border); margin:10px 0;">
-    <div>
-      <button id="toggleDarkMode" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        夜间模式
-      </button>
+
+      <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
+
       <button id="randomPoemBtn" class="nav-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12v6a2 2 0 0 1-2 2H5"/><path d="M7 6h14V2"/></svg>
-        随机一首
+        <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首
+      </button>
+      <button id="toggleDarkMode" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>切换深色模式
       </button>
     </div>
   </aside>
+
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <div class="toc-header">
-      <h2>诗集目录</h2>
-    </div>
-    <div class="toc-grid" id="tocGrid">
-      <p style="text-align:center; color:var(--muted);">加载目录中...</p>
-    </div>
+    <h1 class="page-title">全部诗作</h1>
+    
+    <ul class="toc-list" id="tocList">
+        <li class="empty-state">正在展开诗卷...</li>
+    </ul>
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
@@ -177,109 +171,90 @@
   <script>
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
-    const menuBtn = document.getElementById('menuBtn');
-    const searchBtn = document.getElementById('searchBtn');
     const searchPanel = document.getElementById('searchPanel');
     const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
-    const randomPoemBtn = document.getElementById('randomPoemBtn');
-    const tocGrid = document.getElementById('tocGrid');
-    const tagCloud = document.getElementById('tagCloud');
-    const tagContainer = document.getElementById('tagCloudContainer');
-
+    const tocList = document.getElementById('tocList');
+    const tagBox = document.getElementById('tagBox');
+    const tagToggleBtn = document.getElementById('tagToggleBtn');
+    
     let poemsList = [];
 
-    function toggleSidebar(){ sidebar.classList.contains('active') ? closeSidebar() : openSidebar(); }
-    function openSidebar(){ sidebar.classList.add('active'); backdrop.classList.add('show'); }
-    function closeSidebar(){ sidebar.classList.remove('active'); backdrop.classList.remove('show'); }
-    function toggleSearch(){ searchPanel.style.display === 'block' ? closeSearch() : openSearch(); }
-    function openSearch(){ searchPanel.style.display='block'; setTimeout(()=>searchInput.focus(),60); }
-    function closeSearch(){ searchPanel.style.display='none'; searchInput.value=''; searchResults.classList.remove('has-results'); }
+    // === 基础交互逻辑 ===
+    document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
+    document.getElementById('searchBtn').onclick = () => { 
+        searchPanel.style.display = searchPanel.style.display==='block'?'none':'block'; 
+        if(searchPanel.style.display === 'block') searchInput.focus();
+    };
+    backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); searchPanel.style.display='none'; };
+    tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
 
-    function toggleTags(btn) { btn.classList.toggle('open'); tagContainer.classList.toggle('open'); }
-
-    menuBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSidebar(); });
-    searchBtn.addEventListener('click', (e)=>{ e.stopPropagation(); toggleSearch(); });
-    backdrop.addEventListener('click', ()=>{ closeSidebar(); closeSearch(); });
-    
-    toggleDarkModeBtn.addEventListener('click', ()=>{
+    document.getElementById('toggleDarkMode').onclick = () => {
       const isDark = document.body.classList.toggle('dark');
       localStorage.setItem('site-dark', isDark?'1':'0');
-    });
-    
-    randomPoemBtn.addEventListener('click', ()=>{
-      if(poemsList.length>0) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
-    });
+    };
 
-    // === 即时搜索逻辑 ===
-    searchInput.addEventListener('keyup', (e)=>{
-      const val = searchInput.value.trim().toLowerCase();
-      if(!val) { searchResults.classList.remove('has-results'); searchResults.innerHTML = ''; return; }
+    document.getElementById('randomPoemBtn').onclick = () => {
+      if(poemsList.length > 0) window.location.href = 'poems/' + poemsList[Math.floor(Math.random()*poemsList.length)].file;
+    };
 
-      const matches = poemsList.filter(p => (p.title + p.preview + (p.tags||[]).join(' ')).toLowerCase().includes(val)).slice(0, 6);
+    // === 渲染目录列表 ===
+    function renderTOC(list) {
+        tocList.innerHTML = '';
+        if(list.length === 0) { 
+            tocList.innerHTML = '<li class="empty-state">没有找到相关诗歌...</li>'; 
+            return; 
+        }
+        
+        list.forEach((p, index) => {
+            const li = document.createElement('li');
+            li.className = 'toc-item';
+            
+            // 如果没有标签，默认给一个空字符串
+            const tagHtml = (p.tags && p.tags.length > 0) ? `<span class="toc-tag">#${p.tags[0]}</span>` : '';
+            
+            // 目录编号，例如 01, 02...
+            const num = (list.length - index).toString().padStart(2, '0');
 
-      if(matches.length > 0) {
-        searchResults.classList.add('has-results');
-        searchResults.innerHTML = matches.map(p => `
-          <a href="poems/${p.file}" class="search-item">
-            <img src="${p.img}" onerror="this.src='assets/img/logo.png'">
-            <div><h4>${p.title}</h4><p>${p.preview}</p></div>
-          </a>
-        `).join('');
-      } else {
-        searchResults.classList.add('has-results');
-        searchResults.innerHTML = '<div style="padding:10px;text-align:center;color:var(--muted)">没有找到相关诗歌</div>';
-      }
-    });
-
-    function renderTOC(){
-      tocGrid.innerHTML = '';
-      const sorted = [...poemsList].sort((a, b) => b.slug.localeCompare(a.slug));
-      
-      sorted.forEach((p, index) => {
-        // 从 slug 中提取序号, 如 "poem01" -> "01"
-        const num = p.slug.replace('poem', '');
-        const a = document.createElement('a');
-        a.href = `poems/${p.file}`;
-        a.className = 'toc-item';
-        a.innerHTML = `<span class="toc-num">${num}.</span><span class="toc-title">${p.title}</span>`;
-        tocGrid.appendChild(a);
-      });
+            li.innerHTML = `
+                <a href="poems/${p.file}" class="toc-link">
+                    <span style="color:var(--border); margin-right:15px; font-family:serif;">${num}.</span> 
+                    ${p.title}
+                </a>
+                <div class="toc-meta">
+                    ${tagHtml}
+                </div>
+            `;
+            tocList.appendChild(li);
+        });
     }
 
-    function renderTags(){
-      if(!tagCloud) return;
-      const map = {};
-      poemsList.forEach(p=> (p.tags||[]).forEach(t=> map[t]=(map[t]||0)+1));
-      tagCloud.innerHTML = '';
-      Object.keys(map).sort((a,b)=>map[b]-map[a]).forEach(t=>{
-        const btn = document.createElement('span');
-        btn.className = 'tag-btn';
-        btn.innerText = `#${t}`;
-        // 目录页点击标签 -> 跳转到首页筛选
-        btn.onclick = ()=>{ window.location.href = 'index.html?tag=' + encodeURIComponent(t); };
-        tagCloud.appendChild(btn);
-      });
-    }
+    // === 目录页实时搜索 ===
+    searchInput.onkeyup = () => {
+        const val = searchInput.value.toLowerCase().trim();
+        const filtered = poemsList.filter(p => 
+            p.title.toLowerCase().includes(val) || 
+            (p.tags && p.tags.join('').toLowerCase().includes(val))
+        );
+        renderTOC(filtered);
+    };
 
-    async function loadPoemsJson(){
+    // === 初始化加载数据 ===
+    async function init() {
       try {
-        const res = await fetch('poems/poems.json?t=' + new Date().getTime());
-        if(!res.ok) throw new Error('Status: '+res.status);
+        const res = await fetch('poems/poems.json?v=' + Date.now());
         poemsList = await res.json();
-        renderTOC();
-        renderTags();
-      } catch(err) {
-        tocGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:red;">加载目录失败，请检查 poems.json</p>';
+        
+        // 渲染完整目录
+        renderTOC(poemsList);
+        
+      } catch(e) { 
+        tocList.innerHTML = '<li class="empty-state">诗卷加载失败，请刷新重试</li>'; 
       }
     }
 
-    (function(){
-      if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
-      document.getElementById('year').innerText = new Date().getFullYear();
-      loadPoemsJson();
-    })();
+    if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
+    document.getElementById('year').innerText = new Date().getFullYear();
+    init();
   </script>
 </body>
 </html>
