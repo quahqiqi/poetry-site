@@ -154,7 +154,7 @@
 
   <main>
     <h1 class="poem-title">时间</h1>
-    <p class="poem-meta"># 哲思</p>
+    <p class="poem-meta"># 见我 / 沉思 / 哲理</p>
 
     <div class="reader-tools">
         <div class="font-setter">
@@ -165,9 +165,27 @@
         <div style="font-size: 0.8rem; color: var(--accent); font-weight: bold;">阅读模式</div>
     </div>
 
-    <img src="../images/poem06.jpg" class="poem-image" alt="封面图">
+    <img src="../assets/img/poem06.jpg" class="poem-image" alt="封面图">
 
-    <div class="poem-body" id="poemContent">时间就像一颗巨大的毒瘤，它突然袭来...</div>
+    <div class="poem-body" id="poemContent">时间就像一颗巨大的毒瘤
+它突然袭来 却又悄悄离去
+它像平稳的湖面，又像狂野的河流
+带给我们意想不到的惊喜
+我在时间里寻找爱情
+它却带给了我无尽的空虚
+恋爱使我困惑
+爱情究竟带来了什么
+脑中浮现她的脸庞
+该不该相信
+死亡或许才是唯一解脱
+生命在徘徊
+彼岸立着朵朵红花
+死神缓缓靠近 张开双臂
+拥抱迷茫的灵魂
+小船摇着 摇着
+癫狂的海浪却把小船击碎
+小船却随着时间重组
+如此反复 直至时间走向尽头</div>
 
     <div class="actions">
         <button class="btn-action" id="likeBtn" onclick="toggleLike()">
@@ -181,8 +199,8 @@
     </div>
 
     <nav class="post-nav">
-        <a href="poem07.html" class="nav-card"><span class="label">上一篇</span><span class="p-title">九月</span></a>
-        <a href="poem05.html" class="nav-card" style="text-align:right"><span class="label">下一篇</span><span class="p-title">独</span></a>
+        <a href="poem05.html" class="nav-card"><span class="label">上一篇</span><span class="p-title">独</span></a>
+        <a href="poem07.html" class="nav-card" style="text-align:right"><span class="label">下一篇</span><span class="p-title">九月</span></a>
     </nav>
   </main>
 
@@ -196,8 +214,8 @@
     const searchResults = document.getElementById('searchResults');
     
     // 注入全部诗歌数据供搜索和随机使用
-    const searchData = [{"title": "\u6211\u7684\u5409\u4ed6\u79bb\u5bb6\u51fa\u8d70\u4e86", "file": "poem61.html"}, {"title": "\u8ba8\u538c\u5e7f\u544a", "file": "poem60.html"}, {"title": "\u6211\u7684\u4e0b\u989a\u85cf\u7740\u4e00\u622a\u65ad\u679d", "file": "poem59.html"}, {"title": "Te amo", "file": "poem58.html"}, {"title": "\u79ef\u96e8\u7684\u5723\u8bde\u591c", "file": "poem57.html"}, {"title": "\u6ca1\u6709\u4eba\u62ac\u5934", "file": "poem56.html"}, {"title": "\u53ea\u4f59\u8336\u9999", "file": "poem55.html"}, {"title": "\u613f", "file": "poem54.html"}, {"title": "\u547c\u5438", "file": "poem53.html"}, {"title": "\u516c\u8def", "file": "poem52.html"}, {"title": "\u5973\u5b69", "file": "poem51.html"}, {"title": "\u9e1f\u5c4e", "file": "poem50.html"}, {"title": "\u5802\u5409\u8bc3\u5fb7", "file": "poem49.html"}, {"title": "\u5982\u679c\u6211\u8bf4\u7684\u90fd\u4e0d\u662f\u771f\u7684", "file": "poem48.html"}, {"title": "\u542c\u89c1\u4f60\u672a\u8bf4\u7684\u8bdd", "file": "poem47.html"}, {"title": "\u9999\u6c34", "file": "poem46.html"}, {"title": "\u8bf7\u52ff\u5582\u98df\u75af\u5b50", "file": "poem45.html"}, {"title": "\u8bd7\u975e\u8bd7", "file": "poem44.html"}, {"title": "\u5927\u6d77", "file": "poem43.html"}, {"title": "\u4eca\u65e5\u5982\u662f", "file": "poem42.html"}, {"title": "\u68a6\u9192\u65f6\u5206", "file": "poem41.html"}, {"title": "\u4e00\u7897\u6c64\u9762", "file": "poem40.html"}, {"title": "\u963f\u5af2", "file": "poem39.html"}, {"title": "\u5341\u4e03", "file": "poem38.html"}, {"title": "\u82f9\u679c", "file": "poem37.html"}, {"title": "\u5e74\u591c", "file": "poem36.html"}, {"title": "\u65e0\u9898", "file": "poem35.html"}, {"title": "\u5979", "file": "poem34.html"}, {"title": "\u79bb\u5f00", "file": "poem33.html"}, {"title": "\u4eca\u5929\u4e4b\u540e", "file": "poem32.html"}, {"title": "\u82b1\u671f", "file": "poem31.html"}, {"title": "\u9000\u610f", "file": "poem30.html"}, {"title": "\u75af\u5b50", "file": "poem29.html"}, {"title": "\u660e\u4fe1\u7247", "file": "poem28.html"}, {"title": "\u7b14\u58a8", "file": "poem27.html"}, {"title": "\u610f\u4e49", "file": "poem26.html"}, {"title": "\u6a58\u5b50", "file": "poem25.html"}, {"title": "\u5c0f\u65f6\u5019", "file": "poem24.html"}, {"title": "\u6211\u8bb0\u5f97", "file": "poem23.html"}, {"title": "\u7b54\u5e94\u6211", "file": "poem22.html"}, {"title": "\u5341\u6708", "file": "poem21.html"}, {"title": "\u82e5\u5c06\u5fc3\u4e8b\u6bd4\u4f5c\u8def\u8fb9\u82b1", "file": "poem20.html"}, {"title": "\u79cb\u601d", "file": "poem19.html"}, {"title": "\u6211\u4f1a", "file": "poem18.html"}, {"title": "\u4ed6\u4eec", "file": "poem17.html"}, {"title": "\u9e1f", "file": "poem16.html"}, {"title": "\u4e2d\u79cb", "file": "poem15.html"}, {"title": "\u52a0\u51cf\u6cd5\u7ec3\u4e60\u9898", "file": "poem14.html"}, {"title": "\u6a59\u8272", "file": "poem13.html"}, {"title": "\u5982\u679c\u6211\u662f\u4e00\u53ea\u9c7c", "file": "poem12.html"}, {"title": "\u5e78\u798f", "file": "poem11.html"}, {"title": "\u8840", "file": "poem10.html"}, {"title": "\u8309\u8389", "file": "poem09.html"}, {"title": "\u65e0\u9898", "file": "poem08.html"}, {"title": "\u4e5d\u6708", "file": "poem07.html"}, {"title": "\u65f6\u95f4", "file": "poem06.html"}, {"title": "\u72ec", "file": "poem05.html"}, {"title": "\u62e5\u62b1", "file": "poem04.html"}, {"title": "\u8fd9\u662f\u4e00\u7247\u5bc2\u9759\u7684\u6e56", "file": "poem03.html"}, {"title": "\u98ce", "file": "poem02.html"}, {"title": "\u6210\u957f", "file": "poem01.html"}];
-    const allPoems = ["poem61.html", "poem60.html", "poem59.html", "poem58.html", "poem57.html", "poem56.html", "poem55.html", "poem54.html", "poem53.html", "poem52.html", "poem51.html", "poem50.html", "poem49.html", "poem48.html", "poem47.html", "poem46.html", "poem45.html", "poem44.html", "poem43.html", "poem42.html", "poem41.html", "poem40.html", "poem39.html", "poem38.html", "poem37.html", "poem36.html", "poem35.html", "poem34.html", "poem33.html", "poem32.html", "poem31.html", "poem30.html", "poem29.html", "poem28.html", "poem27.html", "poem26.html", "poem25.html", "poem24.html", "poem23.html", "poem22.html", "poem21.html", "poem20.html", "poem19.html", "poem18.html", "poem17.html", "poem16.html", "poem15.html", "poem14.html", "poem13.html", "poem12.html", "poem11.html", "poem10.html", "poem09.html", "poem08.html", "poem07.html", "poem06.html", "poem05.html", "poem04.html", "poem03.html", "poem02.html", "poem01.html"];
+    const searchData = [{"title": "\u6210\u957f", "file": "poem01.html"}, {"title": "\u98ce", "file": "poem02.html"}, {"title": "\u8fd9\u662f\u4e00\u7247\u5bc2\u9759\u7684\u6e56", "file": "poem03.html"}, {"title": "\u62e5\u62b1", "file": "poem04.html"}, {"title": "\u72ec", "file": "poem05.html"}, {"title": "\u65f6\u95f4", "file": "poem06.html"}, {"title": "\u4e5d\u6708", "file": "poem07.html"}, {"title": "\u65e0\u9898", "file": "poem08.html"}, {"title": "\u8309\u8389", "file": "poem09.html"}, {"title": "\u8840", "file": "poem10.html"}];
+    const allPoems = ["poem01.html", "poem02.html", "poem03.html", "poem04.html", "poem05.html", "poem06.html", "poem07.html", "poem08.html", "poem09.html", "poem10.html"];
 
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); searchPanel.style.display='none'; };
