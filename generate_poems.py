@@ -10,7 +10,7 @@ if not os.path.exists(output_dir):
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
-# 3. HTML 模板（100% 提取自原版，仅增加防卡顿优化）
+# 3. HTML 模板
 html_template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -48,14 +48,12 @@ html_template = """<!DOCTYPE html>
     .search-panel input {{ width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }}
     body.dark .search-panel input {{ background: rgba(255,255,255,0.05); }}
 
-    /* 🚀 性能优化：Sidebar GPU 加速，滑动如丝般顺滑 (排版和颜色完全没动) */
+    /* Sidebar GPU 加速 */
     .sidebar {{ 
       position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
       z-index: 1250; padding: 20px 14px; overflow-y: auto; 
-      transform: translateX(-100%); 
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-      will-change: transform; 
+      transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform; 
     }}
     body.dark .sidebar {{ background: #1a1a1a; border-color: #333; }}
     .sidebar.active {{ transform: translateX(0); }}
@@ -81,25 +79,37 @@ html_template = """<!DOCTYPE html>
     .backdrop {{ position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; backdrop-filter: blur(2px); }}
     .backdrop.show {{ display: block; }}
 
-    /* --- ✨ 诗歌专属的排版 (继承了原版的 max-width) ✨ --- */
+    /* --- 诗歌专属的排版 --- */
     main {{ max-width: 800px; margin: 25px auto; padding: 0 16px; }}
     
-    /* 强行裁剪为 16:9 横屏美图，解决原图过长问题 */
+    .poem-title {{ font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }}
+    .poem-tags {{ text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 25px; letter-spacing: 1px; }}
+    
     .poem-cover-full {{ 
       width: 100%; aspect-ratio: 16 / 9; object-fit: cover; 
       border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
     }}
     
-    .poem-title {{ font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }}
-    .poem-tags {{ text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 30px; letter-spacing: 1px; }}
-    
     .poem-content {{ font-size: 1.15rem; white-space: pre-wrap; color: inherit; padding: 0 10px; text-align: left; }}
     
-    /* 字体大小控制栏 */
-    .font-toolbar {{ display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }}
-    .f-btn {{ background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 20px; border-radius: 20px; cursor: pointer; transition: 0.2s; }}
+    /* 更加直观的字体大小控制栏 */
+    .font-toolbar {{ display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 40px; }}
+    .font-label {{ font-size: 0.9rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }}
+    .f-btn {{ background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 20px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-family: inherit; }}
     body.dark .f-btn {{ background: var(--card-dark); border-color: #333; }}
     .f-btn:hover {{ border-color: var(--accent); color: var(--accent); }}
+
+    /* 恢复：上一篇 / 下一篇 导航 */
+    .poem-nav {{ 
+      display: flex; justify-content: space-between; align-items: center; 
+      margin-top: 60px; padding-top: 25px; border-top: 1px solid var(--border); 
+      font-size: 0.95rem; 
+    }}
+    body.dark .poem-nav {{ border-color: #333; }}
+    .poem-nav a {{ color: var(--accent); text-decoration: none; transition: 0.2s; max-width: 45%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }}
+    .poem-nav a:hover {{ opacity: 0.7; }}
+    .nav-prev {{ text-align: left; }}
+    .nav-next {{ text-align: right; margin-left: auto; }}
 
     footer {{ text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }}
   </style>
@@ -147,17 +157,24 @@ html_template = """<!DOCTYPE html>
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <img src="../{img}" alt="{title}" class="poem-cover-full" loading="lazy" decoding="async" onerror="this.style.display='none'">
-    
     <h1 class="poem-title">{title}</h1>
+    
     <div class="poem-tags">{tags_html}</div>
 
-    <div class="font-toolbar">
-      <button class="f-btn" onclick="changeSize(-2)">A -</button>
-      <button class="f-btn" onclick="changeSize(2)">A +</button>
+    <img src="../{img}" alt="{title}" class="poem-cover-full" loading="lazy" decoding="async" onerror="this.style.display='none'">
+    
+    <div class="font-toolbar" title="在此调节正文字体大小">
+      <span class="font-label">字号调节：</span>
+      <button class="f-btn" onclick="changeSize(-2)" title="缩小字号">A -</button>
+      <button class="f-btn" onclick="changeSize(2)" title="放大字号">A +</button>
     </div>
 
     <div class="poem-content" id="poemContent">{content}</div>
+
+    <div class="poem-nav">
+      {prev_link}
+      {next_link}
+    </div>
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
@@ -168,11 +185,9 @@ html_template = """<!DOCTYPE html>
     const tagBox = document.getElementById('tagBox');
     const tagToggleBtn = document.getElementById('tagToggleBtn');
     
-    // 侧边栏交互
     document.getElementById('menuBtn').onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
     backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; }};
     
-    // 搜索交互：不在首页，直接带参数跳回首页搜索
     document.getElementById('searchBtn').onclick = () => {{ 
         const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
         if(sp.style.display === 'block') document.getElementById('searchInput').focus();
@@ -181,16 +196,13 @@ html_template = """<!DOCTYPE html>
         if(e.key === 'Enter') window.location.href = '../index.html?search=' + encodeURIComponent(this.value);
     }});
 
-    // 标签分类：点击跳回首页并传参
     tagToggleBtn.onclick = () => {{ tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); }};
     function filterByTag(tag) {{
         window.location.href = '../index.html?q=' + encodeURIComponent(tag);
     }}
 
-    // 深色模式
     document.getElementById('darkBtn').onclick = () => {{ document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); }};
 
-    // 随机诗歌
     document.getElementById('randomBtn').onclick = async () => {{ 
         try {{
             const res = await fetch('poems.json');
@@ -199,14 +211,12 @@ html_template = """<!DOCTYPE html>
         }} catch(e) {{}}
     }};
 
-    // 改变字号
     function changeSize(delta) {{
       const el = document.getElementById('poemContent');
       const currentSize = parseFloat(window.getComputedStyle(el).fontSize) || 18.4;
       el.style.fontSize = (currentSize + delta) + 'px';
     }}
 
-    // 初始化加载
     function init() {{
         if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
         document.getElementById('year').innerText = new Date().getFullYear();
@@ -218,19 +228,35 @@ html_template = """<!DOCTYPE html>
 """
 
 # 4. 循环生成 HTML
-for poem in poems:
-    # 把标签格式化为 #见物 #咏物
+for i, poem in enumerate(poems):
     tags_html = " ".join([f"#{tag}" for tag in poem.get('tags', [])])
+    
+    # === 构建上一篇 / 下一篇 的逻辑 ===
+    prev_link = ""
+    next_link = ""
+    
+    # 因为你的 JSON 是倒序的（最新的第61首在前面，最老的第1首在最后）
+    # 所以上一篇（更新的诗）其实在列表的前面 i-1
+    if i > 0:
+        newer_poem = poems[i-1]
+        prev_link = f'<a href="{newer_poem["file"]}" class="nav-prev">← 上一篇：{newer_poem["title"]}</a>'
+        
+    # 下一篇（更早的诗）在列表的后面 i+1
+    if i < len(poems) - 1:
+        older_poem = poems[i+1]
+        next_link = f'<a href="{older_poem["file"]}" class="nav-next">下一篇：{older_poem["title"]} →</a>'
         
     html_content = html_template.format(
         title=poem['title'],
-        img=poem['img'],  # 自动读取图像路径
+        img=poem['img'],
         tags_html=tags_html,
-        content=poem['content']
+        content=poem['content'],
+        prev_link=prev_link,     # 注入上一篇
+        next_link=next_link      # 注入下一篇
     )
     
     file_path = os.path.join(output_dir, poem['file'])
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！已完全同步首页排版，且已开启防卡顿优化！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！排版已修复，上一篇/下一篇功能已回归！")
