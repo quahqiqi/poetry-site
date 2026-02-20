@@ -30,10 +30,20 @@
     .logo-title img { height: 38px; width: 38px; border-radius: 6px; }
     .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
 
-    .search-panel { position: absolute; top: 64px; right: 16px; width: 260px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    /* 搜索框与下拉列表 */
+    .search-panel { position: absolute; top: 64px; right: 16px; width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     body.dark .search-panel { background: var(--card-dark); border-color: #333; }
     .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }
     body.dark .search-panel input { background: rgba(255,255,255,0.05); }
+    
+    /* ✨ 新增：下拉搜索结果列表样式 ✨ */
+    .search-results { max-height: 350px; overflow-y: auto; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
+    .search-results:empty { display: none; margin-top: 0; }
+    .search-item { display: flex; align-items: center; gap: 10px; padding: 8px; text-decoration: none; color: inherit; border-radius: 8px; transition: background 0.2s; }
+    .search-item:hover { background: rgba(0,0,0,0.05); }
+    body.dark .search-item:hover { background: rgba(255,255,255,0.05); }
+    .search-item img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+    .search-item-title { font-size: 0.95rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Sidebar GPU 加速 */
     .sidebar { 
@@ -114,8 +124,10 @@
     <button class="icon-btn" id="searchBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
+    
     <div class="search-panel" id="searchPanel">
-        <input id="searchInput" type="text" placeholder="回车搜索首页诗作..." />
+        <input id="searchInput" type="text" placeholder="输入关键字搜索..." autocomplete="off" />
+        <div class="search-results" id="searchResults"></div>
     </div>
   </header>
 
@@ -213,17 +225,57 @@
     const tagBox = document.getElementById('tagBox');
     const tagToggleBtn = document.getElementById('tagToggleBtn');
     
+    // 侧边栏交互
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
     
-    document.getElementById('searchBtn').onclick = () => { 
-        const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
-        if(sp.style.display === 'block') document.getElementById('searchInput').focus();
+    // ✨ 全新搜索框交互逻辑 ✨
+    let allPoemsCache = null; // 用于缓存 JSON 数据
+
+    document.getElementById('searchBtn').onclick = async () => { 
+        const sp = document.getElementById('searchPanel'); 
+        // 展开时设置为 display: flex，以便内部可以容纳结果列表
+        sp.style.display = sp.style.display === 'flex' ? 'none' : 'flex'; 
+        if(sp.style.display === 'flex') {
+            document.getElementById('searchInput').focus();
+            // 点击搜索按钮时，预先加载诗歌数据
+            if(!allPoemsCache) {
+                try {
+                    const res = await fetch('poems.json');
+                    allPoemsCache = await res.json();
+                } catch(e) { console.error("加载搜索数据失败"); }
+            }
+        }
     };
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        if(e.key === 'Enter') window.location.href = '../index.html?search=' + encodeURIComponent(this.value);
+
+    // 实时监听输入，生成包含小图片和标题的下拉列表
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const q = this.value.toLowerCase().trim();
+        const resultsDiv = document.getElementById('searchResults');
+        
+        if (!q || !allPoemsCache) {
+            resultsDiv.innerHTML = '';
+            return;
+        }
+        
+        // 根据标题或正文过滤
+        const matched = allPoemsCache.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
+        
+        if (matched.length === 0) {
+            resultsDiv.innerHTML = '<div style="text-align:center; padding:10px; color:var(--muted); font-size:0.9rem;">没有找到相关诗歌</div>';
+            return;
+        }
+        
+        // 渲染下拉结果（小图 + 标题）
+        resultsDiv.innerHTML = matched.map(p => `
+            <a href="${p.file}" class="search-item">
+                <img src="../${p.img}" loading="lazy" onerror="this.src='../assets/img/logo.png'">
+                <span class="search-item-title">${p.title}</span>
+            </a>
+        `).join('');
     });
 
+    // 其他原有交互保留不变
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
     function filterByTag(tag) {
         window.location.href = '../index.html?q=' + encodeURIComponent(tag);
