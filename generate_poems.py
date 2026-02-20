@@ -10,7 +10,7 @@ if not os.path.exists(output_dir):
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
-# 3. HTML 模板（100% 提取自你的原版 index.html）
+# 3. HTML 模板（100% 提取自原版，仅增加防卡顿优化）
 html_template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -48,10 +48,17 @@ html_template = """<!DOCTYPE html>
     .search-panel input {{ width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }}
     body.dark .search-panel input {{ background: rgba(255,255,255,0.05); }}
 
-    /* 原版 Sidebar */
-    .sidebar {{ position: fixed; left: calc(-1 * var(--sidebar-w)); top: 0; height: 100%; width: var(--sidebar-w); background: var(--bg); border-right: 1px solid var(--border); transition: 0.3s; z-index: 1250; padding: 20px 14px; overflow-y: auto; }}
+    /* 🚀 性能优化：Sidebar GPU 加速，滑动如丝般顺滑 (排版和颜色完全没动) */
+    .sidebar {{ 
+      position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
+      background: var(--bg); border-right: 1px solid var(--border); 
+      z-index: 1250; padding: 20px 14px; overflow-y: auto; 
+      transform: translateX(-100%); 
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      will-change: transform; 
+    }}
     body.dark .sidebar {{ background: #1a1a1a; border-color: #333; }}
-    .sidebar.active {{ left: 0; }}
+    .sidebar.active {{ transform: translateX(0); }}
     
     .nav-item {{
       display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; margin-bottom: 6px;
@@ -140,7 +147,7 @@ html_template = """<!DOCTYPE html>
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <img src="../{img}" alt="{title}" class="poem-cover-full" onerror="this.style.display='none'">
+    <img src="../{img}" alt="{title}" class="poem-cover-full" loading="lazy" decoding="async" onerror="this.style.display='none'">
     
     <h1 class="poem-title">{title}</h1>
     <div class="poem-tags">{tags_html}</div>
@@ -165,7 +172,7 @@ html_template = """<!DOCTYPE html>
     document.getElementById('menuBtn').onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
     backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; }};
     
-    // 搜索交互：因为我们不在首页，所以直接带上参数跳回首页搜索
+    // 搜索交互：不在首页，直接带参数跳回首页搜索
     document.getElementById('searchBtn').onclick = () => {{ 
         const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
         if(sp.style.display === 'block') document.getElementById('searchInput').focus();
@@ -226,4 +233,4 @@ for poem in poems:
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！已完全同步首页的 UI 和配色体验！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！已完全同步首页排版，且已开启防卡顿优化！")
