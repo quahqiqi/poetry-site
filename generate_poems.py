@@ -6,11 +6,11 @@ output_dir = "poems"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# 2. 加载你的 61 首诗的 JSON
+# 2. 加载你的 61 首诗 JSON
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
-# 3. 干净的 HTML 模板
+# 3. 100% 还原你原版设计的 HTML 模板
 html_template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -20,91 +20,113 @@ html_template = """<!DOCTYPE html>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {{
-      --bg: #fdf6e3; --text: #222; --accent: #b89c7a; --muted: #6d5850; --border: #d7cdbd;
+      --bg: #fdf6e3; --text: #333; --accent: #b89c7a; --muted: #8c7e74; --border: #d7cdbd;
       --bg-dark: #121212; --text-dark: #d4d4d4;
     }}
     * {{ box-sizing: border-box; }}
     body {{ 
       margin: 0; background: var(--bg); color: var(--text); 
-      font-family: 'Noto Serif SC', serif; line-height: 1.8; transition: 0.3s;
+      font-family: 'Noto Serif SC', serif; line-height: 2; transition: background 0.3s, color 0.3s;
     }}
     body.dark {{ background: var(--bg-dark); color: var(--text-dark); }}
 
-    /* 顶部导航 */
+    /* 还原你的原版顶部导航 */
     header {{
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 1000;
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px; background: rgba(253, 246, 227, 0.9);
       border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
     }}
     body.dark header {{ background: rgba(18, 18, 18, 0.9); border-color: #333; }}
-    .nav-btn {{ text-decoration: none; color: var(--muted); cursor: pointer; background: none; border: none; font-size: 1rem; display: flex; align-items: center; }}
+    .icon-btn {{ background: none; border: none; padding: 8px; color: var(--muted); cursor: pointer; display: flex; align-items: center; }}
+    .logo-title {{ position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; width: max-content; pointer-events: none; }}
+    .logo-title * {{ pointer-events: auto; }}
+    .logo-title img {{ height: 32px; width: 32px; border-radius: 6px; }}
+    .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }}
+
+    main {{ max-width: 650px; margin: 30px auto 60px; padding: 0 20px; }}
     
-    main {{ max-width: 650px; margin: 30px auto 60px; padding: 0 20px; text-align: center; }}
-    
-    /* ✨ 核心修复：强制图片一样大，自动裁剪不拉伸 ✨ */
+    /* 还原你的原版标题与斜杠标签排版 */
+    .poem-header {{ text-align: center; margin-bottom: 25px; }}
+    .title {{ font-size: 1.8rem; color: var(--accent); margin: 0 0 10px 0; letter-spacing: 2px; }}
+    .tags {{ font-size: 0.85rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }}
+
+    /* 还原你的原版控制栏（带底色、圆形按钮） */
+    .toolbar {{
+      display: flex; align-items: center; justify-content: space-between;
+      background: #f3eee3; 
+      padding: 12px 20px; border-radius: 12px; margin-bottom: 30px;
+      font-size: 0.9rem; color: var(--muted);
+    }}
+    body.dark .toolbar {{ background: #2a2a2a; color: #999; }}
+    .font-controls {{ display: flex; align-items: center; gap: 15px; }}
+    .f-btn {{ 
+      background: #fff; border: 1px solid var(--border); color: var(--muted);
+      width: 36px; height: 36px; border-radius: 50%; cursor: pointer; 
+      display: flex; align-items: center; justify-content: center; transition: 0.2s;
+    }}
+    body.dark .f-btn {{ background: #1e1e1e; border-color: #444; }}
+    .f-btn:hover {{ color: var(--accent); border-color: var(--accent); }}
+    .read-mode-btn {{ cursor: pointer; transition: 0.2s; }}
+    .read-mode-btn:hover {{ color: var(--accent); }}
+
+    /* ✨ 核心魔法：让图片自动变成一致的 16:9 横屏相片比例，绝不拉伸！ ✨ */
     .poem-cover {{
       width: 100%;
-      max-width: 100%;
-      aspect-ratio: 4 / 3; /* 强制比例为 4:3，像洗出来的相片一样板正 */
-      object-fit: cover;   /* 居中裁剪，太长的部分会被自动隐藏，绝不拉伸 */
-      border-radius: 8px;  /* 微微的圆角 */
-      margin-bottom: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      aspect-ratio: 16 / 9; /* 强制图片显示为横向的长方形 */
+      object-fit: cover;    /* 超出部分自动隐藏，保留中间最精华的部分 */
+      border-radius: 12px;  /* 还原你的大圆角 */
+      margin-bottom: 35px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
       display: block;
     }}
 
-    .title {{ font-size: 2rem; color: var(--accent); margin: 0 0 10px 0; letter-spacing: 2px; }}
-    .tags {{ font-size: 0.9rem; color: var(--muted); margin-bottom: 40px; opacity: 0.8; }}
-    
-    /* 诗歌正文排版 */
-    .content {{ 
-      font-size: 1.15rem; 
-      white-space: pre-wrap; 
-      text-align: center; /* 居中排版更契合现代诗 */
-      color: #333;
-    }}
+    /* 诗歌正文：还原原版的左对齐排版 */
+    .content {{ font-size: 1.15rem; white-space: pre-wrap; color: #333; }}
     body.dark .content {{ color: #ccc; }}
-    
-    /* 字体调节按钮 */
-    .controls {{ margin: 40px 0; display: flex; justify-content: center; gap: 20px; }}
-    .controls button {{ 
-      background: rgba(184, 156, 122, 0.1); border: 1px solid var(--accent); 
-      color: var(--accent); border-radius: 20px; padding: 5px 15px; cursor: pointer; 
-    }}
   </style>
 </head>
 <body>
   <header>
-    <a href="../index.html" class="nav-btn">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      返回
+    <button class="icon-btn" onclick="window.location.href='../index.html'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    </button>
+    <a href="../index.html" class="logo-title">
+        <img src="../images/logo.png" alt="logo" onerror="this.src='../images/logo.png'">
+        <h1>一个青年的天马行空</h1>
     </a>
-    <span style="font-weight: bold; color: var(--muted);">天马行空</span>
-    <button class="nav-btn" onclick="document.body.classList.toggle('dark')">🌓</button>
+    <button class="icon-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    </button>
   </header>
 
   <main>
-    <img src="../{img}" alt="{title}" class="poem-cover" onerror="this.style.display='none'">
-    
-    <h1 class="title">{title}</h1>
-    <div class="tags">{tags_html}</div>
-    
-    <div class="controls">
-      <button onclick="changeSize(-2)">A -</button>
-      <button onclick="changeSize(2)">A +</button>
+    <div class="poem-header">
+      <h1 class="title">{title}</h1>
+      <div class="tags">{tags_html}</div>
     </div>
 
+    <div class="toolbar">
+      <div class="font-controls">
+        <span>字号调节</span>
+        <button class="f-btn" onclick="changeSize(-2)">A-</button>
+        <button class="f-btn" onclick="changeSize(2)">A+</button>
+      </div>
+      <div class="read-mode-btn" onclick="document.body.classList.toggle('dark')">阅读模式</div>
+    </div>
+
+    <img src="../{img}" alt="{title}" class="poem-cover" onerror="this.style.display='none'">
+    
     <div class="content" id="poemContent">{content}</div>
   </main>
 
   <script>
     function changeSize(delta) {{
       const el = document.getElementById('poemContent');
-      const currentSize = parseFloat(window.getComputedStyle(el).fontSize);
+      // 获取当前字体大小，如果没有则默认 18.4px (即 1.15rem)
+      const currentSize = parseFloat(window.getComputedStyle(el).fontSize) || 18.4;
       el.style.fontSize = (currentSize + delta) + 'px';
     }}
-    // 保持深色模式记忆
     if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
   </script>
 </body>
@@ -113,10 +135,13 @@ html_template = """<!DOCTYPE html>
 
 # 4. 循环生成 HTML
 for poem in poems:
-    # 生成带 # 号的标签
-    tags_html = " ".join([f"#{tag}" for tag in poem.get('tags', [])])
-    
-    # 填充模板
+    tags_list = poem.get('tags', [])
+    # ✨ 还原你原版带有斜杠的标签排版方式： # 见我 / 自省 / 独白 ✨
+    if tags_list:
+        tags_html = "# " + " / ".join(tags_list)
+    else:
+        tags_html = ""
+        
     html_content = html_template.format(
         title=poem['title'],
         img=poem['img'],  # 自动读取 images/poemXX.jpg
@@ -124,9 +149,8 @@ for poem in poems:
         content=poem['content']
     )
     
-    # 写出文件
     file_path = os.path.join(output_dir, poem['file'])
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！快去浏览器刷新看看吧！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！原版排版已完美回归！")
