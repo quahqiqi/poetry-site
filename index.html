@@ -14,14 +14,14 @@
     body { margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.3s; }
     body.dark { background: var(--bg-dark); color: var(--muted-dark); }
 
-    /* Header 修复：确保图标可见且对齐 */
+    /* Header */
     header {
       position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px; background: rgba(253, 246, 227, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
     }
     body.dark header { background: rgba(18, 18, 18, 0.9); border-color: #333; }
 
-    .icon-btn { background: transparent; border: none; padding: 8px; cursor: pointer; color: var(--muted); display: flex; align-items: center; transition: 0.2s; }
+    .icon-btn { background: transparent; border: none; padding: 8px; cursor: pointer; color: var(--muted); display: flex; align-items: center; transition: 0.2s; outline: none; }
     body.dark .icon-btn { color: var(--muted-dark); }
     .icon-btn svg { width: 24px; height: 24px; stroke-width: 2.2; stroke: currentColor; }
 
@@ -29,13 +29,22 @@
     .logo-title img { height: 38px; width: 38px; border-radius: 6px; }
     .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
 
-    /* 原版保留：精致的搜索弹窗 */
-    .search-panel { position: absolute; top: 64px; right: 16px; width: 260px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit;}
-    body.dark .search-panel { background: var(--card-dark); border-color: #333; }
-    body.dark .search-panel input { background: rgba(255,255,255,0.05); }
+    /* ✨ 优化后的高颜值居中搜索弹窗 ✨ */
+    .search-panel { 
+      position: absolute; top: 72px; left: 16px; right: 16px; max-width: 500px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
+      padding: 8px; display: none; box-shadow: 0 15px 35px rgba(0,0,0,0.08); z-index: 1100;
+      animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    body.dark .search-panel { background: var(--card-dark); border-color: #333; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .search-box-inner { display: flex; align-items: center; background: rgba(0,0,0,0.04); border-radius: 10px; padding: 4px 12px; }
+    body.dark .search-box-inner { background: rgba(255,255,255,0.06); }
+    .search-box-inner svg { width: 18px; height: 18px; color: var(--muted); margin-right: 8px; }
+    .search-box-inner input { flex: 1; padding: 10px 0; border: none; background: transparent; outline: none; font-family: inherit; color: inherit; font-size: 0.95rem; }
 
-    /* Sidebar：复刻图一效果 + GPU丝滑加速 */
+    /* Sidebar */
     .sidebar { 
       position: fixed; left: 0; top: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
@@ -53,11 +62,9 @@
     .nav-item:hover, .nav-item.active { background: #efe7da; color: var(--accent); font-weight: 700; }
     body.dark .nav-item:hover { background: #2a2a2a; }
     .nav-item svg { width: 20px; height: 20px; stroke-width: 2; fill: none; stroke: currentColor; }
-
     .chevron { margin-left: auto; width: 14px !important; transition: 0.3s; }
     .nav-item.open .chevron { transform: rotate(180deg); }
 
-    /* 标签折叠区域 */
     .tag-box { max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }
     .tag-box.show { max-height: 200px; margin: 10px 0 20px; }
     .tag-pill { padding: 6px 14px; background: #f3eee3; border-radius: 20px; font-size: 0.9rem; color: #8c7e74; cursor: pointer; transition: 0.2s; }
@@ -68,6 +75,27 @@
     .backdrop.show { display: block; }
 
     main { max-width: 1000px; margin: 25px auto; padding: 0 16px; }
+    
+    /* ✨ 新增：头条大图（最新诗作）的精美卡片样式 ✨ */
+    #heroPoem { display: none; margin-bottom: 40px; }
+    .hero-card { 
+      display: block; text-decoration: none; color: inherit; background: var(--card); 
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.06); transition: 0.3s; position: relative;
+    }
+    body.dark .hero-card { background: var(--card-dark); border-color: #333; box-shadow: none; }
+    .hero-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+    .hero-img-wrap { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
+    .hero-img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-badge { 
+      position: absolute; top: 12px; left: 12px; background: rgba(184, 156, 122, 0.95); 
+      color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; 
+      backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); letter-spacing: 1px;
+    }
+    .hero-body { padding: 20px; text-align: center; }
+    .hero-title { font-size: 1.6rem; color: var(--accent); margin: 0 0 10px 0; letter-spacing: 1px; }
+    .hero-preview { font-size: 1rem; color: var(--muted); line-height: 1.6; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
     .intro { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
     .intro h2 { font-size: 1.2rem; margin: 0; color: var(--muted); }
     #latestBadge { font-size: 0.9rem; color: var(--accent); font-weight: bold; }
@@ -82,7 +110,6 @@
     .poem-body h3 a { text-decoration: none; color: inherit; }
     .poem-body p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; height: 3.2em; overflow: hidden; margin: 0; }
 
-    /* ✨ 新增：分页按钮的样式 ✨ */
     .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 40px; }
     .page-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-family: inherit; font-size: 0.95rem; }
     body.dark .page-btn { background: var(--card-dark); border-color: #333; }
@@ -106,7 +133,13 @@
     <button class="icon-btn" id="searchBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索标题或内容..." /></div>
+    
+    <div class="search-panel" id="searchPanel">
+      <div class="search-box-inner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input id="searchInput" type="text" placeholder="搜索标题或内容..." />
+      </div>
+    </div>
   </header>
 
   <aside class="sidebar" id="sidebar">
@@ -134,10 +167,11 @@
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <div class="intro"><h2 id="mainTitle">全部诗作</h2><div id="latestBadge">...</div></div>
+    <div id="heroPoem"></div>
+
+    <div class="intro"><h2 id="mainTitle">往期诗作</h2><div id="latestBadge">...</div></div>
     
     <div id="poemsGrid"></div>
-    
     <div id="pagination" class="pagination"></div>
   </main>
 
@@ -148,20 +182,21 @@
     const backdrop = document.getElementById('backdrop');
     const tagBox = document.getElementById('tagBox');
     const tagToggleBtn = document.getElementById('tagToggleBtn');
+    const heroPoem = document.getElementById('heroPoem');
     const poemsGrid = document.getElementById('poemsGrid');
     const pagination = document.getElementById('pagination');
     const mainTitle = document.getElementById('mainTitle');
+    const latestBadge = document.getElementById('latestBadge');
     
     let allPoems = [];        // 存放所有诗
-    let currentList = [];     // 存放当前展示的诗
+    let currentList = [];     // 存放当前筛选或搜索的诗
     let currentPage = 1;      // 当前页码
     const itemsPerPage = 10;  // 每页显示 10 首
 
-    // 交互逻辑
+    // 基础交互逻辑
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
     
-    // 点击放大镜，弹出/隐藏搜索框
     document.getElementById('searchBtn').onclick = () => { 
         const sp = document.getElementById('searchPanel'); 
         sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
@@ -171,29 +206,62 @@
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
     document.getElementById('darkBtn').onclick = () => { document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); };
 
-    // 重新设置网格并回到第一页
-    function setupGrid(list, title = "全部诗作") {
+    // 核心渲染逻辑
+    function setupGrid(list, titleStr = "往期诗作") {
         currentList = list;
         currentPage = 1;
-        mainTitle.innerText = title;
-        document.getElementById('latestBadge').innerText = "共 " + list.length + " 首";
+        mainTitle.innerText = titleStr;
+        latestBadge.innerText = "共 " + list.length + " 首";
         renderPage();
     }
 
-    // 渲染卡片 + 懒加载图片
     function renderPage() {
         if (currentList.length === 0) { 
-            poemsGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">暂无结果</p>'; 
+            heroPoem.style.display = 'none';
+            poemsGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">暂无相关内容，换个词试试？</p>'; 
             pagination.innerHTML = '';
             return; 
         }
-        
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const pageItems = currentList.slice(start, end);
 
+        // 判断是否是“最原始的主页”（没有搜索，没有分类，在第一页）
+        const isDefaultHome = (currentList === allPoems && currentPage === 1);
+        let gridData = [];
+
+        // 如果是主页，分离出第 1 篇作为“头条大图”
+        if (isDefaultHome) {
+            const hero = currentList[0];
+            heroPoem.innerHTML = `
+                <a href="poems/${hero.file}" class="hero-card">
+                    <div class="hero-img-wrap">
+                        <span class="hero-badge">最新发布</span>
+                        <img class="hero-img" src="${hero.img}" onerror="this.src='assets/img/logo.png'">
+                    </div>
+                    <div class="hero-body">
+                        <h2 class="hero-title">${hero.title}</h2>
+                        <p class="hero-preview">${hero.preview}</p>
+                    </div>
+                </a>
+            `;
+            heroPoem.style.display = 'block';
+            mainTitle.innerText = "往期诗作";
+            
+            // 下面的网格显示第 2 到 第 11 篇（10首）
+            gridData = currentList.slice(1, itemsPerPage + 1);
+        } else {
+            // 如果在搜索、分类，或者在第 2 页之后，隐藏头条大图，正常走分页逻辑
+            heroPoem.style.display = 'none';
+            
+            // 为了保证分页算法的准确性，当处于“主页的其他页”时，剔除已经被头条展示过的第一篇
+            const displayList = (currentList === allPoems) ? currentList.slice(1) : currentList;
+            
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            gridData = displayList.slice(start, end);
+        }
+
+        // 渲染瀑布流网格
         let htmlStr = '';
-        pageItems.forEach(p => {
+        gridData.forEach(p => {
             htmlStr += `
             <div class="poem-card">
                 <a href="poems/${p.file}">
@@ -206,12 +274,16 @@
             </div>`;
         });
         poemsGrid.innerHTML = htmlStr;
+
         renderPagination();
     }
 
     // 渲染分页按钮
     function renderPagination() {
-        const totalPages = Math.ceil(currentList.length / itemsPerPage);
+        // 如果是全量主页，总页数要基于去掉了头条的那 (总数-1) 篇来计算
+        const listToPaginate = (currentList === allPoems) ? currentList.slice(1) : currentList;
+        const totalPages = Math.ceil(listToPaginate.length / itemsPerPage);
+        
         if (totalPages <= 1) { pagination.innerHTML = ''; return; }
 
         pagination.innerHTML = `
@@ -221,33 +293,32 @@
         `;
     }
 
-    // 翻页动作
     function changePage(delta) {
         currentPage += delta;
         renderPage();
-        window.scrollTo({ top: document.querySelector('.intro').offsetTop - 80, behavior: 'smooth' });
+        // 翻页后，平滑滚动到列表顶部
+        const offset = document.querySelector('.intro').offsetTop - 80;
+        window.scrollTo({ top: offset, behavior: 'smooth' });
     }
 
-    // 分类浏览
+    // 分类与搜索过滤
     function filterByTag(tag) {
         setupGrid(allPoems.filter(p => p.tags && p.tags.includes(tag)), "# " + tag);
         sidebar.classList.remove('active'); backdrop.classList.remove('show');
     }
 
-    // 在搜索框打字时实时过滤
     document.getElementById('searchInput').oninput = (e) => {
         const val = e.target.value.toLowerCase();
         if(val) {
             setupGrid(allPoems.filter(p => (p.title + p.preview).toLowerCase().includes(val)), '搜索: "' + val + '"');
         } else {
-            setupGrid(allPoems, "全部诗作");
+            setupGrid(allPoems, "往期诗作");
         }
     };
 
-    // 随机诗歌
     document.getElementById('randomBtn').onclick = () => { if(allPoems.length) window.location.href = 'poems/' + allPoems[Math.floor(Math.random()*allPoems.length)].file; };
 
-    // 页面初始化
+    // 初始化
     async function init() {
         if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
         document.getElementById('year').innerText = new Date().getFullYear();
@@ -263,7 +334,7 @@
                 document.getElementById('searchInput').value = searchVal;
                 setupGrid(allPoems.filter(p => (p.title + p.preview).toLowerCase().includes(searchVal.toLowerCase())), '搜索: "' + searchVal + '"');
             } else {
-                setupGrid(allPoems, "全部诗作");
+                setupGrid(allPoems, "往期诗作");
             }
         } catch(e) { console.error("Error", e); }
     }
