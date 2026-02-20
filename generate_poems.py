@@ -41,7 +41,6 @@ html_template = """<!DOCTYPE html>
     .logo-title img {{ height: 38px; width: 38px; border-radius: 6px; }}
     .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }}
 
-    /* ✨ 同步自 index 的高颜值居中搜索弹窗 ✨ */
     .search-panel {{ 
       position: absolute; top: 72px; left: 16px; right: 16px; max-width: 500px; margin: 0 auto;
       background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
@@ -56,7 +55,6 @@ html_template = """<!DOCTYPE html>
     .search-box-inner svg {{ width: 18px; height: 18px; color: var(--muted); margin-right: 8px; flex-shrink: 0; }}
     .search-box-inner input {{ flex: 1; padding: 10px 0; border: none; background: transparent; outline: none; font-family: inherit; color: inherit; font-size: 0.95rem; }}
 
-    /* 搜索下拉结果的样式（带小图） */
     .search-results {{ max-height: 350px; overflow-y: auto; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }}
     .search-results:empty {{ display: none; margin-top: 0; }}
     .search-item {{ display: flex; align-items: center; gap: 10px; padding: 8px; text-decoration: none; color: inherit; border-radius: 8px; transition: background 0.2s; }}
@@ -65,7 +63,6 @@ html_template = """<!DOCTYPE html>
     .search-item img {{ width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }}
     .search-item-title {{ font-size: 0.95rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 
-    /* Sidebar */
     .sidebar {{ 
       position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
@@ -96,11 +93,16 @@ html_template = """<!DOCTYPE html>
     .backdrop {{ position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; backdrop-filter: blur(2px); }}
     .backdrop.show {{ display: block; }}
 
-    /* --- 诗歌专属的排版（严格遵守顺序） --- */
+    /* --- 诗歌专属的排版 --- */
     main {{ max-width: 800px; margin: 25px auto; padding: 0 16px; }}
     
     .poem-title {{ font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }}
-    .poem-tags {{ text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 25px; letter-spacing: 1px; }}
+    
+    /* 调整了标签的底边距，给日期留出空间 */
+    .poem-tags {{ text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 10px; letter-spacing: 1px; }}
+    
+    /* ✨ 新增：日期的专属美化样式 ✨ */
+    .poem-date {{ text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 25px; opacity: 0.7; letter-spacing: 1px; }}
     
     .poem-cover-full {{ 
       width: 100%; aspect-ratio: 16 / 9; object-fit: cover; 
@@ -181,6 +183,8 @@ html_template = """<!DOCTYPE html>
     
     <div class="poem-tags">{tags_html}</div>
 
+    {date_html}
+
     <img src="../{img}" alt="{title}" class="poem-cover-full" loading="lazy" decoding="async" onerror="this.style.display='none'">
     
     <div class="font-toolbar" title="在此调节正文字体大小">
@@ -208,12 +212,10 @@ html_template = """<!DOCTYPE html>
     document.getElementById('menuBtn').onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
     backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; }};
     
-    // 搜索框缓存与触发
     let allPoemsCache = null; 
 
     document.getElementById('searchBtn').onclick = async () => {{ 
         const sp = document.getElementById('searchPanel'); 
-        // 展开时用 block 即可，内部会自适应
         sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
         if(sp.style.display === 'block') {{
             document.getElementById('searchInput').focus();
@@ -226,7 +228,6 @@ html_template = """<!DOCTYPE html>
         }}
     }};
 
-    // 实时下拉渲染
     document.getElementById('searchInput').addEventListener('input', function() {{
         const q = this.value.toLowerCase().trim();
         const resultsDiv = document.getElementById('searchResults');
@@ -286,6 +287,10 @@ html_template = """<!DOCTYPE html>
 for i, poem in enumerate(poems):
     tags_html = " ".join([f"#{tag}" for tag in poem.get('tags', [])])
     
+    # ✨ 智能日期处理：如果 JSON 里面写了 "date"，就生成 HTML，没写就跳过，防止留白
+    date_val = poem.get('date', '').strip()
+    date_html = f'<div class="poem-date">{date_val}</div>' if date_val else ''
+    
     prev_link = ""
     next_link = ""
     
@@ -301,6 +306,7 @@ for i, poem in enumerate(poems):
         title=poem['title'],
         img=poem['img'],
         tags_html=tags_html,
+        date_html=date_html,  # 注入日期
         content=poem['content'],
         prev_link=prev_link,
         next_link=next_link
@@ -310,4 +316,4 @@ for i, poem in enumerate(poems):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！下拉搜索小窗、完美排版已全部就绪！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！日期功能已加入！")
