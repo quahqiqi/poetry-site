@@ -30,12 +30,20 @@
     .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
 
     .search-panel { position: absolute; top: 64px; right: 16px; width: 260px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; }
+    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }
+    body.dark .search-panel input { background: rgba(255,255,255,0.05); }
 
-    /* Sidebar：复刻图一效果 */
-    .sidebar { position: fixed; left: calc(-1 * var(--sidebar-w)); top: 0; height: 100%; width: var(--sidebar-w); background: var(--bg); border-right: 1px solid var(--border); transition: 0.3s; z-index: 1250; padding: 20px 14px; overflow-y: auto; }
+    /* 🚀 性能优化：Sidebar GPU 加速，滑动如丝般顺滑 */
+    .sidebar { 
+      position: fixed; left: 0; top: 0; height: 100%; width: var(--sidebar-w); 
+      background: var(--bg); border-right: 1px solid var(--border); 
+      z-index: 1250; padding: 20px 14px; overflow-y: auto; 
+      transform: translateX(-100%); /* 替代原本的 left 控制 */
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform; /* 告诉浏览器预先分配性能 */
+    }
     body.dark .sidebar { background: #1a1a1a; border-color: #333; }
-    .sidebar.active { left: 0; }
+    .sidebar.active { transform: translateX(0); }
     
     .nav-item {
       display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; margin-bottom: 6px;
@@ -84,7 +92,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
     <a href="index.html" class="logo-title">
-        <img src="assets/img/logo.png" alt="logo">
+        <img src="assets/img/logo.png" alt="logo" onerror="this.src='images/logo.png'">
         <h1>一个青年的天马行空</h1>
     </a>
     <button class="icon-btn" id="searchBtn">
@@ -142,15 +150,25 @@
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
     document.getElementById('darkBtn').onclick = () => { document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); };
 
+    // 🚀 性能优化：批量渲染 DOM + 开启懒加载
     function renderGrid(list) {
-        poemsGrid.innerHTML = '';
         if (list.length === 0) { poemsGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">暂无结果</p>'; return; }
-        list.slice(0, 10).forEach(p => {
-            const card = document.createElement('div'); card.className = 'poem-card';
-            card.innerHTML = `<a href="poems/${p.file}"><img class="poem-cover" src="${p.img}" onerror="this.src='assets/img/logo.png'"></a>
-                <div class="poem-body"><h3><a href="poems/${p.file}">${p.title}</a></h3><p>${p.preview}</p></div>`;
-            poemsGrid.appendChild(card);
+        
+        // 使用 htmlStr 批量拼接，极大减少网页卡顿
+        let htmlStr = '';
+        list.forEach(p => {
+            htmlStr += `
+            <div class="poem-card">
+                <a href="poems/${p.file}">
+                    <img class="poem-cover" src="${p.img}" loading="lazy" decoding="async" onerror="this.src='assets/img/logo.png'">
+                </a>
+                <div class="poem-body">
+                    <h3><a href="poems/${p.file}">${p.title}</a></h3>
+                    <p>${p.preview}</p>
+                </div>
+            </div>`;
         });
+        poemsGrid.innerHTML = htmlStr;
     }
 
     function filterByTag(tag) {
@@ -159,7 +177,6 @@
         sidebar.classList.remove('active'); backdrop.classList.remove('show');
     }
 
-    // ==== ✨ 这里是修复的搜索功能逻辑 ====
     document.getElementById('searchInput').oninput = (e) => {
         const val = e.target.value.toLowerCase();
         renderGrid(poemsList.filter(p => (p.title + p.preview).toLowerCase().includes(val)));
@@ -178,11 +195,17 @@
             const params = new URLSearchParams(window.location.search);
             if(params.get('q')) {
                 filterByTag(params.get('q'));
+            } else if(params.get('search')) {
+                // 如果是顶部搜索传过来的参数
+                const searchVal = params.get('search');
+                document.getElementById('searchInput').value = searchVal;
+                renderGrid(poemsList.filter(p => (p.title + p.preview).toLowerCase().includes(searchVal.toLowerCase())));
             } else {
+                // 直接展示所有诗歌，因为已经有懒加载，不会卡！
                 renderGrid(poemsList);
                 if(poemsList[0]) document.getElementById('latestBadge').innerText = poemsList[0].title;
             }
-        } catch(e) { console.error("Error"); }
+        } catch(e) { console.error("Error", e); }
     }
     init();
   </script>
