@@ -6,7 +6,6 @@
   <title>离开 | 一个青年的天马行空</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* 完全复制原版的 CSS 变量与基础设定 */
     :root {
       --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
       --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --sidebar-w: 280px;
@@ -15,14 +14,13 @@
     body { margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.3s; line-height: 1.8; }
     body.dark { background: var(--bg-dark); color: var(--muted-dark); }
 
-    /* 原版 Header */
     header {
       position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px; background: rgba(253, 246, 227, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
     }
     body.dark header { background: rgba(18, 18, 18, 0.9); border-color: #333; }
 
-    .icon-btn { background: transparent; border: none; padding: 8px; cursor: pointer; color: var(--muted); display: flex; align-items: center; transition: 0.2s; }
+    .icon-btn { background: transparent; border: none; padding: 8px; cursor: pointer; color: var(--muted); display: flex; align-items: center; transition: 0.2s; outline: none; }
     body.dark .icon-btn { color: var(--muted-dark); }
     .icon-btn svg { width: 24px; height: 24px; stroke-width: 2.2; stroke: currentColor; }
 
@@ -30,13 +28,22 @@
     .logo-title img { height: 38px; width: 38px; border-radius: 6px; }
     .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
 
-    /* 搜索框与下拉列表 */
-    .search-panel { position: absolute; top: 64px; right: 16px; width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    body.dark .search-panel { background: var(--card-dark); border-color: #333; }
-    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }
-    body.dark .search-panel input { background: rgba(255,255,255,0.05); }
+    /* ✨ 同步自 index 的高颜值居中搜索弹窗 ✨ */
+    .search-panel { 
+      position: absolute; top: 72px; left: 16px; right: 16px; max-width: 500px; margin: 0 auto;
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
+      padding: 8px; display: none; box-shadow: 0 15px 35px rgba(0,0,0,0.08); z-index: 1100;
+      animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    body.dark .search-panel { background: var(--card-dark); border-color: #333; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
     
-    /* ✨ 新增：下拉搜索结果列表样式 ✨ */
+    .search-box-inner { display: flex; align-items: center; background: rgba(0,0,0,0.04); border-radius: 10px; padding: 4px 12px; }
+    body.dark .search-box-inner { background: rgba(255,255,255,0.06); }
+    .search-box-inner svg { width: 18px; height: 18px; color: var(--muted); margin-right: 8px; flex-shrink: 0; }
+    .search-box-inner input { flex: 1; padding: 10px 0; border: none; background: transparent; outline: none; font-family: inherit; color: inherit; font-size: 0.95rem; }
+
+    /* 搜索下拉结果的样式（带小图） */
     .search-results { max-height: 350px; overflow-y: auto; margin-top: 8px; display: flex; flex-direction: column; gap: 4px; }
     .search-results:empty { display: none; margin-top: 0; }
     .search-item { display: flex; align-items: center; gap: 10px; padding: 8px; text-decoration: none; color: inherit; border-radius: 8px; transition: background 0.2s; }
@@ -45,7 +52,7 @@
     .search-item img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
     .search-item-title { font-size: 0.95rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Sidebar GPU 加速 */
+    /* Sidebar */
     .sidebar { 
       position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
@@ -76,7 +83,7 @@
     .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; backdrop-filter: blur(2px); }
     .backdrop.show { display: block; }
 
-    /* --- 诗歌专属的排版 --- */
+    /* --- 诗歌专属的排版（严格遵守顺序） --- */
     main { max-width: 800px; margin: 25px auto; padding: 0 16px; }
     
     .poem-title { font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }
@@ -87,16 +94,14 @@
       border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
     }
     
-    .poem-content { font-size: 1.15rem; white-space: pre-wrap; color: inherit; padding: 0 10px; text-align: left; }
-    
-    /* 更加直观的字体大小控制栏 */
     .font-toolbar { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 40px; }
     .font-label { font-size: 0.9rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }
     .f-btn { background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 6px 20px; border-radius: 20px; cursor: pointer; transition: 0.2s; font-family: inherit; }
     body.dark .f-btn { background: var(--card-dark); border-color: #333; }
     .f-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    /* 恢复：上一篇 / 下一篇 导航 */
+    .poem-content { font-size: 1.15rem; white-space: pre-wrap; color: inherit; padding: 0 10px; text-align: left; }
+    
     .poem-nav { 
       display: flex; justify-content: space-between; align-items: center; 
       margin-top: 60px; padding-top: 25px; border-top: 1px solid var(--border); 
@@ -126,7 +131,10 @@
     </button>
     
     <div class="search-panel" id="searchPanel">
-        <input id="searchInput" type="text" placeholder="输入关键字搜索..." autocomplete="off" />
+        <div class="search-box-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input id="searchInput" type="text" placeholder="输入关键字搜索..." autocomplete="off" />
+        </div>
         <div class="search-results" id="searchResults"></div>
     </div>
   </header>
@@ -218,20 +226,18 @@
     const tagBox = document.getElementById('tagBox');
     const tagToggleBtn = document.getElementById('tagToggleBtn');
     
-    // 侧边栏交互
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
     
-    // ✨ 全新搜索框交互逻辑 ✨
-    let allPoemsCache = null; // 用于缓存 JSON 数据
+    // 搜索框缓存与触发
+    let allPoemsCache = null; 
 
     document.getElementById('searchBtn').onclick = async () => { 
         const sp = document.getElementById('searchPanel'); 
-        // 展开时设置为 display: flex，以便内部可以容纳结果列表
-        sp.style.display = sp.style.display === 'flex' ? 'none' : 'flex'; 
-        if(sp.style.display === 'flex') {
+        // 展开时用 block 即可，内部会自适应
+        sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
+        if(sp.style.display === 'block') {
             document.getElementById('searchInput').focus();
-            // 点击搜索按钮时，预先加载诗歌数据
             if(!allPoemsCache) {
                 try {
                     const res = await fetch('poems.json');
@@ -241,7 +247,7 @@
         }
     };
 
-    // 实时监听输入，生成包含小图片和标题的下拉列表
+    // 实时下拉渲染
     document.getElementById('searchInput').addEventListener('input', function() {
         const q = this.value.toLowerCase().trim();
         const resultsDiv = document.getElementById('searchResults');
@@ -251,7 +257,6 @@
             return;
         }
         
-        // 根据标题或正文过滤
         const matched = allPoemsCache.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
         
         if (matched.length === 0) {
@@ -259,7 +264,6 @@
             return;
         }
         
-        // 渲染下拉结果（小图 + 标题）
         resultsDiv.innerHTML = matched.map(p => `
             <a href="${p.file}" class="search-item">
                 <img src="../${p.img}" loading="lazy" onerror="this.src='../assets/img/logo.png'">
@@ -268,7 +272,6 @@
         `).join('');
     });
 
-    // 其他原有交互保留不变
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
     function filterByTag(tag) {
         window.location.href = '../index.html?q=' + encodeURIComponent(tag);
