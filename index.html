@@ -14,7 +14,7 @@
     body { margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.3s; }
     body.dark { background: var(--bg-dark); color: var(--muted-dark); }
 
-    /* Header */
+    /* Header 修复：确保图标可见且对齐 */
     header {
       position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
       padding: 10px 16px; background: rgba(253, 246, 227, 0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
@@ -29,11 +29,13 @@
     .logo-title img { height: 38px; width: 38px; border-radius: 6px; }
     .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
 
+    /* 原版保留：精致的搜索弹窗 */
     .search-panel { position: absolute; top: 64px; right: 16px; width: 260px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }
+    .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit;}
+    body.dark .search-panel { background: var(--card-dark); border-color: #333; }
     body.dark .search-panel input { background: rgba(255,255,255,0.05); }
 
-    /* Sidebar */
+    /* Sidebar：复刻图一效果 + GPU丝滑加速 */
     .sidebar { 
       position: fixed; left: 0; top: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
@@ -55,6 +57,7 @@
     .chevron { margin-left: auto; width: 14px !important; transition: 0.3s; }
     .nav-item.open .chevron { transform: rotate(180deg); }
 
+    /* 标签折叠区域 */
     .tag-box { max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }
     .tag-box.show { max-height: 200px; margin: 10px 0 20px; }
     .tag-pill { padding: 6px 14px; background: #f3eee3; border-radius: 20px; font-size: 0.9rem; color: #8c7e74; cursor: pointer; transition: 0.2s; }
@@ -103,7 +106,7 @@
     <button class="icon-btn" id="searchBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索..." /></div>
+    <div class="search-panel" id="searchPanel"><input id="searchInput" type="text" placeholder="搜索标题或内容..." /></div>
   </header>
 
   <aside class="sidebar" id="sidebar">
@@ -131,7 +134,7 @@
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <div class="intro"><h2>最新诗作</h2><div id="latestBadge">...</div></div>
+    <div class="intro"><h2 id="mainTitle">全部诗作</h2><div id="latestBadge">...</div></div>
     
     <div id="poemsGrid"></div>
     
@@ -147,30 +150,37 @@
     const tagToggleBtn = document.getElementById('tagToggleBtn');
     const poemsGrid = document.getElementById('poemsGrid');
     const pagination = document.getElementById('pagination');
+    const mainTitle = document.getElementById('mainTitle');
     
     let allPoems = [];        // 存放所有诗
-    let currentList = [];     // 存放当前正在展示的诗（可能被筛选过）
+    let currentList = [];     // 存放当前展示的诗
     let currentPage = 1;      // 当前页码
     const itemsPerPage = 10;  // 每页显示 10 首
 
     // 交互逻辑
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
+    
+    // 点击放大镜，弹出/隐藏搜索框
     document.getElementById('searchBtn').onclick = () => { 
-        const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
+        const sp = document.getElementById('searchPanel'); 
+        sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
         if(sp.style.display === 'block') document.getElementById('searchInput').focus();
     };
+
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
     document.getElementById('darkBtn').onclick = () => { document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); };
 
-    // ✨ 核心逻辑：设置列表并跳回第一页
-    function setupGrid(list) {
+    // 重新设置网格并回到第一页
+    function setupGrid(list, title = "全部诗作") {
         currentList = list;
         currentPage = 1;
+        mainTitle.innerText = title;
+        document.getElementById('latestBadge').innerText = "共 " + list.length + " 首";
         renderPage();
     }
 
-    // ✨ 核心逻辑：渲染当前页的数据
+    // 渲染卡片 + 懒加载图片
     function renderPage() {
         if (currentList.length === 0) { 
             poemsGrid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">暂无结果</p>'; 
@@ -178,7 +188,6 @@
             return; 
         }
         
-        // 计算这一页应该截取哪几首诗
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const pageItems = currentList.slice(start, end);
@@ -197,20 +206,13 @@
             </div>`;
         });
         poemsGrid.innerHTML = htmlStr;
-
-        // 渲染分页按钮
         renderPagination();
     }
 
-    // ✨ 核心逻辑：渲染底部的翻页按钮
+    // 渲染分页按钮
     function renderPagination() {
         const totalPages = Math.ceil(currentList.length / itemsPerPage);
-        
-        // 如果只有一页（不到 10 首），就不显示翻页按钮
-        if (totalPages <= 1) { 
-            pagination.innerHTML = ''; 
-            return; 
-        }
+        if (totalPages <= 1) { pagination.innerHTML = ''; return; }
 
         pagination.innerHTML = `
             <button class="page-btn" onclick="changePage(-1)" ${currentPage === 1 ? 'disabled' : ''}>上一页</button>
@@ -219,31 +221,33 @@
         `;
     }
 
-    // ✨ 核心逻辑：点击翻页
+    // 翻页动作
     function changePage(delta) {
         currentPage += delta;
         renderPage();
-        // 翻页后，平滑滚动回到诗歌卡片区域的最上方
         window.scrollTo({ top: document.querySelector('.intro').offsetTop - 80, behavior: 'smooth' });
     }
 
     // 分类浏览
     function filterByTag(tag) {
-        setupGrid(allPoems.filter(p => p.tags && p.tags.includes(tag)));
-        document.getElementById('latestBadge').innerText = "# " + tag;
+        setupGrid(allPoems.filter(p => p.tags && p.tags.includes(tag)), "# " + tag);
         sidebar.classList.remove('active'); backdrop.classList.remove('show');
     }
 
-    // 搜索过滤
+    // 在搜索框打字时实时过滤
     document.getElementById('searchInput').oninput = (e) => {
         const val = e.target.value.toLowerCase();
-        setupGrid(allPoems.filter(p => (p.title + p.preview).toLowerCase().includes(val)));
+        if(val) {
+            setupGrid(allPoems.filter(p => (p.title + p.preview).toLowerCase().includes(val)), '搜索: "' + val + '"');
+        } else {
+            setupGrid(allPoems, "全部诗作");
+        }
     };
 
     // 随机诗歌
     document.getElementById('randomBtn').onclick = () => { if(allPoems.length) window.location.href = 'poems/' + allPoems[Math.floor(Math.random()*allPoems.length)].file; };
 
-    // 初始化
+    // 页面初始化
     async function init() {
         if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
         document.getElementById('year').innerText = new Date().getFullYear();
@@ -257,10 +261,9 @@
             } else if(params.get('search')) {
                 const searchVal = params.get('search');
                 document.getElementById('searchInput').value = searchVal;
-                setupGrid(allPoems.filter(p => (p.title + p.preview).toLowerCase().includes(searchVal.toLowerCase())));
+                setupGrid(allPoems.filter(p => (p.title + p.preview).toLowerCase().includes(searchVal.toLowerCase())), '搜索: "' + searchVal + '"');
             } else {
-                setupGrid(allPoems);
-                if(allPoems[0]) document.getElementById('latestBadge').innerText = "共 " + allPoems.length + " 首";
+                setupGrid(allPoems, "全部诗作");
             }
         } catch(e) { console.error("Error", e); }
     }
