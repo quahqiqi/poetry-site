@@ -35,10 +35,17 @@
     .search-panel input { width: 100%; padding: 10px; border: none; background: rgba(0,0,0,0.05); border-radius: 6px; outline: none; font-family: inherit; color: inherit; }
     body.dark .search-panel input { background: rgba(255,255,255,0.05); }
 
-    /* 原版 Sidebar */
-    .sidebar { position: fixed; left: calc(-1 * var(--sidebar-w)); top: 0; height: 100%; width: var(--sidebar-w); background: var(--bg); border-right: 1px solid var(--border); transition: 0.3s; z-index: 1250; padding: 20px 14px; overflow-y: auto; }
+    /* 🚀 性能优化：Sidebar GPU 加速，滑动如丝般顺滑 (排版和颜色完全没动) */
+    .sidebar { 
+      position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
+      background: var(--bg); border-right: 1px solid var(--border); 
+      z-index: 1250; padding: 20px 14px; overflow-y: auto; 
+      transform: translateX(-100%); 
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+      will-change: transform; 
+    }
     body.dark .sidebar { background: #1a1a1a; border-color: #333; }
-    .sidebar.active { left: 0; }
+    .sidebar.active { transform: translateX(0); }
     
     .nav-item {
       display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; margin-bottom: 6px;
@@ -127,7 +134,7 @@
   <div class="backdrop" id="backdrop"></div>
 
   <main>
-    <img src="../images/poem57.jpg" alt="积雨的圣诞夜" class="poem-cover-full" onerror="this.style.display='none'">
+    <img src="../images/poem57.jpg" alt="积雨的圣诞夜" class="poem-cover-full" loading="lazy" decoding="async" onerror="this.style.display='none'">
     
     <h1 class="poem-title">积雨的圣诞夜</h1>
     <div class="poem-tags">#见物 #朦胧</div>
@@ -173,7 +180,7 @@
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; };
     
-    // 搜索交互：因为我们不在首页，所以直接带上参数跳回首页搜索
+    // 搜索交互：不在首页，直接带参数跳回首页搜索
     document.getElementById('searchBtn').onclick = () => { 
         const sp = document.getElementById('searchPanel'); sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
         if(sp.style.display === 'block') document.getElementById('searchInput').focus();
