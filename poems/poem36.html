@@ -17,7 +17,7 @@
     }
     body.dark { background: var(--bg-dark); color: var(--text-dark); }
 
-    /* 还原你的原版顶部导航 */
+    /* --- 修复：顶部导航（防挤压） --- */
     header {
       position: sticky; top: 0; z-index: 1000;
       display: flex; align-items: center; justify-content: space-between;
@@ -25,64 +25,92 @@
       border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); height: 64px;
     }
     body.dark header { background: rgba(18, 18, 18, 0.9); border-color: #333; }
-    .icon-btn { background: none; border: none; padding: 8px; color: var(--muted); cursor: pointer; display: flex; align-items: center; }
-    .logo-title { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; width: max-content; pointer-events: none; }
-    .logo-title * { pointer-events: auto; }
-    .logo-title img { height: 32px; width: 32px; border-radius: 6px; }
-    .logo-title h1 { margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }
-
-    main { max-width: 650px; margin: 30px auto 60px; padding: 0 20px; }
+    .icon-btn { background: none; border: none; padding: 8px; color: var(--muted); cursor: pointer; display: flex; align-items: center; z-index: 2; }
     
-    /* 还原你的原版标题与斜杠标签排版 */
+    .logo-title { 
+      position: absolute; left: 0; right: 0; margin: auto; 
+      width: max-content; max-width: 55vw; /* 限制宽度，防止和两边按钮打架 */
+      display: flex; align-items: center; justify-content: center; gap: 8px; 
+      text-decoration: none; color: inherit; z-index: 1; pointer-events: none; 
+    }
+    .logo-title * { pointer-events: auto; }
+    /* 修复：正确的 Logo 圆角和尺寸 */
+    .logo-title img { height: 28px; width: 28px; border-radius: 6px; flex-shrink: 0; object-fit: cover; }
+    .logo-title h1 { margin: 0; font-size: 1rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* --- 修复：侧边栏样式 --- */
+    .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; }
+    .sidebar-overlay.open { display: block; }
+    .sidebar { position: fixed; top: 0; left: -280px; width: 260px; height: 100%; background: var(--bg); border-right: 1px solid var(--border); z-index: 2000; transition: left 0.3s ease; padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+    body.dark .sidebar { background: var(--bg-dark); border-color: #333; }
+    .sidebar.open { left: 0; }
+    .close-btn { background: none; border: none; font-size: 1.5rem; color: var(--muted); cursor: pointer; float: right; margin-bottom: 20px; }
+    .nav-item { display: block; padding: 12px 15px; text-decoration: none; color: var(--text); border-radius: 8px; margin-bottom: 8px; background: rgba(184, 156, 122, 0.1); font-weight: bold; }
+    
+    /* --- 修复：搜索弹窗样式 --- */
+    .search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(253, 246, 227, 0.95); z-index: 2000; display: none; flex-direction: column; align-items: center; padding-top: 80px; }
+    body.dark .search-overlay { background: rgba(18, 18, 18, 0.98); }
+    .search-overlay.open { display: flex; }
+    .search-box { width: 90%; max-width: 500px; display: flex; gap: 10px; margin-bottom: 20px; }
+    .search-box input { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--text); font-family: inherit; }
+    body.dark .search-box input { border-color: #444; }
+    .search-box button { padding: 10px 20px; border: none; border-radius: 8px; background: var(--accent); color: white; cursor: pointer; }
+    .search-results { width: 90%; max-width: 500px; max-height: 60vh; overflow-y: auto; }
+    .search-item { display: block; padding: 15px; margin-bottom: 10px; background: #fff; border-radius: 8px; text-decoration: none; color: var(--text); border: 1px solid var(--border); }
+    body.dark .search-item { background: #1e1e1e; border-color: #333; color: var(--text-dark); }
+    .search-item strong { color: var(--accent); display: block; font-size: 1.1rem; margin-bottom: 5px; }
+
+    /* --- 诗歌排版 --- */
+    main { max-width: 650px; margin: 30px auto 60px; padding: 0 20px; }
     .poem-header { text-align: center; margin-bottom: 25px; }
     .title { font-size: 1.8rem; color: var(--accent); margin: 0 0 10px 0; letter-spacing: 2px; }
     .tags { font-size: 0.85rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }
 
-    /* 还原你的原版控制栏（带底色、圆形按钮） */
-    .toolbar {
-      display: flex; align-items: center; justify-content: space-between;
-      background: #f3eee3; 
-      padding: 12px 20px; border-radius: 12px; margin-bottom: 30px;
-      font-size: 0.9rem; color: var(--muted);
-    }
+    /* 原版控制栏 */
+    .toolbar { display: flex; align-items: center; justify-content: space-between; background: #f3eee3; padding: 12px 20px; border-radius: 12px; margin-bottom: 30px; font-size: 0.9rem; color: var(--muted); }
     body.dark .toolbar { background: #2a2a2a; color: #999; }
     .font-controls { display: flex; align-items: center; gap: 15px; }
-    .f-btn { 
-      background: #fff; border: 1px solid var(--border); color: var(--muted);
-      width: 36px; height: 36px; border-radius: 50%; cursor: pointer; 
-      display: flex; align-items: center; justify-content: center; transition: 0.2s;
-    }
+    .f-btn { background: #fff; border: 1px solid var(--border); color: var(--muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
     body.dark .f-btn { background: #1e1e1e; border-color: #444; }
     .f-btn:hover { color: var(--accent); border-color: var(--accent); }
     .read-mode-btn { cursor: pointer; transition: 0.2s; }
     .read-mode-btn:hover { color: var(--accent); }
 
-    /* ✨ 核心魔法：让图片自动变成一致的 16:9 横屏相片比例，绝不拉伸！ ✨ */
-    .poem-cover {
-      width: 100%;
-      aspect-ratio: 16 / 9; /* 强制图片显示为横向的长方形 */
-      object-fit: cover;    /* 超出部分自动隐藏，保留中间最精华的部分 */
-      border-radius: 12px;  /* 还原你的大圆角 */
-      margin-bottom: 35px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      display: block;
-    }
-
-    /* 诗歌正文：还原原版的左对齐排版 */
-    .content { font-size: 1.15rem; white-space: pre-wrap; color: #333; }
-    body.dark .content { color: #ccc; }
+    /* 物理裁剪魔法：16:9 横屏美图 */
+    .poem-cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; margin-bottom: 35px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); display: block; }
+    .content { font-size: 1.15rem; white-space: pre-wrap; color: var(--text); }
   </style>
 </head>
 <body>
+  
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">✕</button>
+    <h2 style="margin-top:0; color:var(--accent);">目录</h2>
+    <a href="../index.html" class="nav-item">🏠 首页最新</a>
+    <a href="../toc.html" class="nav-item">📚 全部诗卷</a>
+  </div>
+
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索诗歌的标题或内容...">
+      <button onclick="performSearch()">搜索</button>
+      <button onclick="toggleSearch()" style="background:var(--muted);">关闭</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
   <header>
-    <button class="icon-btn" onclick="window.location.href='../index.html'">
+    <button class="icon-btn" onclick="toggleSidebar()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
+    
     <a href="../index.html" class="logo-title">
-        <img src="../images/logo.png" alt="logo" onerror="this.src='../images/logo.png'">
+        <img src="../assets/img/logo.png" alt="logo" onerror="this.src='../images/logo.png'">
         <h1>一个青年的天马行空</h1>
     </a>
-    <button class="icon-btn">
+    
+    <button class="icon-btn" onclick="toggleSearch()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
   </header>
@@ -99,7 +127,7 @@
         <button class="f-btn" onclick="changeSize(-2)">A-</button>
         <button class="f-btn" onclick="changeSize(2)">A+</button>
       </div>
-      <div class="read-mode-btn" onclick="document.body.classList.toggle('dark')">阅读模式</div>
+      <div class="read-mode-btn" onclick="toggleDarkMode()">阅读模式</div>
     </div>
 
     <img src="../images/poem36.jpg" alt="年夜" class="poem-cover" onerror="this.style.display='none'">
@@ -140,12 +168,57 @@
   </main>
 
   <script>
+    /* --- 修复：全部的 JS 交互逻辑 --- */
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebarOverlay').classList.toggle('open');
+    }
+
+    function toggleSearch() {
+      const overlay = document.getElementById('searchOverlay');
+      overlay.classList.toggle('open');
+      if (overlay.classList.contains('open')) {
+        document.getElementById('searchInput').focus();
+      }
+    }
+
+    let allPoems = [];
+    async function performSearch() {
+      const resultsDiv = document.getElementById('searchResults');
+      resultsDiv.innerHTML = '<p style="text-align:center;">搜索中...</p>';
+      
+      if(allPoems.length === 0) {
+        try {
+          // 修复：诗歌页里请求 json 直接用 poems.json
+          const res = await fetch('poems.json'); 
+          allPoems = await res.json();
+        } catch(e) {
+          resultsDiv.innerHTML = '<p style="text-align:center;color:red;">加载数据失败</p>';
+          return;
+        }
+      }
+      
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      if(!q) { resultsDiv.innerHTML = ''; return; }
+      
+      const resultsHtml = allPoems.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q))
+        .map(p => `<a href="${p.file}" class="search-item"><strong>${p.title}</strong>${p.preview}</a>`)
+        .join('');
+        
+      resultsDiv.innerHTML = resultsHtml || '<p style="text-align:center;">没有找到相关诗歌</p>';
+    }
+
     function changeSize(delta) {
       const el = document.getElementById('poemContent');
-      // 获取当前字体大小，如果没有则默认 18.4px (即 1.15rem)
       const currentSize = parseFloat(window.getComputedStyle(el).fontSize) || 18.4;
       el.style.fontSize = (currentSize + delta) + 'px';
     }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0');
+    }
+
     if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
   </script>
 </body>
