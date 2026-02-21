@@ -10,8 +10,8 @@ if not os.path.exists(output_dir):
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
-# ✨ 填入你的 GitHub Pages 网址，用于修复 FB 分享抓取不到图片的 Bug
-SITE_BASE_URL = "https://quahqiqi.github.io/poetry-collection"
+# ✨ 核心修复 1：填入你截图里真实的网址，解决 FB 图片抓取问题
+SITE_BASE_URL = "https://quahqiqi.github.io/poetry-site"
 
 # 3. HTML 模板
 html_template = """<!DOCTYPE html>
@@ -26,6 +26,7 @@ html_template = """<!DOCTYPE html>
   <meta property="og:title" content="{title} | 一个青年的天马行空" />
   <meta property="og:description" content="{preview}" />
   <meta property="og:image" content="{absolute_img_url}" />
+  <meta property="og:url" content="{absolute_page_url}" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="一个青年的天马行空" />
   
@@ -53,7 +54,6 @@ html_template = """<!DOCTYPE html>
     .logo-title img {{ height: 38px; width: 38px; border-radius: 6px; flex-shrink: 0; }}
     .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 
-    /* 搜索弹窗 */
     .search-panel {{ 
       position: absolute; top: 72px; left: 16px; right: 16px; max-width: 500px; margin: 0 auto;
       background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
@@ -76,7 +76,6 @@ html_template = """<!DOCTYPE html>
     .search-item img {{ width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }}
     .search-item-title {{ font-size: 0.95rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 
-    /* Sidebar */
     .sidebar {{ 
       position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
@@ -102,12 +101,10 @@ html_template = """<!DOCTYPE html>
     .backdrop {{ position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; backdrop-filter: blur(2px); }}
     .backdrop.show {{ display: block; }}
 
-    /* --- 正文排版 --- */
     main {{ max-width: 800px; margin: 25px auto; padding: 0 16px; }}
     .poem-title {{ font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }}
     .poem-date {{ text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 25px; opacity: 0.7; letter-spacing: 1px; }}
     
-    /* 懒加载图片优化 */
     .poem-cover-full {{ width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); background: rgba(0,0,0,0.05); }}
     body.dark .poem-cover-full {{ background: rgba(255,255,255,0.05); }}
     
@@ -119,14 +116,13 @@ html_template = """<!DOCTYPE html>
 
     .poem-content {{ font-size: 1.15rem; white-space: pre-wrap; color: inherit; padding: 0 10px; text-align: left; }}
     
-    .bottom-actions {{ display: flex; align-items: center; justify-content: space-between; margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 15px; }}
+    /* ✨ 核心修复 3：完全还原第一张图的上下排版 ✨ */
+    .bottom-actions {{ 
+        display: flex; flex-direction: column; align-items: flex-start; /* 垂直排列，靠左对齐 */
+        margin-top: 60px; padding-top: 25px; border-top: 1px solid var(--border); gap: 18px; 
+    }}
     body.dark .bottom-actions {{ border-color: #333; }}
     
-    .poem-tags-row {{ display: flex; gap: 10px; flex-wrap: wrap; }}
-    .tag-link-btn {{ display: inline-block; padding: 6px 14px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.2s; background: transparent; }}
-    body.dark .tag-link-btn {{ color: #aaa; border-color: #444; }}
-    .tag-link-btn:hover {{ border-color: var(--accent); color: var(--accent); background: rgba(184, 156, 122, 0.05); }}
-
     .share-group {{ display: flex; gap: 12px; align-items: center; }}
     .share-icon-btn {{ width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; color: #fff; transition: transform 0.2s, opacity 0.2s; }}
     .share-icon-btn:hover {{ transform: translateY(-2px); opacity: 0.9; }}
@@ -135,13 +131,18 @@ html_template = """<!DOCTYPE html>
     .share-wa {{ background: #25d366; }}
     .share-more {{ background: var(--muted); }}
 
-    .poem-nav {{ display: flex; justify-content: space-between; align-items: center; margin-top: 30px; font-size: 0.95rem; }}
+    .poem-tags-row {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+    .tag-link-btn {{ display: inline-block; padding: 5px 14px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.2s; background: transparent; }}
+    body.dark .tag-link-btn {{ color: #aaa; border-color: #444; }}
+    .tag-link-btn:hover {{ border-color: var(--accent); color: var(--accent); background: rgba(184, 156, 122, 0.05); }}
+
+    .poem-nav {{ display: flex; justify-content: space-between; align-items: center; margin-top: 40px; font-size: 0.95rem; }}
     .poem-nav a {{ color: var(--accent); text-decoration: none; transition: 0.2s; max-width: 45%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }}
     .poem-nav a:hover {{ opacity: 0.7; }}
     .nav-prev {{ text-align: left; }}
     .nav-next {{ text-align: right; margin-left: auto; }}
 
-    /* ✨ 悬浮圆环进度指示器 ✨ */
+    /* 圆环进度指示器 */
     .progress-circle-wrap {{
       position: fixed; right: 20px; bottom: 30px; width: 44px; height: 44px; 
       cursor: pointer; z-index: 1000; opacity: 0; transform: translateY(20px); 
@@ -230,10 +231,6 @@ html_template = """<!DOCTYPE html>
     <div class="poem-content" id="poemContent">{content}</div>
 
     <div class="bottom-actions">
-        <div class="poem-tags-row">
-            {tags_html}
-        </div>
-        
         <div class="share-group">
             <button class="share-icon-btn share-fb" onclick="shareTo('fb')" title="分享到 Facebook">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg>
@@ -247,6 +244,10 @@ html_template = """<!DOCTYPE html>
             <button class="share-icon-btn share-more" onclick="shareMobile()" title="更多平台">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
             </button>
+        </div>
+        
+        <div class="poem-tags-row">
+            {tags_html}
         </div>
     </div>
 
@@ -272,6 +273,7 @@ html_template = """<!DOCTYPE html>
         
         progressFill.style.strokeDashoffset = circumference * (1 - progress);
         
+        // 滑动一段距离后才显示圆环
         if (scrollTop > 150) {{ progressWrap.classList.add('show'); }} 
         else {{ progressWrap.classList.remove('show'); }}
     }});
@@ -328,7 +330,7 @@ html_template = """<!DOCTYPE html>
 
     async function shareMobile() {{
         if (navigator.share) {{
-            try {{ await navigator.share({{ title: document.title, text: '读一首好诗...', url: window.location.href }}); }} 
+            try {{ await navigator.share({{ title: document.title, text: '来读读这首诗吧...', url: window.location.href }}); }} 
             catch(err) {{ console.log('分享取消'); }}
         }} else {{
             navigator.clipboard.writeText(window.location.href);
@@ -390,13 +392,15 @@ for i, poem in enumerate(poems):
     # 提取一段无换行符的纯文本作为 SEO 的 Description
     preview_text = poem.get('preview', '一首来自青年的天马行空的诗作。').replace('\n', '')
     
-    # ✨ 补全绝对路径，解决 Facebook 抓不到图片的 Bug
+    # ✨ 补全绝对路径，解决 Facebook 抓不到图片的 Bug ✨
     absolute_img_url = f"{SITE_BASE_URL}/{poem['img']}"
+    absolute_page_url = f"{SITE_BASE_URL}/poems/{poem['file']}"
 
     html_content = html_template.format(
         title=poem['title'],
         img=poem['img'],
         absolute_img_url=absolute_img_url,
+        absolute_page_url=absolute_page_url,
         tags_html=tags_html,
         date_html=date_html,
         preview=preview_text,
@@ -409,4 +413,4 @@ for i, poem in enumerate(poems):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！FB图片抓取修复、悬浮圆环进度条及极简分享栏已就绪！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！FB图片抓取修复、悬浮圆环进度条及上下排版分享栏已就绪！")
