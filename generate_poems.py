@@ -10,6 +10,9 @@ if not os.path.exists(output_dir):
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
+# ✨ 填入你的 GitHub Pages 网址，用于修复 FB 分享抓取不到图片的 Bug
+SITE_BASE_URL = "https://quahqiqi.github.io/poetry-collection"
+
 # 3. HTML 模板
 html_template = """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -22,7 +25,7 @@ html_template = """<!DOCTYPE html>
   <meta name="description" content="{preview}" />
   <meta property="og:title" content="{title} | 一个青年的天马行空" />
   <meta property="og:description" content="{preview}" />
-  <meta property="og:image" content="{img}" />
+  <meta property="og:image" content="{absolute_img_url}" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="一个青年的天马行空" />
   
@@ -35,10 +38,6 @@ html_template = """<!DOCTYPE html>
     * {{ box-sizing: border-box; }}
     body {{ margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: background 0.3s, color 0.3s; line-height: 1.8; }}
     body.dark {{ background: var(--bg-dark); color: var(--muted-dark); }}
-
-    /* ✨ 阅读进度指示器 ✨ */
-    .progress-container {{ width: 100%; height: 3px; background: transparent; position: fixed; top: 0; left: 0; z-index: 9999; }}
-    .progress-bar {{ height: 3px; background: var(--accent); width: 0%; transition: width 0.1s ease-out; box-shadow: 0 0 5px var(--accent); }}
 
     header {{
       position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
@@ -142,13 +141,40 @@ html_template = """<!DOCTYPE html>
     .nav-prev {{ text-align: left; }}
     .nav-next {{ text-align: right; margin-left: auto; }}
 
+    /* ✨ 悬浮圆环进度指示器 ✨ */
+    .progress-circle-wrap {{
+      position: fixed; right: 20px; bottom: 30px; width: 44px; height: 44px; 
+      cursor: pointer; z-index: 1000; opacity: 0; transform: translateY(20px); 
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }}
+    .progress-circle-wrap.show {{ opacity: 1; transform: translateY(0); }}
+    .progress-circle {{ transform: rotate(-90deg); width: 100%; height: 100%; }}
+    .progress-bg {{ stroke: var(--border); opacity: 0.6; }}
+    .progress-fill {{ 
+      stroke: var(--accent); stroke-dasharray: 125.6; stroke-dashoffset: 125.6; 
+      transition: stroke-dashoffset 0.1s ease-out; stroke-linecap: round; 
+    }}
+    .progress-icon {{ 
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+      display: flex; align-items: center; justify-content: center; 
+      color: var(--accent); font-size: 1.1rem;
+    }}
+    body.dark .progress-bg {{ stroke: #444; }}
+    body.dark .progress-circle-wrap {{ filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }}
+
     footer {{ text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }}
   </style>
 </head>
 <body>
 
-  <div class="progress-container">
-    <div class="progress-bar" id="myBar"></div>
+  <div class="progress-circle-wrap" id="progressWrap" title="回到顶部">
+    <svg class="progress-circle" viewBox="0 0 44 44">
+      <circle class="progress-bg" cx="22" cy="22" r="20" fill="none" stroke-width="2.5"></circle>
+      <circle class="progress-fill" id="progressFill" cx="22" cy="22" r="20" fill="none" stroke-width="2.5"></circle>
+    </svg>
+    <div class="progress-icon">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </div>
   </div>
 
   <header>
@@ -223,23 +249,36 @@ html_template = """<!DOCTYPE html>
             </button>
         </div>
     </div>
-    
+
     <div class="poem-nav">
       {prev_link}
       {next_link}
     </div>
+
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
 
   <script>
-    // 进度条逻辑
-    window.onscroll = function() {{
-        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        let scrolled = (winScroll / height) * 100;
-        document.getElementById("myBar").style.width = scrolled + "%";
-    }};
+    // ✨ 新版圆环进度条与回到顶部逻辑 ✨
+    const progressWrap = document.getElementById('progressWrap');
+    const progressFill = document.getElementById('progressFill');
+    const circumference = 2 * Math.PI * 20; // 125.6
+    
+    window.addEventListener('scroll', () => {{
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        let scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let progress = scrollTop / (scrollHeight || 1);
+        
+        progressFill.style.strokeDashoffset = circumference * (1 - progress);
+        
+        if (scrollTop > 150) {{ progressWrap.classList.add('show'); }} 
+        else {{ progressWrap.classList.remove('show'); }}
+    }});
+
+    progressWrap.addEventListener('click', () => {{
+        window.scrollTo({{ top: 0, behavior: 'smooth' }});
+    }});
 
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
@@ -249,7 +288,7 @@ html_template = """<!DOCTYPE html>
     document.getElementById('menuBtn').onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
     backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; }};
     
-    // 全文内搜索功能（原生轻量级替代 Lunr.js）
+    // 全文内搜索
     let allPoemsCache = null; 
     document.getElementById('searchBtn').onclick = async () => {{ 
         const sp = document.getElementById('searchPanel'); 
@@ -278,6 +317,7 @@ html_template = """<!DOCTYPE html>
         `).join('');
     }});
 
+    // 分享功能
     function shareTo(platform) {{
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent(document.title);
@@ -313,7 +353,6 @@ html_template = """<!DOCTYPE html>
       el.style.fontSize = (currentSize + delta) + 'px';
     }}
 
-    // PWA Service Worker 注册
     function init() {{
         if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
         document.getElementById('year').innerText = new Date().getFullYear();
@@ -350,10 +389,14 @@ for i, poem in enumerate(poems):
         
     # 提取一段无换行符的纯文本作为 SEO 的 Description
     preview_text = poem.get('preview', '一首来自青年的天马行空的诗作。').replace('\n', '')
+    
+    # ✨ 补全绝对路径，解决 Facebook 抓不到图片的 Bug
+    absolute_img_url = f"{SITE_BASE_URL}/{poem['img']}"
 
     html_content = html_template.format(
         title=poem['title'],
         img=poem['img'],
+        absolute_img_url=absolute_img_url,
         tags_html=tags_html,
         date_html=date_html,
         preview=preview_text,
@@ -366,4 +409,4 @@ for i, poem in enumerate(poems):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！SEO优化、进度条、评论区结构已全面就位！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！FB图片抓取修复、悬浮圆环进度条及极简分享栏已就绪！")
