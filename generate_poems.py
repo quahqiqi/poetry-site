@@ -15,8 +15,17 @@ html_template = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#fdf6e3" />
   <title>{title} | 一个青年的天马行空</title>
+  
+  <meta name="description" content="{preview}" />
+  <meta property="og:title" content="{title} | 一个青年的天马行空" />
+  <meta property="og:description" content="{preview}" />
+  <meta property="og:image" content="{img}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="一个青年的天马行空" />
+  
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {{
@@ -24,8 +33,12 @@ html_template = """<!DOCTYPE html>
       --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --sidebar-w: 280px;
     }}
     * {{ box-sizing: border-box; }}
-    body {{ margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: 0.3s; line-height: 1.8; }}
+    body {{ margin: 0; font-family: 'Noto Serif SC', serif; background: var(--bg); color: #222; transition: background 0.3s, color 0.3s; line-height: 1.8; }}
     body.dark {{ background: var(--bg-dark); color: var(--muted-dark); }}
+
+    /* ✨ 阅读进度指示器 ✨ */
+    .progress-container {{ width: 100%; height: 3px; background: transparent; position: fixed; top: 0; left: 0; z-index: 9999; }}
+    .progress-bar {{ height: 3px; background: var(--accent); width: 0%; transition: width 0.1s ease-out; box-shadow: 0 0 5px var(--accent); }}
 
     header {{
       position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
@@ -37,11 +50,11 @@ html_template = """<!DOCTYPE html>
     body.dark .icon-btn {{ color: var(--muted-dark); }}
     .icon-btn svg {{ width: 24px; height: 24px; stroke-width: 2.2; stroke: currentColor; }}
 
-    /* 🛠️ 修复了标题遮挡返回按钮的Bug，限制最大宽度并隐藏溢出部分 */
     .logo-title {{ position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; max-width: 55vw; }}
     .logo-title img {{ height: 38px; width: 38px; border-radius: 6px; flex-shrink: 0; }}
     .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 
+    /* 搜索弹窗 */
     .search-panel {{ 
       position: absolute; top: 72px; left: 16px; right: 16px; max-width: 500px; margin: 0 auto;
       background: var(--card); border: 1px solid var(--border); border-radius: 16px; 
@@ -64,6 +77,7 @@ html_template = """<!DOCTYPE html>
     .search-item img {{ width: 40px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }}
     .search-item-title {{ font-size: 0.95rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 
+    /* Sidebar */
     .sidebar {{ 
       position: fixed; top: 0; left: 0; height: 100%; width: var(--sidebar-w); 
       background: var(--bg); border-right: 1px solid var(--border); 
@@ -89,12 +103,14 @@ html_template = """<!DOCTYPE html>
     .backdrop {{ position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1240; backdrop-filter: blur(2px); }}
     .backdrop.show {{ display: block; }}
 
-    /* --- 诗歌专属的排版 --- */
+    /* --- 正文排版 --- */
     main {{ max-width: 800px; margin: 25px auto; padding: 0 16px; }}
     .poem-title {{ font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }}
-    
     .poem-date {{ text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 25px; opacity: 0.7; letter-spacing: 1px; }}
-    .poem-cover-full {{ width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }}
+    
+    /* 懒加载图片优化 */
+    .poem-cover-full {{ width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); background: rgba(0,0,0,0.05); }}
+    body.dark .poem-cover-full {{ background: rgba(255,255,255,0.05); }}
     
     .font-toolbar {{ display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 40px; }}
     .font-label {{ font-size: 0.9rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }}
@@ -104,47 +120,41 @@ html_template = """<!DOCTYPE html>
 
     .poem-content {{ font-size: 1.15rem; white-space: pre-wrap; color: inherit; padding: 0 10px; text-align: left; }}
     
-    /* ✨ 新增：底部标签与分享栏的混合排版（完美复刻截图样式） ✨ */
-    .bottom-actions {{ 
-        display: flex; align-items: center; justify-content: space-between; 
-        margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); 
-        flex-wrap: wrap; gap: 15px; 
-    }}
+    .bottom-actions {{ display: flex; align-items: center; justify-content: space-between; margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 15px; }}
     body.dark .bottom-actions {{ border-color: #333; }}
     
-    /* 变成按钮形状的标签 */
     .poem-tags-row {{ display: flex; gap: 10px; flex-wrap: wrap; }}
-    .tag-link-btn {{
-        display: inline-block; padding: 6px 14px; font-size: 0.85rem; 
-        color: var(--muted); border: 1px solid var(--border); 
-        border-radius: 6px; cursor: pointer; transition: 0.2s; background: transparent;
-    }}
+    .tag-link-btn {{ display: inline-block; padding: 6px 14px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: 0.2s; background: transparent; }}
     body.dark .tag-link-btn {{ color: #aaa; border-color: #444; }}
     .tag-link-btn:hover {{ border-color: var(--accent); color: var(--accent); background: rgba(184, 156, 122, 0.05); }}
 
-    /* 圆形分享按钮组 */
     .share-group {{ display: flex; gap: 12px; align-items: center; }}
-    .share-icon-btn {{ 
-        width: 36px; height: 36px; border-radius: 50%; display: flex; 
-        align-items: center; justify-content: center; border: none; 
-        cursor: pointer; color: #fff; transition: transform 0.2s, opacity 0.2s;
-    }}
+    .share-icon-btn {{ width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; color: #fff; transition: transform 0.2s, opacity 0.2s; }}
     .share-icon-btn:hover {{ transform: translateY(-2px); opacity: 0.9; }}
     .share-fb {{ background: #3b5998; }}
     .share-x {{ background: #000; }}
     .share-wa {{ background: #25d366; }}
     .share-more {{ background: var(--muted); }}
 
-    .poem-nav {{ display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 0.95rem; }}
+    .poem-nav {{ display: flex; justify-content: space-between; align-items: center; margin-top: 30px; font-size: 0.95rem; }}
     .poem-nav a {{ color: var(--accent); text-decoration: none; transition: 0.2s; max-width: 45%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }}
     .poem-nav a:hover {{ opacity: 0.7; }}
     .nav-prev {{ text-align: left; }}
     .nav-next {{ text-align: right; margin-left: auto; }}
 
+    /* ✨ 互动评论系统 ✨ */
+    .comments-wrapper {{ margin-top: 60px; padding-top: 30px; border-top: 1px dashed var(--border); }}
+    body.dark .comments-wrapper {{ border-color: #333; }}
+    .comments-title {{ text-align: center; color: var(--muted); font-size: 1.1rem; margin-bottom: 25px; letter-spacing: 2px; font-weight: bold; }}
+
     footer {{ text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }}
   </style>
 </head>
 <body>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
 
   <header>
     <button class="icon-btn" id="menuBtn">
@@ -223,11 +233,40 @@ html_template = """<!DOCTYPE html>
       {prev_link}
       {next_link}
     </div>
+
+    <div class="comments-wrapper">
+        <h3 class="comments-title">— 读者回响 —</h3>
+        <div id="giscus-container">
+            <script src="https://giscus.app/client.js"
+                data-repo="YOUR_GITHUB_USERNAME/YOUR_REPO_NAME"
+                data-repo-id="YOUR_REPO_ID"
+                data-category="Announcements"
+                data-category-id="YOUR_CATEGORY_ID"
+                data-mapping="title"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="preferred_color_scheme"
+                data-lang="zh-CN"
+                crossorigin="anonymous"
+                async>
+            </script>
+        </div>
+    </div>
   </main>
 
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
 
   <script>
+    // 进度条逻辑
+    window.onscroll = function() {{
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("myBar").style.width = scrolled + "%";
+    }};
+
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
     const tagBox = document.getElementById('tagBox');
@@ -236,8 +275,8 @@ html_template = """<!DOCTYPE html>
     document.getElementById('menuBtn').onclick = () => {{ sidebar.classList.add('active'); backdrop.classList.add('show'); }};
     backdrop.onclick = () => {{ sidebar.classList.remove('active'); backdrop.classList.remove('show'); document.getElementById('searchPanel').style.display='none'; }};
     
+    // 全文内搜索功能（原生轻量级替代 Lunr.js）
     let allPoemsCache = null; 
-
     document.getElementById('searchBtn').onclick = async () => {{ 
         const sp = document.getElementById('searchPanel'); 
         sp.style.display = sp.style.display === 'block' ? 'none' : 'block'; 
@@ -245,7 +284,7 @@ html_template = """<!DOCTYPE html>
             document.getElementById('searchInput').focus();
             if(!allPoemsCache) {{
                 try {{
-                    const res = await fetch('poems.json');
+                    const res = await fetch('../poems/poems.json');
                     allPoemsCache = await res.json();
                 }} catch(e) {{}}
             }}
@@ -265,30 +304,18 @@ html_template = """<!DOCTYPE html>
         `).join('');
     }});
 
-    // ✨ 智能分享逻辑 ✨
     function shareTo(platform) {{
         const url = encodeURIComponent(window.location.href);
         const title = encodeURIComponent(document.title);
-        
-        if (platform === 'fb') {{
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${{url}}`, '_blank');
-        }} else if (platform === 'x') {{
-            window.open(`https://twitter.com/intent/tweet?url=${{url}}&text=${{title}}`, '_blank');
-        }} else if (platform === 'wa') {{
-            window.open(`https://api.whatsapp.com/send?text=${{title}} ${{url}}`, '_blank');
-        }}
+        if (platform === 'fb') {{ window.open(`https://www.facebook.com/sharer/sharer.php?u=${{url}}`, '_blank'); }} 
+        else if (platform === 'x') {{ window.open(`https://twitter.com/intent/tweet?url=${{url}}&text=${{title}}`, '_blank'); }} 
+        else if (platform === 'wa') {{ window.open(`https://api.whatsapp.com/send?text=${{title}} ${{url}}`, '_blank'); }}
     }}
 
-    // 调用手机自带分享面板（支持 IG、微信等）
     async function shareMobile() {{
         if (navigator.share) {{
-            try {{
-                await navigator.share({{
-                    title: document.title,
-                    text: '来读读这首诗吧！',
-                    url: window.location.href
-                }});
-            }} catch(err) {{ console.log('分享取消'); }}
+            try {{ await navigator.share({{ title: document.title, text: '读一首好诗...', url: window.location.href }}); }} 
+            catch(err) {{ console.log('分享取消'); }}
         }} else {{
             navigator.clipboard.writeText(window.location.href);
             alert('链接已复制！');
@@ -300,7 +327,7 @@ html_template = """<!DOCTYPE html>
     document.getElementById('darkBtn').onclick = () => {{ document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); }};
     document.getElementById('randomBtn').onclick = async () => {{ 
         try {{
-            const res = await fetch('poems.json');
+            const res = await fetch('../poems/poems.json');
             const list = await res.json();
             if(list.length) window.location.href = list[Math.floor(Math.random()*list.length)].file;
         }} catch(e) {{}}
@@ -312,9 +339,18 @@ html_template = """<!DOCTYPE html>
       el.style.fontSize = (currentSize + delta) + 'px';
     }}
 
+    // PWA Service Worker 注册
     function init() {{
         if(localStorage.getItem('site-dark')==='1') document.body.classList.add('dark');
         document.getElementById('year').innerText = new Date().getFullYear();
+        
+        if ('serviceWorker' in navigator) {{
+            window.addEventListener('load', () => {{
+                navigator.serviceWorker.register('../sw.js').catch(err => {{
+                    console.log('SW registration failed: ', err);
+                }});
+            }});
+        }}
     }}
     init();
   </script>
@@ -324,7 +360,6 @@ html_template = """<!DOCTYPE html>
 
 # 4. 循环生成 HTML
 for i, poem in enumerate(poems):
-    # ✨ 这里的标签被生成为带样式的、可点击的按钮 ✨
     tags_html = "".join([f'<span class="tag-link-btn" onclick="filterByTag(\'{tag}\')">#{tag}</span>' for tag in poem.get('tags', [])])
     
     date_val = poem.get('date', '').strip()
@@ -339,5 +374,22 @@ for i, poem in enumerate(poems):
         older_poem = poems[i+1]
         next_link = f'<a href="{older_poem["file"]}" class="nav-next">下一篇：{older_poem["title"]} →</a>'
         
+    # 提取一段无换行符的纯文本作为 SEO 的 Description
+    preview_text = poem.get('preview', '一首来自青年的天马行空的诗作。').replace('\n', '')
+
     html_content = html_template.format(
-  
+        title=poem['title'],
+        img=poem['img'],
+        tags_html=tags_html,
+        date_html=date_html,
+        preview=preview_text,
+        content=poem['content'],
+        prev_link=prev_link,
+        next_link=next_link
+    )
+    
+    file_path = os.path.join(output_dir, poem['file'])
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！SEO优化、进度条、评论区结构已全面就位！")
