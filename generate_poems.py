@@ -37,9 +37,10 @@ html_template = """<!DOCTYPE html>
     body.dark .icon-btn {{ color: var(--muted-dark); }}
     .icon-btn svg {{ width: 24px; height: 24px; stroke-width: 2.2; stroke: currentColor; }}
 
-    .logo-title {{ position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; width: max-content; }}
-    .logo-title img {{ height: 38px; width: 38px; border-radius: 6px; }}
-    .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; }}
+    /* 🛠️ 修复了标题遮挡返回按钮的Bug，限制最大宽度并隐藏溢出部分 */
+    .logo-title {{ position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; max-width: 55vw; }}
+    .logo-title img {{ height: 38px; width: 38px; border-radius: 6px; flex-shrink: 0; }}
+    .logo-title h1 {{ margin: 0; font-size: 1.05rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
 
     .search-panel {{ 
       position: absolute; top: 72px; left: 16px; right: 16px; max-width: 500px; margin: 0 auto;
@@ -72,18 +73,13 @@ html_template = """<!DOCTYPE html>
     body.dark .sidebar {{ background: #1a1a1a; border-color: #333; }}
     .sidebar.active {{ transform: translateX(0); }}
     
-    .nav-item {{
-      display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; margin-bottom: 6px;
-      border-radius: 10px; background: transparent; color: var(--muted); text-decoration: none; border: none; cursor: pointer; font-size: 1rem; font-family: inherit;
-    }}
+    .nav-item {{ display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 16px; margin-bottom: 6px; border-radius: 10px; background: transparent; color: var(--muted); text-decoration: none; border: none; cursor: pointer; font-size: 1rem; font-family: inherit; }}
     body.dark .nav-item {{ color: #aaa; }}
     .nav-item:hover, .nav-item.active {{ background: #efe7da; color: var(--accent); font-weight: 700; }}
     body.dark .nav-item:hover {{ background: #2a2a2a; }}
     .nav-item svg {{ width: 20px; height: 20px; stroke-width: 2; fill: none; stroke: currentColor; }}
-
     .chevron {{ margin-left: auto; width: 14px !important; transition: 0.3s; }}
     .nav-item.open .chevron {{ transform: rotate(180deg); }}
-
     .tag-box {{ max-height: 0; overflow: hidden; transition: 0.3s; display: flex; flex-wrap: wrap; gap: 8px; padding-left: 16px; }}
     .tag-box.show {{ max-height: 200px; margin: 10px 0 20px; }}
     .tag-pill {{ padding: 6px 14px; background: #f3eee3; border-radius: 20px; font-size: 0.9rem; color: #8c7e74; cursor: pointer; transition: 0.2s; }}
@@ -95,19 +91,10 @@ html_template = """<!DOCTYPE html>
 
     /* --- 诗歌专属的排版 --- */
     main {{ max-width: 800px; margin: 25px auto; padding: 0 16px; }}
-    
     .poem-title {{ font-size: 2rem; color: var(--accent); text-align: center; margin: 0 0 10px 0; }}
     
-    /* 调整了标签的底边距，给日期留出空间 */
-    .poem-tags {{ text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 10px; letter-spacing: 1px; }}
-    
-    /* ✨ 新增：日期的专属美化样式 ✨ */
     .poem-date {{ text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 25px; opacity: 0.7; letter-spacing: 1px; }}
-    
-    .poem-cover-full {{ 
-      width: 100%; aspect-ratio: 16 / 9; object-fit: cover; 
-      border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-    }}
+    .poem-cover-full {{ width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }}
     
     .font-toolbar {{ display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 40px; }}
     .font-label {{ font-size: 0.9rem; color: var(--muted); opacity: 0.8; letter-spacing: 1px; }}
@@ -117,12 +104,38 @@ html_template = """<!DOCTYPE html>
 
     .poem-content {{ font-size: 1.15rem; white-space: pre-wrap; color: inherit; padding: 0 10px; text-align: left; }}
     
-    .poem-nav {{ 
-      display: flex; justify-content: space-between; align-items: center; 
-      margin-top: 60px; padding-top: 25px; border-top: 1px solid var(--border); 
-      font-size: 0.95rem; 
+    /* ✨ 新增：底部标签与分享栏的混合排版（完美复刻截图样式） ✨ */
+    .bottom-actions {{ 
+        display: flex; align-items: center; justify-content: space-between; 
+        margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); 
+        flex-wrap: wrap; gap: 15px; 
     }}
-    body.dark .poem-nav {{ border-color: #333; }}
+    body.dark .bottom-actions {{ border-color: #333; }}
+    
+    /* 变成按钮形状的标签 */
+    .poem-tags-row {{ display: flex; gap: 10px; flex-wrap: wrap; }}
+    .tag-link-btn {{
+        display: inline-block; padding: 6px 14px; font-size: 0.85rem; 
+        color: var(--muted); border: 1px solid var(--border); 
+        border-radius: 6px; cursor: pointer; transition: 0.2s; background: transparent;
+    }}
+    body.dark .tag-link-btn {{ color: #aaa; border-color: #444; }}
+    .tag-link-btn:hover {{ border-color: var(--accent); color: var(--accent); background: rgba(184, 156, 122, 0.05); }}
+
+    /* 圆形分享按钮组 */
+    .share-group {{ display: flex; gap: 12px; align-items: center; }}
+    .share-icon-btn {{ 
+        width: 36px; height: 36px; border-radius: 50%; display: flex; 
+        align-items: center; justify-content: center; border: none; 
+        cursor: pointer; color: #fff; transition: transform 0.2s, opacity 0.2s;
+    }}
+    .share-icon-btn:hover {{ transform: translateY(-2px); opacity: 0.9; }}
+    .share-fb {{ background: #3b5998; }}
+    .share-x {{ background: #000; }}
+    .share-wa {{ background: #25d366; }}
+    .share-more {{ background: var(--muted); }}
+
+    .poem-nav {{ display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font-size: 0.95rem; }}
     .poem-nav a {{ color: var(--accent); text-decoration: none; transition: 0.2s; max-width: 45%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }}
     .poem-nav a:hover {{ opacity: 0.7; }}
     .nav-prev {{ text-align: left; }}
@@ -158,20 +171,13 @@ html_template = """<!DOCTYPE html>
     <a href="../index.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页</a>
     <a href="../toc.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录</a>
     <a href="../about.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>关于</a>
-    
     <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
-
-    <button class="nav-item" id="tagToggleBtn">
-        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
-        分类浏览
-        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </button>
+    <button class="nav-item" id="tagToggleBtn"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>分类浏览<svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
     <div class="tag-box" id="tagBox">
         <span class="tag-pill" onclick="filterByTag('见人')">#见人</span>
         <span class="tag-pill" onclick="filterByTag('见物')">#见物</span>
         <span class="tag-pill" onclick="filterByTag('见我')">#见我</span>
     </div>
-
     <button id="randomBtn" class="nav-item"><svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首</button>
     <button id="darkBtn" class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>深色模式</button>
   </aside>
@@ -180,20 +186,38 @@ html_template = """<!DOCTYPE html>
 
   <main>
     <h1 class="poem-title">{title}</h1>
-    
-    <div class="poem-tags">{tags_html}</div>
-
     {date_html}
 
     <img src="../{img}" alt="{title}" class="poem-cover-full" loading="lazy" decoding="async" onerror="this.style.display='none'">
     
     <div class="font-toolbar" title="在此调节正文字体大小">
       <span class="font-label">字号调节：</span>
-      <button class="f-btn" onclick="changeSize(-2)" title="缩小字号">A -</button>
-      <button class="f-btn" onclick="changeSize(2)" title="放大字号">A +</button>
+      <button class="f-btn" onclick="changeSize(-2)">A -</button>
+      <button class="f-btn" onclick="changeSize(2)">A +</button>
     </div>
 
     <div class="poem-content" id="poemContent">{content}</div>
+
+    <div class="bottom-actions">
+        <div class="poem-tags-row">
+            {tags_html}
+        </div>
+        
+        <div class="share-group">
+            <button class="share-icon-btn share-fb" onclick="shareTo('fb')" title="分享到 Facebook">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path></svg>
+            </button>
+            <button class="share-icon-btn share-x" onclick="shareTo('x')" title="分享到 X">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+            </button>
+            <button class="share-icon-btn share-wa" onclick="shareTo('wa')" title="分享到 WhatsApp">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+            </button>
+            <button class="share-icon-btn share-more" onclick="shareMobile()" title="更多平台">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            </button>
+        </div>
+    </div>
 
     <div class="poem-nav">
       {prev_link}
@@ -223,7 +247,7 @@ html_template = """<!DOCTYPE html>
                 try {{
                     const res = await fetch('poems.json');
                     allPoemsCache = await res.json();
-                }} catch(e) {{ console.error("加载搜索数据失败"); }}
+                }} catch(e) {{}}
             }}
         }}
     }};
@@ -231,34 +255,49 @@ html_template = """<!DOCTYPE html>
     document.getElementById('searchInput').addEventListener('input', function() {{
         const q = this.value.toLowerCase().trim();
         const resultsDiv = document.getElementById('searchResults');
-        
-        if (!q || !allPoemsCache) {{
-            resultsDiv.innerHTML = '';
-            return;
-        }}
-        
+        if (!q || !allPoemsCache) {{ resultsDiv.innerHTML = ''; return; }}
         const matched = allPoemsCache.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
-        
-        if (matched.length === 0) {{
-            resultsDiv.innerHTML = '<div style="text-align:center; padding:10px; color:var(--muted); font-size:0.9rem;">没有找到相关诗歌</div>';
-            return;
-        }}
-        
         resultsDiv.innerHTML = matched.map(p => `
             <a href="${{p.file}}" class="search-item">
-                <img src="../${{p.img}}" loading="lazy" onerror="this.src='../assets/img/logo.png'">
+                <img src="../${{p.img}}" onerror="this.src='../assets/img/logo.png'">
                 <span class="search-item-title">${{p.title}}</span>
             </a>
         `).join('');
     }});
 
-    tagToggleBtn.onclick = () => {{ tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); }};
-    function filterByTag(tag) {{
-        window.location.href = '../index.html?q=' + encodeURIComponent(tag);
+    // ✨ 智能分享逻辑 ✨
+    function shareTo(platform) {{
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent(document.title);
+        
+        if (platform === 'fb') {{
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${{url}}`, '_blank');
+        }} else if (platform === 'x') {{
+            window.open(`https://twitter.com/intent/tweet?url=${{url}}&text=${{title}}`, '_blank');
+        }} else if (platform === 'wa') {{
+            window.open(`https://api.whatsapp.com/send?text=${{title}} ${{url}}`, '_blank');
+        }}
     }}
 
-    document.getElementById('darkBtn').onclick = () => {{ document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); }};
+    // 调用手机自带分享面板（支持 IG、微信等）
+    async function shareMobile() {{
+        if (navigator.share) {{
+            try {{
+                await navigator.share({{
+                    title: document.title,
+                    text: '来读读这首诗吧！',
+                    url: window.location.href
+                }});
+            }} catch(err) {{ console.log('分享取消'); }}
+        }} else {{
+            navigator.clipboard.writeText(window.location.href);
+            alert('链接已复制！');
+        }}
+    }}
 
+    tagToggleBtn.onclick = () => {{ tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); }};
+    function filterByTag(tag) {{ window.location.href = '../index.html?q=' + encodeURIComponent(tag); }}
+    document.getElementById('darkBtn').onclick = () => {{ document.body.classList.toggle('dark'); localStorage.setItem('site-dark', document.body.classList.contains('dark') ? '1' : '0'); }};
     document.getElementById('randomBtn').onclick = async () => {{ 
         try {{
             const res = await fetch('poems.json');
@@ -285,35 +324,20 @@ html_template = """<!DOCTYPE html>
 
 # 4. 循环生成 HTML
 for i, poem in enumerate(poems):
-    tags_html = " ".join([f"#{tag}" for tag in poem.get('tags', [])])
+    # ✨ 这里的标签被生成为带样式的、可点击的按钮 ✨
+    tags_html = "".join([f'<span class="tag-link-btn" onclick="filterByTag(\'{tag}\')">#{tag}</span>' for tag in poem.get('tags', [])])
     
-    # ✨ 智能日期处理：如果 JSON 里面写了 "date"，就生成 HTML，没写就跳过，防止留白
     date_val = poem.get('date', '').strip()
     date_html = f'<div class="poem-date">{date_val}</div>' if date_val else ''
     
     prev_link = ""
     next_link = ""
-    
     if i > 0:
         newer_poem = poems[i-1]
         prev_link = f'<a href="{newer_poem["file"]}" class="nav-prev">← 上一篇：{newer_poem["title"]}</a>'
-        
     if i < len(poems) - 1:
         older_poem = poems[i+1]
         next_link = f'<a href="{older_poem["file"]}" class="nav-next">下一篇：{older_poem["title"]} →</a>'
         
     html_content = html_template.format(
-        title=poem['title'],
-        img=poem['img'],
-        tags_html=tags_html,
-        date_html=date_html,  # 注入日期
-        content=poem['content'],
-        prev_link=prev_link,
-        next_link=next_link
-    )
-    
-    file_path = os.path.join(output_dir, poem['file'])
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
-
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！日期功能已加入！")
+  
