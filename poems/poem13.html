@@ -129,11 +129,6 @@
     .nav-prev { text-align: left; }
     .nav-next { text-align: right; margin-left: auto; }
 
-    /* ✨ 互动评论系统 ✨ */
-    .comments-wrapper { margin-top: 60px; padding-top: 30px; border-top: 1px dashed var(--border); }
-    body.dark .comments-wrapper { border-color: #333; }
-    .comments-title { text-align: center; color: var(--muted); font-size: 1.1rem; margin-bottom: 25px; letter-spacing: 2px; font-weight: bold; }
-
     footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }
   </style>
 </head>
@@ -237,34 +232,13 @@
             </button>
         </div>
     </div>
-
+    
     <div class="poem-nav">
       <a href="poem14.html" class="nav-prev">← 上一篇：加减法练习题</a>
       <a href="poem12.html" class="nav-next">下一篇：如果我是一只鱼 →</a>
     </div>
-
-        <div class="comments-wrapper">
-        <h3 class="comments-title">— 读者回响 —</h3>
-        <div id="giscus-container">
-            <script src="https://giscus.app/client.js"
-                data-repo="quahqiqi/poetry-collection"
-                data-repo-id="R_kgDORVc_fA"
-                data-category="General"
-                data-category-id="DIC_kwDORVc_fM4C27A7"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="preferred_color_scheme"
-                data-lang="zh-CN"
-                crossorigin="anonymous"
-                async>
-            </script>
-        </div>
-    </div>
   </main>
-  
+
   <footer>© <span id="year"></span> 一个青年的天马行空</footer>
 
   <script>
