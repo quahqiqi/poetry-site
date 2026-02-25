@@ -28,6 +28,20 @@ html_template = """<!DOCTYPE html>
   <meta property="og:url" content="{absolute_page_url}" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="字里" />
+
+    <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="字里" />
+  
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
