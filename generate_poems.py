@@ -10,8 +10,7 @@ if not os.path.exists(output_dir):
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
-# ✨ 核心修复 1：填入你截图里真实的网址，解决 FB 图片抓取问题
-SITE_BASE_URL = "https://quahqiqi.github.io/poetry-site"
+SITE_BASE_URL = "https://hangjian.vercel.app”
 
 # 3. HTML 模板
 html_template = """<!DOCTYPE html>
