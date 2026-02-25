@@ -10,7 +10,7 @@ if not os.path.exists(output_dir):
 with open('poems/poems.json', 'r', encoding='utf-8') as f:
     poems = json.load(f)
 
-SITE_BASE_URL = "https://hangjian.vercel.app”
+SITE_BASE_URL = "https://hangjian.vercel.app"
 
 # 3. HTML 模板
 html_template = """<!DOCTYPE html>
