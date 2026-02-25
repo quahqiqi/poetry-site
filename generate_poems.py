@@ -19,15 +19,15 @@ html_template = """<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#fdf6e3" />
-  <title>{title} | 一个青年的天马行空</title>
+  <title>{title} | 字里</title>
   
   <meta name="description" content="{preview}" />
-  <meta property="og:title" content="{title} | 一个青年的天马行空" />
+  <meta property="og:title" content="{title} | 字里" />
   <meta property="og:description" content="{preview}" />
   <meta property="og:image" content="{absolute_img_url}" />
   <meta property="og:url" content="{absolute_page_url}" />
   <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="一个青年的天马行空" />
+  <meta property="og:site_name" content="字里" />
   
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -183,7 +183,7 @@ html_template = """<!DOCTYPE html>
     </button>
     <a href="../index.html" class="logo-title">
         <img src="../assets/img/logo.png" alt="logo" onerror="this.src='../images/logo.png'">
-        <h1>一个青年的天马行空</h1>
+        <h1>字里</h1>
     </a>
     <button class="icon-btn" id="searchBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -257,7 +257,7 @@ html_template = """<!DOCTYPE html>
 
   </main>
 
-  <footer>© <span id="year"></span> 一个青年的天马行空</footer>
+  <footer>© <span id="year"></span> 字里</footer>
 
   <script>
     // ✨ 新版圆环进度条与回到顶部逻辑 ✨
