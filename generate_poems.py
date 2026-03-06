@@ -426,4 +426,4 @@ for i, poem in enumerate(poems):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"✅ 成功生成 {len(poems)} 首诗歌页面！FB图片抓取修复、悬浮圆环进度条及上下排版分享栏已就绪！")
+print(f"✅ 成功生成 {len(poems)} 首诗歌页面！FB图片抓取修复、悬浮圆环进度条及上下排版分享栏已就绪！") 
