@@ -134,155 +134,113 @@
     .page-info { color: var(--muted); font-size: 0.9rem; letter-spacing: 1px; }
 
     footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }
-    /* ✨ 启宏专属：极致美学的生辰请柬信封 ✨ */
+    /* ✨ 启宏专属：终极立体艺术折纸信封 & 退隐印章 ✨ */
+:root {
+  --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
 #birthday-envelope {
-  position: fixed;
-  top: 50%;
-  left: 50%;
+  position: fixed; top: 50%; left: 50%;
   transform: translate(-50%, -35%); 
-  width: 290px;
-  max-width: 85vw;
-  padding: 55px 30px 45px; 
-  
-  /* ✨ 修复透明窟窿：加上实体底色，并把渐变和噪点完美融合 ✨ */
-  background-color: #fefdfa; 
-  background-image: 
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
-    linear-gradient(135deg, #fefdfa 0%, #f7eee1 100%);
-  
-  border: 1px solid rgba(184, 156, 122, 0.25);
-  border-radius: 4px; 
-  
-  box-shadow: 
-    0 25px 50px rgba(0,0,0,0.1),
-    0 0 0 100vmax rgba(253, 246, 227, 0.88); 
-  
-  z-index: 9999;
-  opacity: 0;
-  cursor: pointer;
-  display: none;
-  text-align: center;
-  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  overflow: hidden;
+  width: 300px; height: 190px;
+  z-index: 9999; cursor: pointer; display: none; opacity: 0;
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#birthday-envelope.open { pointer-events: none; }
+
+#env-close-btn {
+  position: absolute; top: 8px; right: 10px;
+  width: 24px; height: 24px; line-height: 22px; text-align: center;
+  font-size: 18px; color: rgba(92, 75, 68, 0.4); 
+  cursor: pointer; z-index: 10; border-radius: 50%;
+  transition: all 0.3s; font-family: sans-serif; pointer-events: auto;
+}
+#env-close-btn:hover { color: rgba(92, 75, 68, 0.9); background: rgba(0,0,0,0.05); }
+
+.env-back {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #f2e6d6 0%, #e8d7c1 100%);
+  background-image: var(--noise); border-radius: 4px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 100vmax rgba(253, 246, 227, 0.88); 
+  z-index: 1;
 }
 
-/* 深色模式也要修复透明问题 */
-body.dark #birthday-envelope {
-  background-color: #2a2a2a;
-  background-image: 
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
-    linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-  box-shadow: 
-    0 25px 50px rgba(0,0,0,0.5),
-    0 0 0 100vmax rgba(18, 18, 18, 0.92);
-}
-
-/* 1. 信纸：竖排中式笺纸线（茶色竖格） */
 .env-letter {
-  background-image: repeating-linear-gradient(
-    to right,
-    transparent,
-    transparent 22px,
-    rgba(184, 156, 122, 0.15) 22px,
-    rgba(184, 156, 122, 0.15) 23px
-  );
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* 让信纸有一点点立体感 */
+  position: absolute; bottom: 8px; left: 12px; right: 12px; height: 165px;
+  background-color: #fdfbf7;
+  background-image: repeating-linear-gradient(to right, transparent, transparent 24px, rgba(184, 156, 122, 0.12) 24px, rgba(184, 156, 122, 0.12) 25px), var(--noise);
+  border-radius: 4px; z-index: 2;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s; 
+}
+.env-letter p {
+  margin: 0; color: #5c4b44; font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem; line-height: 2.2; letter-spacing: 2px;
+  opacity: 0; transition: opacity 0.6s ease 0.8s; 
 }
 
-/* 2. 信封表面的毛笔水墨竹枝描线装饰 */
-.env-front::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  bottom: 25px;
-  width: 100px;
-  height: 60px;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 55 C 20 45, 30 35, 40 45 C 50 55, 60 45, 70 35 L 80 40 L 90 30' stroke='%235c4b44' fill='none' stroke-width='0.5' stroke-linecap='round' /%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.6;
-  z-index: 5; /* 确保在信封口袋上面 */
+.env-front {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #f8efe1 0%, #ecdac3 100%);
+  background-image: var(--noise); border-radius: 4px;
+  clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+  z-index: 3; box-shadow: inset 0 0 15px rgba(0,0,0,0.03);
 }
 
-/* 3. 右下角：更BOLD、立体的“迟行”印章线描 */
+.env-deco {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%); 
+}
+.deco-line {
+  position: absolute; left: 20px; bottom: 20px; height: 60px; width: 4px;
+  border-left: 1px solid rgba(184, 156, 122, 0.4); border-right: 1px solid rgba(184, 156, 122, 0.4);
+}
+.env-deco::after {
+  content: ''; position: absolute; left: 30px; bottom: 25px; width: 100px; height: 65px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 55 C 20 45, 30 35, 40 45 C 50 55, 60 45, 70 35 L 80 40 L 90 30' stroke='%235c4b44' fill='none' stroke-width='0.6' stroke-linecap='round' /%3E%3C/svg%3E");
+  background-size: contain; background-repeat: no-repeat; opacity: 0.55;
+}
 .postmark {
-  position: absolute;
-  right: 25px;
-  bottom: 12px;
-  width: 46px;
-  height: 46px;
-  /* 加粗虚线，使用印章朱红 (#8c3b3b) */
-  border: 1px dashed rgba(140, 59, 59, 0.8);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-12deg); 
-  color: rgba(140, 59, 59, 0.95);
-  font-family: 'Noto Serif SC', serif;
-  box-shadow: inset 0 0 0 1px rgba(140, 59, 59, 0.1); /* 增加印章立体感 */
+  position: absolute; right: 25px; bottom: 20px; width: 50px; height: 50px;
+  border: 1.5px dashed rgba(140, 59, 59, 0.75); border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: rotate(-15deg); color: rgba(140, 59, 59, 0.95); font-family: 'Noto Serif SC', serif;
+  box-shadow: inset 0 0 0 1px rgba(140, 59, 59, 0.08);
+}
+.postmark span { font-size: 0.8rem; font-weight: bold; letter-spacing: 1.5px; }
+.postmark .date { font-size: 0.6rem; border-top: 1px solid rgba(140, 59, 59, 0.3); padding-top: 3px; margin-top: 3px; letter-spacing: 0; }
+
+.env-flap {
+  position: absolute; top: 0; left: 0; right: 0; height: 60%;
+  background: linear-gradient(135deg, #fdf8f0 0%, #ecdac3 100%);
+  background-image: var(--noise); border-radius: 4px 4px 0 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  z-index: 5; transform-origin: top; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.05));
 }
 
-.postmark span {
-  font-size: 0.75rem;
-  line-height: 1.2;
-  font-weight: bold;
-  letter-spacing: 1.5px; /* 字距拉开更雅致 */
-}
-
-.postmark .date {
-  font-size: 0.55rem;
-  border-top: 1px solid rgba(140, 59, 59, 0.3);
-  padding-top: 2px;
-  margin-top: 2px;
-  font-weight: normal;
-  letter-spacing: 0;
-}
-
-/* 4. 排版核心文字：更舒展、诗歌感更强 */
-.env-content {
-  transition: filter 0.8s ease, opacity 0.8s ease;
-  position: relative;
-  z-index: 10;
-}
-
-.env-text {
-  font-family: inherit;
-  font-size: 1.05rem; 
-  color: var(--muted, #5c4b44);
-  line-height: 2.1; /* 行距更宽，留白更通透 */
-  margin: 0;
-  letter-spacing: 1px;
-}
-
-/* --- 大胆的交互设计：像诗歌落款一样的揭晓方式 --- */
-
-/* 去掉突兀的边框按钮，让它静静听滞 */
-.env-text .highlight {
-  display: inline-block;
-  margin-top: 35px; /* 间距拉开 */
-  padding: 4px 0;
-  font-size: 0.85rem;
-  color: var(--accent);
-  letter-spacing: 4px;
-  border-bottom: 1px solid transparent; /* 初始隐藏下划线 */
-  transition: all 0.4s ease;
-  opacity: 0.85; /* 初始微微透明 */
-}
-
-/* 当鼠标放上去 (Hover)，字迹下方浮现一道优雅的下划线 */
-#birthday-envelope:hover .env-text .highlight {
-  opacity: 1;
-  border-bottom: 1px solid var(--accent);
-  transform: translateY(-2px); /* 微微上浮反馈 */
-}
-
-/* --- 拆信动画：保持优雅丝滑 --- */
 #birthday-envelope.open .env-flap { transform: rotateX(180deg); z-index: 1; }
-#birthday-envelope.open .env-letter { transform: translateY(-85px); z-index: 6; }
+#birthday-envelope.open .env-letter { transform: translateY(-100px); z-index: 6; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
 #birthday-envelope.open .env-letter p { opacity: 1; }
 
+#mini-wax-seal {
+  position: fixed; bottom: 30px; right: 30px; width: 38px; height: 38px;
+  background: radial-gradient(circle at 35% 35%, #b34d4d, #7a2222);
+  border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.3);
+  z-index: 9998; cursor: pointer; display: none; opacity: 0.8;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#mini-wax-seal:hover { opacity: 1; transform: scale(1.1) rotate(15deg); box-shadow: 0 6px 16px rgba(0,0,0,0.3); }
+.inner-seal { position: absolute; inset: 4px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 50%; }
+
+body.dark .env-back { background: #262626; box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 100vmax rgba(18, 18, 18, 0.92); }
+body.dark .env-front { background: #2f2f2f; }
+body.dark .env-flap { background: #333; }
+body.dark .env-letter { background: #1e1e1e; }
+body.dark .env-letter p { color: #d4d4d4; }
+#warm-flash { position: fixed; inset: 0; background: var(--bg); opacity: 0; z-index: 13001; pointer-events: none; transition: opacity 0.8s ease; }
+body.dark #warm-flash { background: var(--bg-dark); }
     
   </style>
 </head>
@@ -342,7 +300,12 @@ body.dark #birthday-envelope {
   </main>
 
   <footer>© <span id="year"></span> 字里hangjian</footer>
-    <div id="birthday-envelope">
+    <div id="mini-wax-seal" title="重温生辰彩蛋">
+     <div class="inner-seal"></div>
+  </div>
+
+  <div id="birthday-envelope">
+    <div id="env-close-btn">×</div>
     <div class="env-back"></div>
     <div class="env-letter">
       <p>字里行间，<br>今天藏着一个大秘密……</p>
@@ -359,11 +322,11 @@ body.dark #birthday-envelope {
   </div>
 
   <div id="warm-flash"></div>
-
   <audio id="flip-sound" preload="auto">
     <source src="assets/audio/page-flip.mp3" type="audio/mpeg">
   </audio>
-  <script>
+
+  <script>  
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
     const tagBox = document.getElementById('tagBox');
@@ -524,59 +487,97 @@ body.dark #birthday-envelope {
             }
         } catch(e) { console.error("Error", e); }
     }
-            // ✨ 3.17 生日彩蛋逻辑（已修复冲突） ✨
+        // ✨ 3.17 生日彩蛋逻辑（终极角落退隐版） ✨
     function checkBirthdayEasterEgg() {
         const today = new Date();
+        const currentYear = today.getFullYear();
         const isBirthday = (today.getMonth() === 2 && today.getDate() === 17);
-        const isTesting = true; 
+        const isTesting = true; // 上线前改成 false
 
-        if (isBirthday || isTesting) {
-            const envelope = document.getElementById('birthday-envelope');
-            const flipSound = document.getElementById('flip-sound');
-            const warmFlash = document.getElementById('warm-flash');
+        if (!isBirthday && !isTesting) return;
 
-            if (!envelope) return;
+        const envelope = document.getElementById('birthday-envelope');
+        const flipSound = document.getElementById('flip-sound');
+        const warmFlash = document.getElementById('warm-flash');
+        const closeBtn = document.getElementById('env-close-btn');
+        const miniSeal = document.getElementById('mini-wax-seal');
 
-          // 1. 延迟浮现与水墨动画
+        if (!envelope) return;
+
+        const memoryKey = 'birthday_egg_seen_' + currentYear;
+        const hasSeen = localStorage.getItem(memoryKey) === 'true';
+
+        const showBigEnvelope = (delay = 0) => {
+            envelope.classList.remove('open');
+            if(miniSeal) miniSeal.style.display = 'none';
+            
             setTimeout(() => {
                 envelope.style.display = 'block';
-                // 强制浏览器重绘，确保过渡动画完美生效
                 envelope.getBoundingClientRect(); 
                 envelope.style.opacity = '1';
-                // 让信封从偏下方，像呼吸一样缓缓浮现到正中央
-                envelope.style.transform = 'translate(-50%, -50%)'; 
-            }, 1000);
+                envelope.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, delay);
+        };
 
-            // 2. 点击触发拆信
-            const triggerEasterEgg = () => {
-                if (flipSound) {
-                    flipSound.volume = 0.5; 
-                    let playPromise = flipSound.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => console.log("需互动以播放声音"));
-                    }
+        const hideToMiniSeal = () => {
+            envelope.style.opacity = '0';
+            envelope.style.transform = 'translate(-50%, -50%) scale(0.9)'; 
+            
+            setTimeout(() => {
+                envelope.style.display = 'none';
+                if(miniSeal) {
+                    miniSeal.style.display = 'block';
+                    miniSeal.animate([
+                        { transform: 'scale(0)' }, 
+                        { transform: 'scale(1)' }
+                    ], { duration: 400, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
                 }
-                
-                // 给信封加上 open 状态，信封翻开，抽出带线条的信纸
-                envelope.classList.add('open');
+            }, 600);
+        };
 
-                // 留出 2.5 秒的安静时间读信
-                setTimeout(() => {
-                    if(warmFlash) warmFlash.style.opacity = '1';
-                    
-                    // 画面变暗后跳转生辰页
-                    setTimeout(() => {
-                        window.location.href = 'birthday.html'; 
-                    }, 800);
-                }, 2500); 
-            };
-
-            // 绑定点击动作
-            envelope.addEventListener('click', triggerEasterEgg);
+        if (!hasSeen || isTesting) {
+            showBigEnvelope(1000);
+        } else {
+            if(miniSeal) miniSeal.style.display = 'block';
         }
+
+        if (closeBtn) {
+            closeBtn.onclick = (e) => {
+                e.stopPropagation(); 
+                localStorage.setItem(memoryKey, 'true'); 
+                hideToMiniSeal();
+            };
+        }
+
+        if (miniSeal) {
+            miniSeal.onclick = () => {
+                showBigEnvelope(50);
+            };
+        }
+
+        const triggerEasterEgg = (e) => {
+            if (e.target === closeBtn) return; 
+
+            localStorage.setItem(memoryKey, 'true'); 
+
+            if (flipSound) {
+                flipSound.volume = 0.5; 
+                let playPromise = flipSound.play();
+                if (playPromise !== undefined) playPromise.catch(() => {});
+            }
+            
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                if(warmFlash) warmFlash.style.opacity = '1';
+                setTimeout(() => {
+                    window.location.href = 'birthday.html'; 
+                }, 800);
+            }, 2500); 
+        };
+
+        envelope.addEventListener('click', triggerEasterEgg);
     }
-    init();
-    checkBirthdayEasterEgg();
   </script>
 </body>
 
