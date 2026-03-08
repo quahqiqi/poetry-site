@@ -139,25 +139,23 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  /* 初始在稍低一点的位置，准备优雅浮现 */
   transform: translate(-50%, -35%); 
   width: 290px;
   max-width: 85vw;
-  /* 增加上下高度，留白更充分，比例更优雅 */
   padding: 55px 30px 45px; 
   
-  /* 纸张质感：不再是扁平米色，叠加极其细腻的SVG纸张噪点和对角线暖光渐变 */
-  background: linear-gradient(135deg, #fefdfa 0%, #f7eee1 100%);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  /* ✨ 修复透明窟窿：加上实体底色，并把渐变和噪点完美融合 ✨ */
+  background-color: #fefdfa; 
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, #fefdfa 0%, #f7eee1 100%);
   
-  /* 茶色内装帧线：借鉴雅致诗集装帧 */
   border: 1px solid rgba(184, 156, 122, 0.25);
   border-radius: 4px; 
   
-  /* 核心魔法：全屏水墨光晕，把全世界调暗，信封浮现 */
   box-shadow: 
     0 25px 50px rgba(0,0,0,0.1),
-    0 0 0 100vmax rgba(253, 246, 227, 0.88); /* 暖调水墨全屏遮罩 */
+    0 0 0 100vmax rgba(253, 246, 227, 0.88); 
   
   z-index: 9999;
   opacity: 0;
@@ -168,31 +166,16 @@
   overflow: hidden;
 }
 
-/* 深色模式适配 */
+/* 深色模式也要修复透明问题 */
 body.dark #birthday-envelope {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  background-color: #2a2a2a;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
   box-shadow: 
     0 25px 50px rgba(0,0,0,0.5),
     0 0 0 100vmax rgba(18, 18, 18, 0.92);
 }
-
-/* 信封周边的水墨晕染线条光晕（浮现时随信封浮现） */
-#birthday-envelope::before {
-  content: '';
-  position: absolute;
-  inset: -10px;
-  border-radius: 12px;
-  box-shadow: 0 0 0 100vmax rgba(253, 246, 227, 0.88), 0 0 0 2px var(--accent);
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  z-index: -1;
-}
-
-#birthday-envelope[style*="display: block;"][style*="opacity: 1;"]::before {
-  opacity: 1;
-}
-
-/* --- 线条细节描绘 --- */
 
 /* 1. 信纸：竖排中式笺纸线（茶色竖格） */
 .env-letter {
