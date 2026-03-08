@@ -134,6 +134,117 @@
     .page-info { color: var(--muted); font-size: 0.9rem; letter-spacing: 1px; }
 
     footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }
+    /* ✨ 3.17 生日彩蛋：信笺视觉与动画 ✨ */
+#birthday-envelope {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 260px;
+  padding: 25px 20px;
+  /* 使用网站原有的暖色背景，叠加极微弱的SVG纸张噪点纹理 */
+  background: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px); /* 初始位置偏下，准备浮现 */
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: pointer;
+  display: none; /* 默认隐藏，由后期的 JS 日期判断来唤醒 */
+  overflow: hidden;
+}
+
+/* 深色模式适配 */
+body.dark #birthday-envelope {
+  background: var(--bg-dark);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* 呼吸感：悬停时的极其轻微的上浮和倾斜 */
+#birthday-envelope:hover {
+  transform: translateY(-5px) rotate(-1deg);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+/* 物理触感：鼠标按下的“下陷”收缩反馈 */
+#birthday-envelope.pressed {
+  transform: scale(0.97) translateY(2px) !important;
+  filter: brightness(0.96);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: all 0.1s ease;
+}
+
+/* 封缄的小细节：低调的红点 */
+.wax-seal {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 6px;
+  height: 6px;
+  background-color: #8c3b3b;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+/* 文本排版 */
+.env-content {
+  transition: filter 0.8s ease, opacity 0.8s ease; /* 准备水墨晕开效果 */
+}
+.env-text {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin: 0;
+}
+.env-text .highlight {
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 12px;
+  transition: color 0.3s;
+}
+#birthday-envelope:hover .env-text .highlight {
+  color: #8c3b3b;
+}
+
+/* --- 过渡动画的核心 --- */
+
+/* 纸张张力满屏展开 */
+#birthday-envelope.expanding {
+  position: fixed;
+  /* 强制居中后无限放大 */
+  top: 50% !important;
+  left: 50% !important;
+  bottom: auto;
+  right: auto;
+  transform: translate(-50%, -50%) scale(80);
+  opacity: 1;
+  z-index: 13000; /* 盖过所有 header 和 sidebar */
+  transition: transform 1.2s cubic-bezier(0.64, 0, 0.05, 1), opacity 1.5s ease;
+  pointer-events: none;
+}
+
+/* 展开时文字像水墨一样模糊散开 */
+#birthday-envelope.expanding .env-content {
+  opacity: 0;
+  filter: blur(5px);
+}
+
+/* 暖光闪烁遮罩层（用于完美衔接新页面） */
+#warm-flash {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+  z-index: 13001;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
   </style>
 </head>
 <body>
