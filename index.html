@@ -554,10 +554,15 @@ body.dark #birthday-envelope {
 
             if (!envelope) return;
 
-            // 1. 延迟浮现
+          // 1. 延迟浮现与水墨动画
             setTimeout(() => {
                 envelope.style.display = 'block';
-            }, 1500);
+                // 强制浏览器重绘，确保过渡动画完美生效
+                envelope.getBoundingClientRect(); 
+                envelope.style.opacity = '1';
+                // 让信封从偏下方，像呼吸一样缓缓浮现到正中央
+                envelope.style.transform = 'translate(-50%, -50%)'; 
+            }, 1000);
 
             // 2. 点击触发拆信
             const triggerEasterEgg = () => {
