@@ -481,7 +481,77 @@ body.dark #birthday-envelope {
             }
         } catch(e) { console.error("Error", e); }
     }
+        // ✨ 3.17 生日彩蛋逻辑 ✨
+    function checkBirthdayEasterEgg() {
+        const today = new Date();
+        // JavaScript 中月份是从 0 开始的，2 代表 3月，17 代表 17号
+        const isBirthday = (today.getMonth() === 2 && today.getDate() === 17);
+        
+        // 【重要】因为现在还不是 3.17，为了方便你随时测试效果，这里设为 true。
+        // 等你全部测试满意、准备正式上线前，记得把它改成 false 隐藏起来！
+        const isTesting = true; 
+
+        if (isBirthday || isTesting) {
+            const envelope = document.getElementById('birthday-envelope');
+            const flipSound = document.getElementById('flip-sound');
+            const warmFlash = document.getElementById('warm-flash');
+
+            // 1. 悄然而至：页面加载完成后，延迟 1.5 秒像初春的叶子般缓缓浮现
+            setTimeout(() => {
+                envelope.style.display = 'block';
+                // 强制重绘以触发平滑的 transition 过渡
+                envelope.getBoundingClientRect(); 
+                envelope.style.opacity = '1';
+                envelope.style.transform = 'translateY(0)';
+            }, 1500);
+
+            // 2. 物理触感：指尖按下的微微收缩与下陷
+            const pressDown = () => envelope.classList.add('pressed');
+            envelope.addEventListener('mousedown', pressDown);
+            envelope.addEventListener('touchstart', pressDown, {passive: true});
+
+            // 3. 揭开秘密：松开指尖，触发纸张铺展
+            const triggerEasterEgg = () => {
+                envelope.classList.remove('pressed');
+
+                // 播放温润的纸张翻页音效，稍微调低音量显得空灵
+                if (flipSound) {
+                    flipSound.volume = 0.5; 
+                    let playPromise = flipSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => console.log("浏览器限制了自动播放声音，需要互动"));
+                    }
+                }
+
+                // 添加扩展的 class，触发水墨模糊与满屏放大
+                envelope.classList.add('expanding');
+
+                // 4. 光影交替：1.2秒后纸张彻底铺开，亮起一层极短的暖光遮罩掩护跳转
+                setTimeout(() => {
+                    warmFlash.style.opacity = '1';
+
+                    // 5. 跨越时间：暖光亮起的 0.8秒后，顺理成章地抵达那个专属的生日页面
+                    setTimeout(() => {
+                        // 这里预设跳转的文件名叫 birthday.html，你可以后续创建它
+                        window.location.href = 'birthday.html'; 
+                    }, 800);
+
+                }, 1200);
+            };
+
+            // 绑定松开事件
+            envelope.addEventListener('mouseup', triggerEasterEgg);
+            envelope.addEventListener('touchend', (e) => {
+                // 防止手机端长按或滑动的穿透干扰
+                e.preventDefault(); 
+                triggerEasterEgg();
+            });
+        }
+    }
+    
     init();
+    checkBirthdayEasterEgg(); // 唤醒彩蛋机制
   </script>
 </body>
+
 </html>
