@@ -134,157 +134,63 @@
     .page-info { color: var(--muted); font-size: 0.9rem; letter-spacing: 1px; }
 
     footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.8rem; letter-spacing: 1px; }
-    /* ✨ 居中大版：3.17 生日信笺 ✨ */
+  /* 纯粹的折纸信封与诗意线条 ✨ */
 #birthday-envelope {
-  position: fixed;
-  /* 使用 inset 和 margin: auto 实现完美物理居中，这样就不会和 JS 的动画冲突 */
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  height: fit-content; 
-  
-  /* 尺寸变大，更加显眼 */
-  width: 320px; 
-  max-width: 85vw;
-  padding: 35px 30px; 
-  
-  background: var(--card); 
-  border: 1px solid var(--border);
-  border-radius: 16px; 
-  /* 加深居中卡片的悬浮阴影，让它彻底从背景中跳出来 */
-  box-shadow: 0 25px 50px rgba(0,0,0,0.18); 
-  z-index: 9999;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  cursor: pointer;
-  display: none;
-  overflow: hidden;
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px; height: 160px;
+  z-index: 9999; cursor: pointer; display: none;
 }
-
-/* 深色模式适配 */
-body.dark #birthday-envelope {
-  background: var(--card-dark);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+.env-back {
+  position: absolute; inset: 0; background: #cfbda6;
+  border-radius: 4px; box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
-
-/* 呼吸感：悬停时的微动 */
-#birthday-envelope:hover {
-  transform: translateY(-5px) rotate(-1deg);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.22);
-}
-
-/* 物理触感：鼠标按下的收缩反馈 */
-#birthday-envelope.pressed {
-  transform: scale(0.96) translateY(2px) !important;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  transition: all 0.1s ease;
-}
-
-/* 文本排版：因为卡片居中了，文字也改成居中对齐更有仪式感 */
-.env-content {
-  transition: filter 0.8s ease, opacity 0.8s ease; 
-  text-align: center; /* 文字居中 */
-}
-.env-text {
-  font-family: inherit;
-  font-size: 1.05rem; /* 字号稍微放大 */
-  color: var(--muted);
-  line-height: 1.9;
-  margin: 0;
-}
-.env-text .highlight {
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 0.95rem;
-  display: block;
-  margin-top: 18px; /* 间距拉开 */
-  transition: color 0.3s;
-}
-#birthday-envelope:hover .env-text .highlight {
-  color: #8c3b3b;
-}
-
-/* ✨ 圆形水墨扩散动画（保持丝滑） ✨ */
-#birthday-envelope.expanding {
-  background: var(--bg); 
-  transform: scale(60) !important; /* 直接从中心放大 60 倍 */
-  opacity: 1;
-  z-index: 13000;
-  border-radius: 50%; 
-  transition: transform 1.2s cubic-bezier(0.5, 0, 0.2, 1), background 0.8s ease;
-  pointer-events: none;
-}
-
-    /* --- ✨ 线条与细节设计 ✨ --- */
-
-/* 1. 给信纸加上传统“笺纸”的茶色竖排细线 */
 .env-letter {
-  background-image: repeating-linear-gradient(
-    to right,
-    transparent,
-    transparent 22px,
-    rgba(184, 156, 122, 0.15) 22px,
-    rgba(184, 156, 122, 0.15) 23px
-  );
+  position: absolute; bottom: 5px; left: 10px; right: 10px; height: 145px;
+  background: #faf4e8; border-radius: 4px; z-index: 2;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s;
+  background-image: repeating-linear-gradient(to right, transparent, transparent 22px, rgba(184, 156, 122, 0.15) 22px, rgba(184, 156, 122, 0.15) 23px);
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
-
-/* 2. 信封正面的装饰层 */
+.env-letter p {
+  margin: 0; color: #6d5850; font-family: 'Noto Serif SC', serif; font-size: 1.05rem; line-height: 2; opacity: 0;
+  transition: opacity 0.6s ease 0.8s;
+}
+.env-front {
+  position: absolute; bottom: 0; left: 0; width: 0; height: 0;
+  border-left: 120px solid #e2d1bc; border-right: 120px solid #e2d1bc; border-bottom: 95px solid #d8c5ad;
+  z-index: 3; border-radius: 0 0 4px 4px;
+}
 .env-deco {
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 100%; height: 95px;
-  z-index: 4; /* 确保在信封口袋上面 */
-  pointer-events: none; 
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 95px; z-index: 4; pointer-events: none;
 }
-
-/* 3. 左侧的优雅双竖线 */
 .deco-line {
-  position: absolute;
-  left: 20px;
-  bottom: 15px;
-  height: 50px;
-  width: 4px;
-  border-left: 1px solid rgba(184, 156, 122, 0.5);
-  border-right: 1px solid rgba(184, 156, 122, 0.5);
+  position: absolute; left: 20px; bottom: 15px; height: 50px; width: 4px;
+  border-left: 1px solid rgba(184, 156, 122, 0.5); border-right: 1px solid rgba(184, 156, 122, 0.5);
 }
-
-/* 4. 右下角的专属虚线邮戳 */
 .postmark {
-  position: absolute;
-  right: 25px;
-  bottom: 12px;
-  width: 46px;
-  height: 46px;
-  border: 1px dashed rgba(184, 156, 122, 0.7);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-12deg); 
-  color: rgba(184, 156, 122, 0.95);
-  font-family: 'Noto Serif SC', serif;
+  position: absolute; right: 25px; bottom: 12px; width: 46px; height: 46px;
+  border: 1px dashed rgba(184, 156, 122, 0.7); border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: rotate(-12deg); color: rgba(184, 156, 122, 0.95); font-family: 'Noto Serif SC', serif;
+}
+.postmark span { font-size: 0.75rem; line-height: 1.2; font-weight: bold; letter-spacing: 1px; }
+.postmark .date { font-size: 0.55rem; border-top: 1px solid rgba(184, 156, 122, 0.4); padding-top: 2px; margin-top: 2px; font-weight: normal; letter-spacing: 0; }
+.env-flap {
+  position: absolute; top: 0; left: 0; width: 0; height: 0;
+  border-left: 120px solid transparent; border-right: 120px solid transparent; border-top: 95px solid #ebdacc;
+  z-index: 5; transform-origin: top; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#birthday-envelope.open .env-flap { transform: rotateX(180deg); z-index: 1; }
+#birthday-envelope.open .env-letter { transform: translateY(-85px); z-index: 6; }
+#birthday-envelope.open .env-letter p { opacity: 1; }
+
+/* 暖光遮罩 */
+#warm-flash {
+  position: fixed; inset: 0; background: var(--bg); opacity: 0; z-index: 13001; pointer-events: none; transition: opacity 0.8s ease;
 }
 
-.postmark span {
-  font-size: 0.75rem;
-  line-height: 1.2;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.postmark .date {
-  font-size: 0.55rem;
-  border-top: 1px solid rgba(184, 156, 122, 0.4);
-  padding-top: 2px;
-  margin-top: 2px;
-  font-weight: normal;
-  letter-spacing: 0;
-}
     
   </style>
 </head>
@@ -345,14 +251,12 @@ body.dark #birthday-envelope {
 
   <footer>© <span id="year"></span> 字里hangjian</footer>
   <div id="birthday-envelope">
+    <div id="birthday-envelope">
     <div class="env-back"></div>
-
     <div class="env-letter">
       <p>字里行间，<br>今天藏着一个大秘密……</p>
     </div>
-
     <div class="env-front"></div>
-
     <div class="env-deco">
        <div class="deco-line"></div>
        <div class="postmark">
@@ -360,11 +264,14 @@ body.dark #birthday-envelope {
           <span class="date">03.17</span>
        </div>
     </div>
-
     <div class="env-flap"></div>
   </div>
 
+  <div id="warm-flash"></div>
 
+  <audio id="flip-sound" preload="auto">
+    <source src="assets/audio/page-flip.mp3" type="audio/mpeg">
+  </audio>
   <script>
     const sidebar = document.getElementById('sidebar');
     const backdrop = document.getElementById('backdrop');
@@ -526,14 +433,10 @@ body.dark #birthday-envelope {
             }
         } catch(e) { console.error("Error", e); }
     }
-        // ✨ 3.17 生日彩蛋逻辑 ✨
+            // ✨ 3.17 生日彩蛋逻辑（已修复冲突） ✨
     function checkBirthdayEasterEgg() {
         const today = new Date();
-        // JavaScript 中月份是从 0 开始的，2 代表 3月，17 代表 17号
         const isBirthday = (today.getMonth() === 2 && today.getDate() === 17);
-        
-        // 【重要】因为现在还不是 3.17，为了方便你随时测试效果，这里设为 true。
-        // 等你全部测试满意、准备正式上线前，记得把它改成 false 隐藏起来！
         const isTesting = true; 
 
         if (isBirthday || isTesting) {
@@ -541,83 +444,41 @@ body.dark #birthday-envelope {
             const flipSound = document.getElementById('flip-sound');
             const warmFlash = document.getElementById('warm-flash');
 
-            // 1. 悄然而至：页面加载完成后，延迟 1.5 秒像初春的叶子般缓缓浮现
+            if (!envelope) return;
+
+            // 1. 延迟浮现
             setTimeout(() => {
                 envelope.style.display = 'block';
-                // 强制重绘以触发平滑的 transition 过渡
-                envelope.getBoundingClientRect(); 
-                envelope.style.opacity = '1';
-                envelope.style.transform = 'translateY(0)';
             }, 1500);
 
-            // 2. 物理触感：指尖按下的微微收缩与下陷
-            const pressDown = () => envelope.classList.add('pressed');
-            envelope.addEventListener('mousedown', pressDown);
-            envelope.addEventListener('touchstart', pressDown, {passive: true});
-
-            // 3. 揭开秘密：松开指尖，触发纸张铺展
-            Const triggerEasterEgg = () => {
-                envelope.classList.remove('pressed');
+            // 2. 点击触发拆信
+            const triggerEasterEgg = () => {
                 if (flipSound) {
                     flipSound.volume = 0.5; 
                     let playPromise = flipSound.play();
                     if (playPromise !== undefined) {
-                        playPromise.catch(error => console.log("浏览器限制了自动播放声音"));
+                        playPromise.catch(error => console.log("需互动以播放声音"));
                     }
                 }
                 
-                // 1. 给信封加上 open 状态，信封盖子翻开，信纸抽出
+                // 给信封加上 open 状态，信封翻开，抽出带线条的信纸
                 envelope.classList.add('open');
 
-                // 2. 留出 2.5 秒的安静时间，让访客读完信纸上的两行字
+                // 留出 2.5 秒的安静时间读信
                 setTimeout(() => {
-                    warmFlash.style.opacity = '1';
+                    if(warmFlash) warmFlash.style.opacity = '1';
                     
-                    // 3. 画面变暗后跳转到你的生日代码页
+                    // 画面变暗后跳转生辰页
                     setTimeout(() => {
                         window.location.href = 'birthday.html'; 
                     }, 800);
                 }, 2500); 
             };
-                envelope.classList.remove('pressed');
 
-                // 播放温润的纸张翻页音效，稍微调低音量显得空灵
-                if (flipSound) {
-                    flipSound.volume = 0.5; 
-                    let playPromise = flipSound.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => console.log("浏览器限制了自动播放声音，需要互动"));
-                    }
-                }
-
-                // 添加扩展的 class，触发水墨模糊与满屏放大
-                envelope.classList.add('expanding');
-
-                // 4. 光影交替：1.2秒后纸张彻底铺开，亮起一层极短的暖光遮罩掩护跳转
-                setTimeout(() => {
-                    warmFlash.style.opacity = '1';
-
-                    // 5. 跨越时间：暖光亮起的 0.8秒后，顺理成章地抵达那个专属的生日页面
-                    setTimeout(() => {
-                        // 这里预设跳转的文件名叫 birthday.html，你可以后续创建它
-                        window.location.href = 'birthday.html'; 
-                    }, 800);
-
-                }, 1200);
-            };
-
-            // 绑定松开事件
-            envelope.addEventListener('mouseup', triggerEasterEgg);
-            envelope.addEventListener('touchend', (e) => {
-                // 防止手机端长按或滑动的穿透干扰
-                e.preventDefault(); 
-                triggerEasterEgg();
-            });
+            // 绑定点击动作
+            envelope.addEventListener('click', triggerEasterEgg);
         }
     }
-    
-    init();
-    checkBirthdayEasterEgg(); // 唤醒彩蛋机制
   </script>
 </body>
 
