@@ -3,128 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>关于作者 | 字里</title>
+  <title>关于 | 字里</title>
   <link rel="icon" href="favicon.ico" />
 
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
-  <script defer src="/_vercel/insights/script.js"></script>
+  <script src="/_vercel/insights/script.js"></script>
 
   <script>
     window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
   </script>
-  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script src="/_vercel/speed-insights/script.js"></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* === 1. 全局与变量 === */
-    :root{
-      --bg: #fdf6e3; --card: #fff; --muted: #6d5850; --accent: #b89c7a; --border: #d7cdbd;
-      --bg-dark: #121212; --card-dark: #1e1e1e; --muted-dark: #d4d4d4; --border-dark: #333;
-      --max-w: 800px; --sidebar-width: 280px;
+    /* =========================================================
+       ✨ 「字里」全站诗笺美学 ✨
+    ========================================================= */
+    :root {
+      --bg: #fdfbf7;             
+      --card: #fdfbf7;           
+      --text-main: #2c2621;      
+      --text-muted: #8b7e74;     
+      --accent: #a64036;         
+      --border: #e6dfd7;         
+      --border-hover: #2c2621;   
+      --sidebar-w: 280px;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%; margin:0; font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased;}
-    body{ background:var(--bg); color:#222; transition: background .25s, color .25s; line-height: 1.6; }
-    body.dark{ background:var(--bg-dark); color:var(--muted-dark); }
+    
+    body.dark { 
+      --bg: #161311;             
+      --card: #161311; 
+      --text-main: #d4c4b7;      
+      --text-muted: #8b7e74; 
+      --accent: #b34d4d;         
+      --border: #3d342b;
+      --border-hover: #d4c4b7;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: 'Noto Serif SC', serif; -webkit-font-smoothing: antialiased; }
+    body { 
+      background: var(--bg); color: var(--text-main); 
+      transition: background 0.5s ease, color 0.5s ease; 
+      line-height: 1.8; letter-spacing: 0.5px;
+    }
+    a { text-decoration: none; color: inherit; }
 
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    main { animation: fadeInUp 0.7s ease-out forwards; }
+    main { animation: fadeInUp 0.8s ease-out forwards; max-width: 800px; margin: 40px auto; padding: 0 20px; min-height: 60vh; }
 
-    /* === 2. Header === */
-    header{
-      position:sticky; top:0; z-index:1200; display:flex; align-items:center; justify-content:space-between;
-      padding:10px 16px; background: rgba(253,246,227,0.9); border-bottom:1px solid var(--border); backdrop-filter: blur(10px); height:64px;
+    /* --- 导航栏 (Header) --- */
+    header {
+      position: sticky; top: 0; z-index: 1200; display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; background: rgba(253, 251, 247, 0.85); 
+      border-bottom: 1px solid var(--border); backdrop-filter: blur(8px); height: 70px;
+      transition: background 0.5s ease, border-color 0.5s ease;
     }
-    body.dark header{ background: rgba(18,18,18,0.9); border-color:var(--border-dark); }
+    body.dark header { background: rgba(22, 19, 17, 0.85); }
 
-    .icon-btn{ background:transparent; border:none; padding:8px; cursor:pointer; color:var(--muted); display:flex; align-items:center; transition:0.2s; }
-    body.dark .icon-btn{ color:var(--muted-dark); }
-    .icon-btn svg{ width:24px; height:24px; stroke-width:2.2; stroke:currentColor; }
+    .icon-btn { 
+      background: transparent; border: none; padding: 8px; cursor: pointer; 
+      color: var(--text-muted); display: flex; align-items: center; 
+      transition: color 0.3s; outline: none; 
+    }
+    .icon-btn:hover { color: var(--text-main); }
+    .icon-btn svg { width: 22px; height: 22px; stroke-width: 1.5; stroke: currentColor; }
     
-    .logo-title{ position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:8px; text-decoration: none; color:inherit; width:max-content; }
-    .logo-title img{ height:38px; width:38px; border-radius:6px; }
-    .logo-title h1{ margin:0; font-size:1.05rem; font-weight:700; white-space:nowrap; }
-
-    /* === 3. Sidebar === */
-    .sidebar{
-      position:fixed; left:calc(-1 * var(--sidebar-width)); top:0; height:100%; width:var(--sidebar-width); padding:20px 14px;
-      background:var(--bg); border-right:1px solid var(--border); transition:left .3s cubic-bezier(0.4, 0, 0.2, 1); z-index:1250; overflow-y:auto;
+    .logo-title { 
+      position: absolute; left: 50%; transform: translateX(-50%); 
+      display: flex; align-items: center; gap: 10px; color: var(--text-main); 
     }
-    body.dark .sidebar{ background:#1a1a1a; border-color:var(--border-dark); }
-    .sidebar.active{ left:0; }
+    .logo-title img { height: 32px; width: 32px; border-radius: 4px; border: 1px solid var(--border); filter: grayscale(20%);}
+    .logo-title h1 { margin: 0; font-size: 1.2rem; font-weight: 600; letter-spacing: 4px; }
+
+    /* --- 侧边栏 --- */
+    .sidebar { 
+      position: fixed; left: 0; top: 0; height: 100%; width: var(--sidebar-w); 
+      background: var(--bg); border-right: 1px solid var(--border); 
+      z-index: 1250; padding: 30px 20px; overflow-y: auto; 
+      transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    }
+    .sidebar.active { transform: translateX(0); }
     
     .nav-item {
-      display:flex; align-items:center; gap:12px; width:100%; padding:12px 16px; margin-bottom:6px;
-      border-radius:10px; background:transparent; color:var(--muted); text-decoration:none; border:none; cursor:pointer; font-size:1rem; font-family:inherit; transition:0.2s;
+      display: flex; align-items: center; gap: 15px; width: 100%; padding: 12px 10px; margin-bottom: 5px;
+      background: transparent; color: var(--text-muted); border: none; cursor: pointer; 
+      font-size: 1.05rem; font-family: inherit; letter-spacing: 2px;
+      transition: all 0.3s; position: relative;
     }
-    body.dark .nav-item { color:#aaa; }
-    .nav-item:hover, .nav-item.active { background:#efe7da; color:var(--accent); font-weight:700; }
-    body.dark .nav-item:hover { background:#2a2a2a; }
-    .nav-item svg { width:20px; height:20px; stroke-width:2; fill:none; stroke:currentColor; }
+    .nav-item::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 2px; height: 0; background: var(--accent); transition: height 0.3s;
+    }
+    .nav-item:hover, .nav-item.active { color: var(--text-main); font-weight: 600; }
+    .nav-item:hover::before, .nav-item.active::before { height: 60%; }
+    
+    .nav-item svg { width: 18px; height: 18px; stroke-width: 1.5; fill: none; stroke: currentColor; }
+    .chevron { margin-left: auto; width: 14px !important; transition: transform 0.3s; }
+    .nav-item.open .chevron { transform: rotate(180deg); }
 
-    .chevron { margin-left:auto; width:14px !important; transition:0.3s; }
-    .nav-item.open .chevron { transform:rotate(180deg); }
-    .tag-box { max-height:0; overflow:hidden; transition:0.3s; display:flex; flex-wrap:wrap; gap:8px; padding-left:16px; }
-    .tag-box.show { max-height:200px; margin:10px 0 20px; }
-    .tag-pill { padding:6px 14px; background:#f3eee3; border-radius:20px; font-size:0.9rem; color:#8c7e74; cursor:pointer; transition:0.2s; text-decoration:none; display:inline-block; }
-    body.dark .tag-pill { background:#2a2a2a; color:#999; }
-    .tag-pill:hover { background:#efe7da; color:var(--accent); }
+    .tag-box { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; display: flex; flex-wrap: wrap; gap: 10px; padding-left: 35px; }
+    .tag-box.show { max-height: 200px; margin: 5px 0 20px; }
+    .tag-pill { 
+      padding: 4px 12px; background: transparent; border: 1px solid var(--border); 
+      color: var(--text-muted); cursor: pointer; transition: all 0.3s; 
+      font-size: 0.85rem; letter-spacing: 1px;
+    }
+    .tag-pill:hover { border-color: var(--accent); color: var(--accent); }
 
-    .backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.3); display:none; z-index:1240; backdrop-filter:blur(2px); }
-    .backdrop.show{ display:block; }
+    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.2); display: none; z-index: 1240; backdrop-filter: blur(2px); transition: opacity 0.3s; opacity: 0;}
+    .backdrop.show { display: block; opacity: 1;}
 
-    /* === 4. About 正文 === */
-    main { max-width: var(--max-w); margin: 40px auto; padding: 0 20px; min-height: 60vh; }
+    /* --- About 正文 (诗笺风) --- */
     .author-section { text-align: center; }
     
-    /* ✨ 头像：更大、更板正（方正带微圆角）、像实体照片 ✨ */
+    /* 头像：泛黄旧照片风格 */
     .author-photo { 
-        width: 240px; height: 260px; /* 尺寸调大，略微偏长的矩形，更板正 */
+        width: 200px; height: 260px; 
         object-fit: cover; display: block; margin: 0 auto 35px; 
-        border-radius: 8px; /* 放弃正圆形，改用微小圆角 */
-        box-shadow: 0 15px 35px rgba(0,0,0,0.12); /* 增加阴影深度 */
-        border: 8px solid var(--card); /* 类似拍立得或相框的厚实白边 */
-        cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; user-select: none;
+        border: 1px solid var(--border);
+        padding: 6px; background: transparent;
+        filter: sepia(15%) contrast(90%); 
+        cursor: pointer; transition: all 0.4s ease; user-select: none;
     }
-    body.dark .author-photo { border-color: var(--card-dark); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
-    .author-photo:active { transform: scale(0.97); box-shadow: 0 5px 15px rgba(0,0,0,0.1); } /* 点击下陷反馈 */
+    .author-photo:active { transform: scale(0.97); }
+    .author-photo:hover { border-color: var(--text-main); filter: sepia(0%) contrast(100%); }
 
-    .page-title { font-size: 2.2rem; color: var(--accent); margin: 0 0 8px 0; letter-spacing: 4px; }
-    .subtitle { font-size: 1.05rem; color: var(--muted); opacity: 0.8; margin-bottom: 45px; letter-spacing: 1px; }
+    .page-title { font-size: 1.8rem; color: var(--text-main); margin: 0 0 10px 0; letter-spacing: 6px; font-weight: 600; }
+    .subtitle { font-size: 1rem; color: var(--text-muted); margin-bottom: 50px; letter-spacing: 2px; }
 
-    .author-text { max-width: 620px; margin: 0 auto; text-align: left; font-size: 1.15rem; line-height: 2.2; color: #333; }
-    body.dark .author-text { color: #ccc; }
-    .author-text p { margin-bottom: 1.5em; text-indent: 2em; }
+    .author-text { max-width: 600px; margin: 0 auto; text-align: left; font-size: 1.1rem; line-height: 2.4; color: var(--text-main); }
+    .author-text p { margin-bottom: 1.8em; text-indent: 2em; letter-spacing: 1px; }
 
-    .contact-info { margin-top: 50px; padding-top: 30px; border-top: 1px dashed var(--border); max-width: 400px; margin-inline: auto; }
-    body.dark .contact-info { border-color: var(--border-dark); }
-    .contact-info h3 { font-size: 1.1rem; color: var(--muted); margin-bottom: 20px; letter-spacing: 1px; }
+    /* 联系方式：克制的线框 */
+    .contact-info { margin-top: 60px; padding-top: 35px; border-top: 1px dashed var(--border); max-width: 400px; margin-inline: auto; }
+    .contact-info h3 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 25px; letter-spacing: 3px; font-weight: 600;}
     .contact-info ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px; }
-    .contact-link { display: flex; align-items: center; justify-content: center; gap: 10px; color: inherit; text-decoration: none; font-weight: 600; transition: 0.2s; font-family: sans-serif; }
+    .contact-link { display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--text-muted); font-size: 0.95rem; letter-spacing: 1px; transition: 0.3s; }
     .contact-link:hover { color: var(--accent); }
-    .contact-link svg { width: 20px; height: 20px; }
+    .contact-link svg { width: 18px; height: 18px; stroke-width: 1.5; }
 
-    footer{ margin:60px auto 30px; text-align:center; color:var(--muted); font-size:0.85rem; letter-spacing: 1px; }
+    footer { text-align: center; padding: 60px 0 40px; color: var(--text-muted); font-size: 0.85rem; letter-spacing: 2px; opacity: 0.7;}
 
-    /* ✨ 密码输入框模态层 (诗意谜语版) ✨ */
+    /* --- 密码输入框模态层 (深夜书房版) --- */
     .secret-modal {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; 
-        display: none; align-items: center; justify-content: center; flex-direction: column; opacity: 0; transition: opacity 0.4s;
+        position: fixed; inset: 0; background: rgba(22, 19, 17, 0.98); z-index: 2000; 
+        display: none; align-items: center; justify-content: center; flex-direction: column; opacity: 0; transition: opacity 0.5s ease;
     }
     .secret-modal.show { display: flex; opacity: 1; }
     
     .secret-input {
-        background: transparent; border: none; border-bottom: 2px solid #555; color: #fff;
-        font-size: 1.8rem; text-align: center; padding: 10px; outline: none; width: 260px; letter-spacing: 3px; font-family: 'Noto Serif SC', serif;
+        background: transparent; border: none; border-bottom: 1px solid #8b7e74; color: #d4c4b7;
+        font-size: 1.5rem; text-align: center; padding: 10px; outline: none; width: 260px; letter-spacing: 4px; font-family: 'Noto Serif SC', serif;
+        transition: border-color 0.3s;
     }
-    .secret-input:focus { border-color: var(--accent); }
+    .secret-input:focus { border-color: #b34d4d; }
+    .secret-input::placeholder { color: #5c4b44; font-size: 1rem; letter-spacing: 2px;}
     
-    .secret-close { position: absolute; top: 30px; right: 30px; color: #fff; cursor: pointer; opacity: 0.5; transition: 0.2s; }
-    .secret-close:hover { opacity: 1; transform: rotate(90deg); }
+    .secret-close { position: absolute; top: 30px; right: 30px; color: #8b7e74; cursor: pointer; transition: all 0.3s; }
+    .secret-close:hover { color: #d4c4b7; transform: rotate(90deg); }
 
+    .secret-hint-box {
+        text-align: left; line-height: 2.4; font-family: 'Noto Serif SC', serif; color: #8b7e74; 
+        margin-top: 40px; border: 1px solid #3d342b; padding: 30px 40px; background: transparent; max-width: 500px;
+    }
   </style>
 </head>
 <body>
@@ -134,14 +179,15 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
     <a href="index.html" class="logo-title">
-        <img src="assets/img/logo.png" alt="logo">
+        <img src="assets/img/logo.png" alt="logo" onerror="this.src='images/logo.png'">
         <h1>字里</h1>
     </a>
-    <div style="width: 40px;"></div> </header>
+    <div style="width: 40px;"></div> 
+  </header>
 
   <aside class="sidebar" id="sidebar">
     <a href="index.html" class="nav-item">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首页
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>首卷
     </a>
     <a href="toc.html" class="nav-item">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 8h10M7 12h10M7 16h6"></path></svg>目录
@@ -150,47 +196,48 @@
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>关于
     </a>
     
-    <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
+    <div style="height:1px; background:var(--border); margin:15px 0; opacity:0.6;"></div>
 
     <button class="nav-item" id="tagToggleBtn">
         <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path></svg>
-        分类浏览
+        分类
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
     </button>
     <div class="tag-box" id="tagBox">
-        <a href="index.html?q=见人" class="tag-pill">#见人</a>
-        <a href="index.html?q=见物" class="tag-pill">#见物</a>
-        <a href="index.html?q=见我" class="tag-pill">#见我</a>
+        <a href="index.html?q=见人" class="tag-pill">见人</a>
+        <a href="index.html?q=见物" class="tag-pill">见物</a>
+        <a href="index.html?q=见我" class="tag-pill">见我</a>
     </div>
 
-    <div style="height:1px; background:var(--border); margin:10px 0; opacity:0.4;"></div>
+    <div style="height:1px; background:var(--border); margin:15px 0; opacity:0.6;"></div>
 
-    <button id="randomPoemBtn" class="nav-item"><svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>随机读一首</button>
-    <button id="toggleDarkMode" class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>深色模式</button>
+    <button id="randomPoemBtn" class="nav-item"><svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline></svg>偶遇一首</button>
+    <button id="toggleDarkMode" class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>夜读模式</button>
   </aside>
 
   <div class="backdrop" id="backdrop"></div>
 
+  <!-- 彩蛋解谜框 -->
   <div class="secret-modal" id="secretModal">
     <div class="secret-close" id="closeSecret">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </div>
     
     <input type="text" id="secretInput" class="secret-input" autocomplete="off" placeholder="输入三字口令..." />
     
-    <div class="secret-hint" style="text-align:left; line-height:2.2; font-family: 'Noto Serif SC', serif; color: #ccc; margin-top: 35px; border: 1px dashed rgba(184, 156, 122, 0.4); padding: 25px 30px; border-radius: 8px; background: rgba(0,0,0,0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <div style="text-align:center; color:var(--accent); margin-bottom:20px; letter-spacing:4px; font-weight:bold;">【 字 里 行 间 】</div>
-        <div style="font-size:0.95rem; opacity:0.8; margin-bottom:20px; text-align:center; border-bottom: 1px solid #333; padding-bottom: 20px;">
+    <div class="secret-hint-box">
+        <div style="text-align:center; color:#b34d4d; margin-bottom:20px; letter-spacing:6px; font-weight:600;">【 字里行间 】</div>
+        <div style="font-size:0.95rem; margin-bottom:20px; text-align:center; border-bottom: 1px dashed #3d342b; padding-bottom: 20px;">
             钥匙化作诗断作了三截，散落在我的梦里。<br>只有读懂它们的人，才能推开这扇门。
         </div>
         
-        <div style="font-size: 0.95rem; text-align: center; color:#e0e0e0;">
+        <div style="font-size: 0.95rem; text-align: center; color:#d4c4b7;">
             其一：那是落日褪下的外衣，酸甜的晚霞同谋。<br>
             其二：那道满是遗憾的算术题里，两个灵魂靠近的符号。<br>
             其三：潜入深海的假设中，永远不会流泪的缄默生灵。
         </div>
         
-        <div style="opacity:0.3; font-size:0.8rem; text-align:center; margin-top:35px; letter-spacing:2px;">参透三字，回车叩门</div>
+        <div style="color: #5c4b44; font-size:0.8rem; text-align:center; margin-top:35px; letter-spacing:3px;">参透三字 · 回车叩门</div>
     </div>
   </div>
 
@@ -198,14 +245,14 @@
     <section class="author-section">
       <img src="assets/img/author.jpg" id="authorImg" alt="作者" class="author-photo" title="嘘..." onerror="this.src='assets/img/logo.png'"/>
       
-      <h1 class="page-title">迟行/启宏</h1>
+      <h1 class="page-title">迟行 / 启宏</h1>
       <div class="subtitle">来自马来西亚雪兰莪的写诗青年</div>
       
       <div class="author-text">
-<p>你好，我是迟行（启宏）。</p>
-<p>我用诗歌搭建了这个安静的角落，把沿途的思考与感受，都折叠进字里行间。</p>
-<p>这里是我安放情绪与思想的自留地，现在，这扇门向你敞开。也许有些笔触尚显青涩，但我很珍惜这种略带笨拙的真诚。</p>
-<p>无论你是偶然路过，还是专程造访，都欢迎你停下来读一读。如果哪句诗刚好触动了你，或者让你有了不同的见解，期待你的留下只言片语。</p>
+        <p>你好，我是迟行（启宏）。</p>
+        <p>我用诗歌搭建了这个安静的角落，把沿途的思考与感受，都折叠进字里行间。</p>
+        <p>这里是我安放情绪与思想的自留地，现在，这扇门向你敞开。也许有些笔触尚显青涩，但我很珍惜这种略带笨拙的真诚。</p>
+        <p>无论你是偶然路过，还是专程造访，都欢迎你停下来读一读。如果哪句诗刚好触动了你，或者让你有了不同的见解，期待你的留下只言片语。</p>
       </div>
 
       <div class="contact-info">
@@ -213,13 +260,13 @@
         <ul>
           <li>
               <a href="https://www.instagram.com/galiambuqq/" target="_blank" class="contact-link">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                   @galiambuqq
               </a>
           </li>
           <li>
               <a href="mailto:qihongpoet@gmail.com" class="contact-link">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                   qihongpoet@gmail.com
               </a>
           </li>
@@ -228,7 +275,7 @@
     </section>
   </main>
 
-  <footer>© <span id="year"></span> 字里hangjian</footer>
+  <footer>© <span id="year"></span> 字里 · 迟行</footer>
 
   <script>
     const sidebar = document.getElementById('sidebar');
@@ -237,7 +284,6 @@
     const tagToggleBtn = document.getElementById('tagToggleBtn');
     let poemsList = [];
 
-    // 基础交互
     document.getElementById('menuBtn').onclick = () => { sidebar.classList.add('active'); backdrop.classList.add('show'); };
     backdrop.onclick = () => { sidebar.classList.remove('active'); backdrop.classList.remove('show'); };
     tagToggleBtn.onclick = () => { tagToggleBtn.classList.toggle('open'); tagBox.classList.toggle('show'); };
@@ -262,41 +308,34 @@
 
     authorImg.addEventListener('click', () => {
         clickCount++;
-        // 每次点击重置定时器，如果 1秒 内没有点到 3下，就清零
         clearTimeout(clickTimer);
         clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
 
         if (clickCount === 3) {
-            // 成功连点 3下！
             clickCount = 0; 
             secretModal.classList.add('show');
-            setTimeout(() => secretInput.focus(), 100); // 自动对焦输入框
+            setTimeout(() => secretInput.focus(), 100); 
         }
     });
 
-    // 关闭模态层
     closeSecret.onclick = () => { 
         secretModal.classList.remove('show'); 
         secretInput.value = ''; 
         secretInput.placeholder = '输入三字口令...';
     };
 
-    // 验证密码逻辑
     secretInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             const pwd = this.value.trim();
-            // 🎯 密码判断
             if (pwd === '橙加鱼') {
-                // 密码正确，全屏渐隐变白，然后跳转
+                // 密码正确，渐隐变回纸色，然后跳转
                 document.body.style.transition = '1s';
-                document.body.style.background = '#fff';
+                document.body.style.background = 'var(--bg)';
                 document.body.style.opacity = '0';
                 setTimeout(() => {
-                    // 跳转到你的秘密页面（去 GitHub 建一个 secret.html）
                     window.location.href = 'secret.html'; 
                 }, 1000);
             } else {
-                // 密码错误，晃动输入框提示
                 this.style.transform = 'translateX(-10px)';
                 setTimeout(() => this.style.transform = 'translateX(10px)', 100);
                 setTimeout(() => this.style.transform = 'translateX(-10px)', 200);
@@ -307,7 +346,6 @@
         }
     });
 
-    // 初始化加载
     async function init() {
       try {
         const res = await fetch('poems/poems.json?v=' + Date.now());
@@ -321,3 +359,4 @@
   </script>
 </body>
 </html>
+
