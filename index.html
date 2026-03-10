@@ -492,7 +492,7 @@ body.dark #warm-flash { background: var(--bg-dark); }
         const today = new Date();
         const currentYear = today.getFullYear();
         const isBirthday = (today.getMonth() === 2 && today.getDate() === 17);
-        const isTesting = true; // 上线前改成 false
+        const isTesting = false; // 上线前改成 false
 
         if (!isBirthday && !isTesting) return;
 
