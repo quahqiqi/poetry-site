@@ -1,226 +1,129 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>字里 - 生辰</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    /* 基础重置与纸张质感背景 */
-    :root {
-      --bg: #fdf6e3; 
-      --accent: #b89c7a;
-      --text-main: #6d5850;
-      --code-bg: rgba(28, 28, 28, 0.85); /* 半透明深色，毛玻璃效果 */
-    }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--bg);
-      /* 极其微弱的宣纸噪点纹理 */
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-      font-family: 'Noto Serif SC', serif;
-      color: var(--text-main);
-      overflow: hidden; 
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字里 · 生日快乐启宏</title>
+    <style>
+        body {
+            /* 模拟深夜的静谧，带有温度的暗色 */
+            background-color: #1a1a1a;
+            color: #e6c280; 
+            font-family: "STKaiti", "KaiTi", serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 3s ease;
+        }
 
-    /* --- 背景的微光浮尘动画 --- */
-    .dust {
-      position: absolute;
-      background: var(--accent);
-      border-radius: 50%;
-      opacity: 0;
-      pointer-events: none;
-      animation: floatUp infinite ease-in;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0); opacity: 0; }
-      20% { opacity: 0.3; }
-      80% { opacity: 0.1; }
-      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
-    }
+        #timer-container {
+            text-align: center;
+            line-height: 2.5;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
 
-    /* --- 核心容器 --- */
-    .container {
-      position: relative;
-      z-index: 10;
-      width: 90%;
-      max-width: 650px;
-      display: flex;
-      flex-direction: column;
-      gap: 50px;
-    }
+        .highlight {
+            font-size: 1.8rem;
+            color: #ffda89;
+            font-weight: bold;
+        }
 
-    /* --- 诗意代码视窗 --- */
-    .code-window {
-      background: var(--code-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 12px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.08);
-      overflow: hidden;
-      transform: translateY(30px);
-      opacity: 0;
-      animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
-    }
-    @keyframes fadeInUp {
-      to { transform: translateY(0); opacity: 1; }
-    }
-    
-    .window-header {
-      background: rgba(0,0,0,0.3);
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot.red { background: #ff5f56; }
-    .dot.yellow { background: #ffbd2e; }
-    .dot.green { background: #27c93f; }
-    .window-title { margin-left: auto; color: #7f848e; font-size: 0.85rem; font-family: 'Fira Code', monospace; letter-spacing: 1px;}
+        /* 互动按钮：迟行 */
+        #interact-btn {
+            margin-top: 50px;
+            padding: 12px 30px;
+            background: transparent;
+            color: #e6c280;
+            border: 1px solid #e6c280;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 1s ease;
+        }
 
-    .code-body {
-      padding: 30px;
-      font-family: 'Fira Code', monospace;
-      font-size: 1rem;
-      line-height: 2;
-      color: #d4d4d4;
-    }
-    .code-line { display: block; }
-    .keyword { color: #c678dd; } /* 紫色 */
-    .selector { color: #e06c75; } /* 红色 */
-    .property { color: #56b6c2; } /* 青色 */
-    .string { color: #98c379; } /* 绿色 */
-    .value { color: #d19a66; } /* 橘黄 */
-    .comment { color: #7f848e; font-style: italic; }
+        #interact-btn:hover {
+            background-color: #e6c280;
+            color: #1a1a1a;
+        }
 
-    /* --- 光阴计时器 --- */
-    .timer-section {
-      text-align: center;
-      opacity: 0;
-      animation: fadeIn 1.5s ease 1.5s forwards;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    .timer-text {
-      font-size: 1.1rem;
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-      color: var(--text-main);
-    }
-    .timer-numbers {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #8c3b3b; /* 呼应火漆印的低调暗红 */
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      align-items: baseline;
-    }
-    .time-unit { 
-      font-size: 1rem; 
-      font-weight: 400; 
-      color: var(--accent); 
-      margin-left: 4px; 
-      font-family: 'Noto Serif SC', serif;
-    }
+        /* 隐藏的诗句彩蛋 */
+        #poem-egg {
+            margin-top: 40px;
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 2.5s ease;
+        }
 
-    /* 手机端适配 */
-    @media (max-width: 600px) {
-      .code-body { font-size: 0.85rem; padding: 20px; }
-      .timer-numbers { font-size: 1.5rem; gap: 8px; }
-    }
-  </style>
+        .revealed {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    
-    <div class="code-window">
-      <div class="window-header">
-        <div class="dot red"></div>
-        <div class="dot yellow"></div>
-        <div class="dot green"></div>
-        <div class="window-title">poetry.css</div>
-      </div>
-      <div class="code-body">
-        <span class="code-line"><span class="comment">/* 给这颗星球的温柔特调 */</span></span>
-        <span class="code-line"><span class="selector">.March_17</span> {</span>
-        <span class="code-line">  <span class="property">font-family</span>: <span class="string">'风的形状'</span>, serif;</span>
-        <span class="code-line">  <span class="property">content</span>: <span class="string">"祝你生辰欢愉，岁岁平安"</span>;</span>
-        <span class="code-line">  <span class="property">color</span>: <span class="value">#初春的茶色</span>;</span>
-        <span class="code-line">  <span class="property">animation</span>: <span class="string">'如诗般自由'</span> <span class="value">infinite</span>;</span>
-        <span class="code-line">  <span class="property">life-status</span>: <span class="value">bloom</span>;</span>
-        <span class="code-line">}</span>
-      </div>
+    <div id="timer-container">
+        <div id="time-text">正在感知时间的脉搏...</div>
     </div>
 
-    <div class="timer-section">
-      <div class="timer-text">距离这颗灵魂降落地球，已经过去了</div>
-      <div class="timer-numbers" id="time-counter">
-        </div>
+    <button id="interact-btn" onclick="lightUpZili()">迟行一步，点亮字里</button>
+
+    <div id="poem-egg">
+        岁月不居，时节如流。<br>
+        愿这字里行间，皆是温情与自由。
     </div>
 
-  </div>
+    <script>
+        // 请在此处替换为你的真实出生时间 (年, 月-1, 日, 时, 分)
+        // 注意：JavaScript中月份是从0开始的，所以1月是0，12月是11。
+        const birthDate = new Date(1990, 0, 1, 0, 0); 
 
-  <script>
-    // 1. 生成背景的微光浮尘
-    function createDust() {
-      const body = document.querySelector('body');
-      const count = 25; // 光点数量
-      for (let i = 0; i < count; i++) {
-        const dust = document.createElement('div');
-        dust.classList.add('dust');
-        
-        // 随机位置、大小、速度和延迟
-        const size = Math.random() * 4 + 2; 
-        dust.style.width = `${size}px`;
-        dust.style.height = `${size}px`;
-        dust.style.left = `${Math.random() * 100}vw`;
-        dust.style.animationDuration = `${Math.random() * 10 + 10}s`;
-        dust.style.animationDelay = `${Math.random() * 5}s`;
-        
-        body.appendChild(dust);
-      }
-    }
-    createDust();
+        function updateTimer() {
+            const now = new Date();
+            const diffMs = now - birthDate;
+            
+            const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diffMs / 1000 / 60) % 60);
+            
+            // 估算呼吸次数 (静息状态约每分钟16次)
+            const breaths = Math.floor(diffMs / 1000 / 60 * 16);
 
-    // 2. 光阴计时器逻辑
-    function updateTimer() {
-      // ⚠️ 在这里修改为你想要计算的起始日期！格式为 'YYYY-MM-DDTHH:mm:ss'
-      // 例如：如果是2005年3月17日零点出生，就写 '2005-03-17T00:00:00'
-      const startDate = new Date('2008-03-17T08:50:00'); 
-      const now = new Date();
-      
-      const diff = now - startDate; // 毫秒差
-      
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById('time-text').innerHTML = `
+                在这颗星球上，你已迎来了 <span class="highlight">${days}</span> 次晨曦<br>
+                经历了 <span class="highlight">${hours}</span> 小时 <span class="highlight">${minutes}</span> 分钟的流转<br>
+                约莫完成了 <span class="highlight">${breaths.toLocaleString()}</span> 次平稳的呼吸
+            `;
+        }
 
-      // 补零函数
-      const pad = (num) => num.toString().padStart(2, '0');
+        // 初始运行并每分钟更新一次
+        updateTimer();
+        setInterval(updateTimer, 60000); 
 
-      document.getElementById('time-counter').innerHTML = `
-        <div>${days}<span class="time-unit">天</span></div>
-        <div>${pad(hours)}<span class="time-unit">时</span></div>
-        <div>${pad(minutes)}<span class="time-unit">分</span></div>
-        <div>${pad(seconds)}<span class="time-unit">秒</span></div>
-      `;
-    }
+        // 互动功能：点亮字里
+        function lightUpZili() {
+            // 背景变暖
+            document.body.style.backgroundColor = "#2a2118";
+            
+            // 按钮淡出
+            const btn = document.getElementById('interact-btn');
+            btn.style.opacity = '0';
+            setTimeout(() => btn.style.display = 'none', 1000);
 
-    // 初始化并每秒更新计时器
-    updateTimer();
-    setInterval(updateTimer, 1000);
-  </script>
+            // 诗句浮现
+            setTimeout(() => {
+                document.getElementById('poem-egg').classList.add('revealed');
+            }, 500);
+        }
+    </script>
 </body>
 </html>
-
