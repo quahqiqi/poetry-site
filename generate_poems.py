@@ -28,6 +28,7 @@ html_template = """<!DOCTYPE html>
   <meta property="og:url" content="{absolute_page_url}" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="字里" />
+  <link rel="canonical" href="{absolute_page_url}" />
 
   <script>
     window.va = window.va || function () {{ (window.vaq = window.vaq || []).push(arguments); }};
