@@ -1,5 +1,6 @@
 import json
 import os
+import html
 
 # 1. 确保输出文件夹存在
 output_dir = "poems"
@@ -157,6 +158,28 @@ html_template = """<!DOCTYPE html>
     .f-btn:hover {{ border-color: var(--text-main); color: var(--text-main); }}
 
     .poem-content {{ font-size: 1.15rem; white-space: pre-wrap; color: var(--text-main); padding: 0 10px; text-align: left; line-height: 2.2; letter-spacing: 1px; }}
+
+    .poem-note {{
+      margin-top: 64px;
+      padding-top: 28px;
+      border-top: 1px dashed var(--border);
+    }}
+
+    .poem-note-label {{
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }}
+
+    .poem-note-text {{
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 2;
+      letter-spacing: 0.6px;
+      white-space: pre-wrap;
+    }}
     
     /* === 现代诗的温度：彩色水彩光晕分享按钮 === */
     .bottom-actions {{ 
@@ -290,6 +313,8 @@ html_template = """<!DOCTYPE html>
     </div>
 
     <div class="poem-content" id="poemContent">{content}</div>
+
+    {note_html}
 
     <div class="bottom-actions">
         <div class="share-group">
@@ -430,6 +455,16 @@ for i, poem in enumerate(poems):
     date_val = poem.get('date', '').strip()
     date_html = f'<div class="poem-date">{date_val}</div>' if date_val else ''
     
+    note_text = poem.get('note', '').strip()
+    if note_text:
+        note_text = html.escape(note_text).replace('\n', '<br>')
+        note_html = f"""<section class="poem-note" aria-label="字外">
+      <div class="poem-note-label">字外</div>
+      <div class="poem-note-text">{note_text}</div>
+    </section>"""
+    else:
+        note_html = ''
+    
     prev_link = ""
     next_link = ""
     if i > 0:
@@ -453,6 +488,7 @@ for i, poem in enumerate(poems):
         date_html=date_html,
         preview=preview_text,
         content=poem['content'],
+        note_html=note_html,
         prev_link=prev_link,
         next_link=next_link
     )
