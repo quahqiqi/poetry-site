@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字里｜鸡同鸭讲</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdfbf7;
+  --text:#2c2621;
+  --muted:#85786e;
+  --line:#e8dfd3;
+  --accent:#a9846b;
+  --shadow:#3a332d;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Noto Serif SC', serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:2;
+}
+.wrap{
+  max-width:600px;
+  margin:0 auto;
+  padding:5rem 1.6rem 8rem;
+}
+.title{
+  text-align:center;
+  font-size:1.1rem;
+  letter-spacing:.5em;
+  color:var(--muted);
+  margin-bottom:4rem;
+  font-weight:400;
+}
+
+.thread{ position:relative; }
+.thread::before{
+  content:'';
+  position:absolute;
+  top:0; bottom:0; left:50%;
+  width:1px;
+  transform:translateX(-50%);
+  background-image:repeating-linear-gradient(
+    to bottom,
+    var(--line) 0px, var(--line) 5px,
+    transparent 5px, transparent 9px
+  );
+  z-index:0;
+}
+
+p{
+  position:relative;
+  z-index:1;
+  background:var(--bg);
+  font-size:1.05rem;
+  letter-spacing:.03em;
+  margin:0 0 2.4rem;
+  text-indent:2em;
+}
+
+/* ---- 绳结 ---- */
+.knot-block{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  margin:0 0 .4rem;
+}
+.knot{
+  display:inline-block;
+  cursor:pointer;
+  background:var(--bg);
+  padding:8px;
+  -webkit-tap-highlight-color:transparent;
+  color:var(--shadow);
+  transition:color .6s ease;
+}
+.knot svg{
+  width:40px;
+  height:28px;
+  display:block;
+}
+.knot path{
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.knot circle{
+  fill:currentColor;
+}
+
+/* 未解开：轻轻呼吸式摆动，暗示"我是活的，可以碰我" */
+.knot:not(.open) svg{
+  animation:knotSway 3.2s ease-in-out infinite;
+}
+@keyframes knotSway{
+  0%,100%{ transform:rotate(-3deg); }
+  50%{ transform:rotate(3deg); }
+}
+.knot:active svg{ transform:scale(.9); }
+
+.knot.open{ color:var(--accent); }
+.knot.open svg{
+  animation:none;
+  transform:scale(1.1) rotate(-8deg);
+  transition:transform .5s cubic-bezier(.2,.9,.3,1.2);
+}
+
+.knot-hint{
+  text-align:center;
+  font-size:.66rem;
+  color:var(--muted);
+  opacity:.5;
+  letter-spacing:.2em;
+  margin-bottom:2rem;
+  transition:opacity .4s ease;
+}
+.knot-hint.hidden{ opacity:0; height:0; margin:0; overflow:hidden; }
+
+.reveal{
+  text-align:center;
+  max-width:340px;
+  margin:0 auto;
+  font-style:italic;
+  font-size:1.05rem;
+  color:var(--text);
+  letter-spacing:.06em;
+  line-height:1.9;
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  transition:max-height .6s ease, opacity .8s ease .1s;
+}
+.reveal.show{
+  max-height:200px;
+  opacity:1;
+  margin-bottom:2rem;
+}
+.reveal .struck{
+  display:block;
+  color:var(--muted);
+  text-decoration:line-through;
+  text-decoration-color:var(--line);
+  opacity:.6;
+  margin-bottom:.5rem;
+  font-size:.95rem;
+}
+
+.knot-group-hint{
+  text-align:center;
+  font-size:.68rem;
+  color:var(--muted);
+  opacity:.4;
+  letter-spacing:.15em;
+  margin:1rem 0 3.5rem;
+}
+
+.signature{
+  text-align:center;
+  margin-top:5rem;
+  color:var(--muted);
+  font-size:.85rem;
+  letter-spacing:.3em;
+}
+
+a.home{
+  display:block;
+  text-align:center;
+  margin-top:4rem;
+  color:var(--accent);
+  text-decoration:none;
+  font-size:.85rem;
+  letter-spacing:.1em;
+  opacity:.7;
+  transition:opacity .3s;
+}
+a.home:hover{ opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="title">鸡 同 鸭 讲</div>
+
+  <div class="thread">
+
+    <!-- 开篇：鸭的话，藏在六个结里 -->
+    <div id="knotSeq">
+      <div class="knot-block"><div class="knot" data-lines="有天，<br>鸡同鸭讲，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+      <div class="knot-hint">轻触解开</div>
+      <div class="reveal"></div>
+
+      <div class="knot-block"><div class="knot" data-lines="宝贝，<br>借我，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+      <div class="knot-hint">轻触解开</div>
+      <div class="reveal"></div>
+
+      <div class="knot-block"><div class="knot" data-lines="十年，<br>我想，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+      <div class="knot-hint">轻触解开</div>
+      <div class="reveal"></div>
+
+      <div class="knot-block"><div class="knot" data-lines="每天，<br>在凌晨，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+      <div class="knot-hint">轻触解开</div>
+      <div class="reveal"></div>
+
+      <div class="knot-block"><div class="knot" data-lines="抱着你，<br>不再让你孤单，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+      <div class="knot-hint">轻触解开</div>
+      <div class="reveal"></div>
+
+      <div class="knot-block"><div class="knot" data-lines="我爱你。"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+      <div class="knot-hint">轻触解开</div>
+      <div class="reveal"></div>
+    </div>
+    <div class="knot-group-hint">・ 一次只能解一个 ・</div>
+
+    <p>鸭子听懂了，却也只是摇摇头，继续忙自己活去了。那天以后，鸡舍总时不时传来吵闹，有时咯咯地叫，有时也有些嘎嘎声响，好不热闹，倒不如说，是有些吵闹。</p>
+
+    <p>我问鸡："你爱她？"鸡望着我，相对无言，但他的眼神似是在肯定，瞳孔却也藏着一些不定。我心中明了，却还是找上了鸭，我问鸭："你爱他？"听罢，鸭郑重其事地注视我，"爱！"相比鸡的摇摆，鸭倒显得真诚，注视着他真挚的眼神，我心中却也微微了然。</p>
+
+    <p>后来，舍里的热闹氛围淡了一些，争执也常有。有趣的是，每当起了争执，鸡就变得漠然，把自己关在房间，只任由鸭在门外嘎嘎地叫着，有时鸭喊得喉咙都哑了，鸡才慢悠悠地走出来，后来鸭还是走了，一路往河那边去，没再回来。鸡舍空了大半，只剩鸡，每天依旧咯咯叫着，却是叫给谁听，倒也没人知道。</p>
+
+    <p>有人问我，鸡到底爱不爱鸭。我说，或许爱过，只是他的爱，是关起门来的爱，鸭等不起，也就不等了。</p>
+
+    <!-- 结尾两个结：一个空的，一个划掉重写的 -->
+    <div class="knot-block"><div class="knot" data-lines="没写完。"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+    <div class="knot-hint">轻触解开</div>
+    <div class="reveal"></div>
+
+    <div class="knot-block"><div class="knot" data-strike="有人问我，鸡到底爱不爱鸭。" data-lines="我问过很多次，鸡到底爱不爱鸭。"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
+    <div class="knot-hint">轻触解开</div>
+    <div class="reveal"></div>
+
+  </div>
+
+  <div class="signature">・ 完 ・</div>
+
+  <a class="home" href="/">回到字里</a>
+</div>
+
+<script>
+document.querySelectorAll('.knot').forEach(knot => {
+  knot.addEventListener('click', () => {
+    if (knot.classList.contains('open')) return;
+    knot.classList.add('open');
+
+    const hint = knot.closest('.knot-block').nextElementSibling;
+    const reveal = hint.nextElementSibling;
+    hint.classList.add('hidden');
+
+    const strike = knot.getAttribute('data-strike');
+    const lines = knot.getAttribute('data-lines');
+
+    if (strike) {
+      reveal.innerHTML = `<span class="struck">${strike}</span>`;
+      reveal.classList.add('show');
+      setTimeout(() => {
+        reveal.innerHTML = `<span class="struck">${strike}</span>${lines}`;
+      }, 900);
+    } else {
+      reveal.innerHTML = lines;
+      reveal.classList.add('show');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
