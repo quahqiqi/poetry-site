@@ -46,14 +46,13 @@ function shadowWhisper(text, duration = 3000) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ========== ⑦ 夜间模式：第一次开启才说话 ========== */
+  /* ========== ⑦ 夜间模式：每次切到夜间都说话 ========== */
   const darkBtn = document.getElementById('darkBtn');
   if (darkBtn) {
     // 注册得比页面原本的 onclick 晚，所以会在切换动作完成之后才触发
     darkBtn.addEventListener('click', () => {
       const isDark = document.body.classList.contains('dark');
-      if (isDark && !localStorage.getItem('shadow-dark-seen')) {
-        localStorage.setItem('shadow-dark-seen', '1');
+      if (isDark) {
         shadowWhisper('灯已经关好了。');
       }
     });
