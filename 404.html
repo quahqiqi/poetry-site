@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字里｜咦，这里没有字</title>
+<style>
+:root{
+  --bg:#fdfbf7;--text:#2c2621;--muted:#85786e;--line:#e8dfd3;--accent:#a9846b;--shadow:#3a332d;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:"Noto Serif SC","Source Han Serif SC","Songti SC",serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow:hidden;
+  position:relative;
+  cursor:default;
+}
+main{
+  width:min(640px,90vw);
+  padding:2rem;
+  text-align:center;
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:2;
+}
+.code{
+  font-size:9rem;
+  font-weight:700;
+  line-height:1;
+  color:var(--shadow);
+  letter-spacing:-.02em;
+  margin-bottom:.5rem;
+  user-select:none;
+}
+.tagline{
+  font-size:1.1rem;
+  color:var(--muted);
+  margin-bottom:1rem;
+}
+a.home{
+  display:inline-block;
+  color:var(--accent);
+  text-decoration:none;
+  border-bottom:1px solid var(--accent);
+  padding-bottom:2px;
+  font-size:.95rem;
+  letter-spacing:.05em;
+  transition:opacity .2s;
+  margin-top:1rem;
+}
+a.home:hover{opacity:.6}
+.hint{
+  margin-top:2.2rem;
+  font-size:.7rem;
+  color:var(--muted);
+  opacity:.4;
+  letter-spacing:.1em;
+}
+
+/* 冒出的台词气泡（点击页面任意处） */
+.bubble{
+  position:fixed;
+  font-size:.9rem;
+  color:var(--text);
+  pointer-events:none;
+  white-space:nowrap;
+  opacity:0;
+  transform:translate(-50%,0) translateY(4px);
+  transition:opacity .5s ease, transform .5s ease;
+  z-index:5;
+}
+.bubble.show{
+  opacity:1;
+  transform:translate(-50%,0) translateY(-14px);
+}
+
+/* 一双好奇的眼睛，随机在角落闪现 */
+.glimpse{
+  position:fixed;
+  display:flex;
+  gap:14px;
+  opacity:0;
+  transform:scale(.7);
+  transition:opacity .3s ease, transform .3s ease;
+  z-index:6;
+  cursor:pointer;
+}
+.glimpse.show{opacity:1;transform:scale(1)}
+.eye{
+  width:22px;height:16px;
+  background:#fffdf9;
+  border-radius:50%;
+  position:relative;
+  box-shadow:0 0 0 1px rgba(58,51,45,.25);
+  overflow:hidden;
+}
+.eye .pupil{
+  width:8px;height:8px;
+  background:var(--shadow);
+  border-radius:50%;
+  position:absolute;
+  top:4px;left:7px;
+  transition:transform .15s ease;
+}
+.glimpse.blink .eye{height:2px}
+.glimpse.blink .eye .pupil{opacity:0}
+
+.catch-feedback{
+  position:fixed;
+  font-size:.85rem;
+  color:var(--muted);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s ease, transform .4s ease;
+  transform:translate(-50%,0) translateY(6px);
+  z-index:7;
+  white-space:nowrap;
+}
+.catch-feedback.show{
+  opacity:1;
+  transform:translate(-50%,0) translateY(-10px);
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="code">404</div>
+  <div class="tagline">呀，这一页竟然是空的。</div>
+  <a class="home" href="/">先回字里看看</a>
+  <div class="hint">・ 好像总有什么在看着你 ・</div>
+</main>
+
+<script>
+/* ====== 可调参数 ====== */
+const SECRET_URL = '/secret.html';   // 抓够次数后跳转的地址
+const CATCHES_NEEDED = 5;            // 需要点中眼睛几次才触发跳转
+/* ====================== */
+
+const ambientLines = [
+  "诶，你点这儿干嘛？",
+  "这一页是空的，但我不是。",
+  "我可能在这个字里，也可能在下一个。",
+  "别看这，看那边——不对，看这边。"
+];
+
+const catchLines = [
+  "被你发现了。",
+  "手挺快啊。",
+  "再让你抓到几次，我就带你去个地方。",
+  "快了快了……",
+  "好吧，跟我来。"
+];
+
+let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+
+let catchCount = 0;
+let ambientIdx = 0;
+
+/* 页面任意处点击：冒出氛围台词 */
+document.body.addEventListener('click', (e) => {
+  if (e.target.closest('a') || e.target.closest('.glimpse')) return;
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = ambientLines[ambientIdx % ambientLines.length];
+  ambientIdx++;
+  bubble.style.left = e.clientX + 'px';
+  bubble.style.top = e.clientY + 'px';
+  document.body.appendChild(bubble);
+  requestAnimationFrame(() => bubble.classList.add('show'));
+  setTimeout(() => {
+    bubble.style.opacity = '0';
+    setTimeout(() => bubble.remove(), 500);
+  }, 1400);
+});
+
+/* 生成一双随机出现、好奇张望的眼睛 */
+function spawnEyes(){
+  const g = document.createElement('div');
+  g.className = 'glimpse';
+  const margin = 70;
+  const x = margin + Math.random() * (window.innerWidth - margin*2);
+  const y = margin + Math.random() * (window.innerHeight - margin*2);
+  g.style.left = x + 'px';
+  g.style.top = y + 'px';
+  g.innerHTML = `
+    <div class="eye"><div class="pupil"></div></div>
+    <div class="eye"><div class="pupil"></div></div>
+  `;
+  document.body.appendChild(g);
+
+  // 瞳孔朝鼠标方向偏移，制造“好奇张望”的感觉
+  const pupils = g.querySelectorAll('.pupil');
+  const rect = () => g.getBoundingClientRect();
+  function lookAtCursor(){
+    const r = rect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const dx = Math.max(-1, Math.min(1, (mouseX - cx) / 60));
+    const dy = Math.max(-1, Math.min(1, (mouseY - cy) / 40));
+    pupils.forEach(p => {
+      p.style.transform = `translate(${dx*4}px, ${dy*3}px)`;
+    });
+  }
+  lookAtCursor();
+  const lookInterval = setInterval(lookAtCursor, 100);
+
+  requestAnimationFrame(() => g.classList.add('show'));
+
+  const lifespan = 1300 + Math.random()*400;
+  const blinkAt = setTimeout(() => g.classList.add('blink'), lifespan - 250);
+
+  const removeTimer = setTimeout(() => {
+    g.classList.remove('show');
+    clearInterval(lookInterval);
+    setTimeout(() => g.remove(), 300);
+  }, lifespan);
+
+  g.addEventListener('click', (e) => {
+    e.stopPropagation();
+    clearTimeout(removeTimer);
+    clearTimeout(blinkAt);
+    clearInterval(lookInterval);
+
+    catchCount++;
+    const fb = document.createElement('div');
+    fb.className = 'catch-feedback';
+    fb.textContent = catchLines[Math.min(catchCount-1, catchLines.length-1)];
+    fb.style.left = (parseFloat(g.style.left) + 20) + 'px';
+    fb.style.top = g.style.top;
+    document.body.appendChild(fb);
+    requestAnimationFrame(() => fb.classList.add('show'));
+    setTimeout(() => { fb.style.opacity = '0'; setTimeout(()=>fb.remove(),400); }, 1100);
+
+    g.classList.remove('show');
+    setTimeout(() => g.remove(), 250);
+
+    if (catchCount >= CATCHES_NEEDED) {
+      setTimeout(() => { window.location.href = SECRET_URL; }, 900);
+    }
+  });
+
+  const nextDelay = 3000 + Math.random() * 5000;
+  setTimeout(spawnEyes, nextDelay);
+}
+
+setTimeout(spawnEyes, 2200);
+</script>
+</body>
+</html>
