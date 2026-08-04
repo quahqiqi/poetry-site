@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetIdleTimer();
   })();
 
-  /* ========== 停留超过5分钟：还在这里吗 ========== */
+  /* ========== 停留超过3分钟：还在这里吗 ========== */
   if (document.getElementById('poemContent')) {
     (function () {
       const READ_MS = 3 * 60 * 1000;
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (elapsed >= READ_MS) {
           fired = true;
-          shadowWhisper('还在这里吗？', 10000); // 停留10秒后自己消失
+          shadowWhisper('还在这里吗？', 50000); // 停留10秒后自己消失
           clearInterval(readTimer);
         }
       }, 5000);
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ========== ⑥ 连续随机20次：你是真的在随机 ========== */
+  /* ========== ⑥ 连续随机10次：你是真的在随机 ========== */
   (function () {
     const RANDOM_KEY = 'shadow-random-count';
 
