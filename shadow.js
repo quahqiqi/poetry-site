@@ -223,4 +223,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  /* ========== 一分钟不动：他好像还惦记着你 ========== */
+  (function () {
+    const IDLE_MS = 60 * 1000;
+    let idleTimer;
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        shadowWhisper('我帮你把风关小一点。');
+        // 说完这句，什么都不会发生——他只是提了一下，不打扰你
+      }, IDLE_MS);
+    }
+
+    ['mousemove', 'touchstart', 'touchmove', 'keydown', 'scroll', 'click']
+      .forEach(evt => window.addEventListener(evt, resetIdleTimer, { passive: true }));
+
+    resetIdleTimer();
+  })();
+
 });
