@@ -104,6 +104,18 @@ function shadowWhisper(text, duration = 3000, position = 'corner') {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ========== ⑪ 请假模式：手动开关，优先级最高，放在最前面 ========== */
+  // 想让影子管家"消失"一天，就把日期加进下面这个数组，格式 'YYYY-MM-DD'
+  // 生效期间：这个文件里所有其他彩蛋全部停止工作
+  const SHADOW_LEAVE_DATES = [
+    // 例如：'2026-08-15',
+  ];
+  const todayStr = new Date().toISOString().slice(0, 10);
+  if (SHADOW_LEAVE_DATES.includes(todayStr)) {
+    return; // 今天请假，后面什么都不做
+  }
+
+
   /* ========== ⑦ 夜间模式：每次切到夜间都说话 ========== */
   const darkBtn = document.getElementById('darkBtn');
   if (darkBtn) {
@@ -241,5 +253,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resetIdleTimer();
   })();
+
+  /* ========== 停留超过5分钟：还在这里吗 ========== */
+  if (document.getElementById('poemContent')) {
+    (function () {
+      const READ_MS = 5 * 60 * 1000;
+      let elapsed = 0;
+      let lastTick = Date.now();
+      let fired = false;
+
+      const readTimer = setInterval(() => {
+        if (fired) return;
+        const now = Date.now();
+        if (!document.hidden) elapsed += now - lastTick; // 切走标签页的时间不计入
+        lastTick = now;
+
+        if (elapsed >= READ_MS) {
+          fired = true;
+          shadowWhisper('还在这里吗？', 10000); // 停留10秒后自己消失
+          clearInterval(readTimer);
+        }
+      }, 5000);
+    })();
+  }
+
+  /* ========== ③ 凌晨专属：footer 多一句 ========== */
+  const nowHour = new Date().getHours();
+  if (nowHour >= 1 && nowHour < 6) {
+    const footer = document.querySelector('footer');
+    if (footer) {
+      const lines = ['他已经睡了', '今晚由我值班'];
+      const pick = lines[Math.floor(Math.random() * lines.length)];
+      const span = document.createElement('span');
+      span.textContent = ' · ' + pick;
+      footer.appendChild(span);
+    }
+  }
+
+  /* ========== ⑥ 连续随机20次：你是真的在随机 ========== */
+  (function () {
+    const RANDOM_KEY = 'shadow-random-count';
+
+    // 如果这次落地是因为随机跳转而来，先检查次数够不够
+    const count = parseInt(sessionStorage.getItem(RANDOM_KEY) || '0', 10);
+    if (count > 0 && count % 20 === 0) {
+      shadowWhisper('……你是真的在随机。');
+    }
+
+    const randomBtn = document.getElementById('randomBtn');
+    if (randomBtn) {
+      randomBtn.addEventListener('click', () => {
+        const c = parseInt(sessionStorage.getItem(RANDOM_KEY) || '0', 10) + 1;
+        sessionStorage.setItem(RANDOM_KEY, String(c));
+      });
+    }
+  })();
+
+  /* ========== ⑩ 一年以后：只说这一次 ========== */
+  if (filename === '' || filename === 'index.html') {
+    const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
+    if (
+      shadowVisit.firstVisit &&
+      (Date.now() - shadowVisit.firstVisit) >= ONE_YEAR &&
+      ShadowState.canShow('one-year', ONE_YEAR) // 说过就不会再说第二次
+    ) {
+      shadowWhisper('我们认识一年了。');
+      ShadowState.markShown('one-year');
+    }
+  }
 
 });
