@@ -6,6 +6,54 @@
   绝不出现在诗歌正文里，绝不弹窗，绝不要求点击，绝不引导任务。
 */
 
+/* ---------- 状态层：记住来访痕迹，给所有彩蛋提供统一的冷却能力 ---------- */
+const ShadowState = (function () {
+  const KEY_FIRST = 'shadow-first-visit';
+  const KEY_LAST = 'shadow-last-visit';
+  const KEY_COUNT = 'shadow-visit-count';
+  const SESSION_GAP = 30 * 60 * 1000; // 隔超过30分钟，才算新的一次来访
+
+  function now() { return Date.now(); }
+
+  function init() {
+    const firstRaw = localStorage.getItem(KEY_FIRST);
+    const lastRaw = localStorage.getItem(KEY_LAST);
+    let count = parseInt(localStorage.getItem(KEY_COUNT) || '0', 10);
+
+    if (!firstRaw) localStorage.setItem(KEY_FIRST, String(now()));
+
+    const isNewVisit = !lastRaw || (now() - parseInt(lastRaw, 10)) > SESSION_GAP;
+    if (isNewVisit) {
+      count += 1;
+      localStorage.setItem(KEY_COUNT, String(count));
+    }
+    const lastVisitBefore = lastRaw ? parseInt(lastRaw, 10) : null;
+    localStorage.setItem(KEY_LAST, String(now()));
+
+    return {
+      firstVisit: parseInt(localStorage.getItem(KEY_FIRST), 10),
+      lastVisitBefore,
+      visitCount: count,
+      isNewVisit
+    };
+  }
+
+  // 某句提示最近有没有说过，还在不在冷却里
+  function canShow(hintKey, cooldownMs) {
+    const last = localStorage.getItem('shadow-seen-' + hintKey);
+    if (!last) return true;
+    return (now() - parseInt(last, 10)) > cooldownMs;
+  }
+
+  function markShown(hintKey) {
+    localStorage.setItem('shadow-seen-' + hintKey, String(now()));
+  }
+
+  return { init, canShow, markShown };
+})();
+
+const shadowVisit = ShadowState.init();
+
 /* ---------- 视觉样式：只加一次 ---------- */
 (function injectShadowStyle() {
   const style = document.createElement('style');
@@ -165,6 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (touchStartY - endY > 25) registerPush();
       touchStartY = null;
     }, { passive: true });
+  }
+
+  /* ========== 好久不见：真的隔了一阵子才说 ========== */
+  if (filename === '' || filename === 'index.html') {
+    const GREETING_GAP = 24 * 60 * 60 * 1000; // 约1天没来，才算"好久不见"
+    if (shadowVisit.lastVisitBefore && (Date.now() - shadowVisit.lastVisitBefore) > GREETING_GAP) {
+      shadowWhisper('好久不见。');
+    }
   }
 
 });
