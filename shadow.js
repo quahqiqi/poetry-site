@@ -107,9 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ========== ⑪ 请假模式：手动开关，优先级最高，放在最前面 ========== */
   // 想让影子管家"消失"一天，就把日期加进下面这个数组，格式 'YYYY-MM-DD'
   // 生效期间：这个文件里所有其他彩蛋全部停止工作
-  const SHADOW_LEAVE_DATES = [
-    // 例如：'2026-08-15',
-  ];
+  const SHADOW_LEAVE_DATES = ['2026-8-4'];
   const todayStr = new Date().toISOString().slice(0, 10);
   if (SHADOW_LEAVE_DATES.includes(todayStr)) {
     return; // 今天请假，后面什么都不做
@@ -229,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ========== 好久不见：真的隔了一阵子才说 ========== */
   if (filename === '' || filename === 'index.html') {
-    const GREETING_GAP = 24 * 60 * 60 * 1000; // 约1天没来，才算"好久不见"
+    const GREETING_GAP = 36 * 60 * 60 * 1000; // 约1天没来，才算"好久不见"
     if (shadowVisit.lastVisitBefore && (Date.now() - shadowVisit.lastVisitBefore) > GREETING_GAP) {
       shadowWhisper('好久不见。');
     }
@@ -257,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ========== 停留超过5分钟：还在这里吗 ========== */
   if (document.getElementById('poemContent')) {
     (function () {
-      const READ_MS = 5 * 60 * 1000;
+      const READ_MS = 3 * 60 * 1000;
       let elapsed = 0;
       let lastTick = Date.now();
       let fired = false;
@@ -296,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 如果这次落地是因为随机跳转而来，先检查次数够不够
     const count = parseInt(sessionStorage.getItem(RANDOM_KEY) || '0', 10);
-    if (count > 0 && count % 20 === 0) {
+    if (count > 0 && count % 10 === 0) {
       shadowWhisper('……你是真的在随机。');
     }
 
