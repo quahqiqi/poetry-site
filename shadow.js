@@ -62,25 +62,32 @@ const shadowVisit = ShadowState.init();
       position:fixed;
       right:24px;
       bottom:24px;
-      font-size:.78rem;
-      color:var(--text-muted, #8b7e74);
+      font-size:1rem;
+      font-weight:500;
+      color:#6b5344;
       opacity:0;
       transition:opacity 1.2s ease;
       pointer-events:none;
       z-index:9999;
-      letter-spacing:.05em;
-      max-width:220px;
+      letter-spacing:.06em;
+      max-width:240px;
       text-align:right;
+      text-shadow:0 1px 2px rgba(255,255,255,.5);
     }
-    .shadow-whisper.show{ opacity:.75; }
+    .shadow-whisper.show{ opacity:.92; }
+
+    body.dark .shadow-whisper{
+      color:#e8d9c8;
+      text-shadow:0 1px 3px rgba(0,0,0,.5);
+    }
 
     .shadow-whisper-center{
       right:auto; bottom:auto;
       left:50%; top:50%;
       transform:translate(-50%,-50%);
       text-align:center;
-      max-width:280px;
-      font-size:.9rem;
+      max-width:300px;
+      font-size:1.25rem;
       letter-spacing:.3em;
     }
   `;
@@ -107,7 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ========== ⑪ 请假模式：手动开关，优先级最高，放在最前面 ========== */
   // 想让影子管家"消失"一天，就把日期加进下面这个数组，格式 'YYYY-MM-DD'
   // 生效期间：这个文件里所有其他彩蛋全部停止工作
-  const SHADOW_LEAVE_DATES = ['2026-8-4'];
+  const SHADOW_LEAVE_DATES = [
+    // 例如：'2026-08-15',
+  ];
   const todayStr = new Date().toISOString().slice(0, 10);
   if (SHADOW_LEAVE_DATES.includes(todayStr)) {
     return; // 今天请假，后面什么都不做
@@ -227,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ========== 好久不见：真的隔了一阵子才说 ========== */
   if (filename === '' || filename === 'index.html') {
-    const GREETING_GAP = 36 * 60 * 60 * 1000; // 约1天没来，才算"好久不见"
+    const GREETING_GAP = 24 * 60 * 60 * 1000; // 约1天没来，才算"好久不见"
     if (shadowVisit.lastVisitBefore && (Date.now() - shadowVisit.lastVisitBefore) > GREETING_GAP) {
       shadowWhisper('好久不见。');
     }
@@ -252,10 +261,10 @@ document.addEventListener('DOMContentLoaded', () => {
     resetIdleTimer();
   })();
 
-  /* ========== 停留超过3分钟：还在这里吗 ========== */
+  /* ========== 停留超过5分钟：还在这里吗 ========== */
   if (document.getElementById('poemContent')) {
     (function () {
-      const READ_MS = 3 * 60 * 1000;
+      const READ_MS = 5 * 60 * 1000;
       let elapsed = 0;
       let lastTick = Date.now();
       let fired = false;
@@ -268,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (elapsed >= READ_MS) {
           fired = true;
-          shadowWhisper('还在这里吗？', 50000); // 停留10秒后自己消失
+          shadowWhisper('还在这里吗？', 10000); // 停留10秒后自己消失
           clearInterval(readTimer);
         }
       }, 5000);
@@ -288,13 +297,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  /* ========== ⑥ 连续随机10次：你是真的在随机 ========== */
+  /* ========== ⑥ 连续随机20次：你是真的在随机 ========== */
   (function () {
     const RANDOM_KEY = 'shadow-random-count';
 
     // 如果这次落地是因为随机跳转而来，先检查次数够不够
     const count = parseInt(sessionStorage.getItem(RANDOM_KEY) || '0', 10);
-    if (count > 0 && count % 10 === 0) {
+    if (count > 0 && count % 20 === 0) {
       shadowWhisper('……你是真的在随机。');
     }
 
