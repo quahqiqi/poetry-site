@@ -445,14 +445,24 @@ html_template = """<!DOCTYPE html>
     }}
     init();
   </script>
+  <script src="../shadow.js"></script>
 </body>
 </html>
 """
 
 for i, poem in enumerate(poems):
-    tags_html = "".join([f'<span class="tag-link-btn" onclick="filterByTag(\'{tag}\')">{tag}</span>' for tag in poem.get('tags', [])])
+    # 安全转义：防止诗句、标题、预览文字里的 < > & " 把页面结构戳破
+    safe_title = html.escape(poem['title'])
+    safe_content = html.escape(poem['content'])  # 保留原有换行，靠 CSS white-space:pre-wrap 显示
+    safe_preview_raw = poem.get('preview', '一首来自青年的天马行空的诗作。').replace('\n', '')
+    safe_preview = html.escape(safe_preview_raw)
+
+    tags_html = "".join([
+        f'<span class="tag-link-btn" onclick="filterByTag(\'{html.escape(tag)}\')">{html.escape(tag)}</span>'
+        for tag in poem.get('tags', [])
+    ])
     
-    date_val = poem.get('date', '').strip()
+    date_val = html.escape(poem.get('date', '').strip())
     date_html = f'<div class="poem-date">{date_val}</div>' if date_val else ''
     
     note_text = poem.get('note', '').strip()
@@ -469,25 +479,23 @@ for i, poem in enumerate(poems):
     next_link = ""
     if i > 0:
         newer_poem = poems[i-1]
-        prev_link = f'<a href="{newer_poem["file"]}" class="nav-prev">← 前卷：{newer_poem["title"]}</a>'
+        prev_link = f'<a href="{newer_poem["file"]}" class="nav-prev">← 前卷：{html.escape(newer_poem["title"])}</a>'
     if i < len(poems) - 1:
         older_poem = poems[i+1]
-        next_link = f'<a href="{older_poem["file"]}" class="nav-next">后卷：{older_poem["title"]} →</a>'
+        next_link = f'<a href="{older_poem["file"]}" class="nav-next">后卷：{html.escape(older_poem["title"])} →</a>'
         
-    preview_text = poem.get('preview', '一首来自青年的天马行空的诗作。').replace('\n', '')
-    
     absolute_img_url = f"{SITE_BASE_URL}/{poem['img']}"
     absolute_page_url = f"{SITE_BASE_URL}/poems/{poem['file']}"
 
     html_content = html_template.format(
-        title=poem['title'],
+        title=safe_title,
         img=poem['img'],
         absolute_img_url=absolute_img_url,
         absolute_page_url=absolute_page_url,
         tags_html=tags_html,
         date_html=date_html,
-        preview=preview_text,
-        content=poem['content'],
+        preview=safe_preview,
+        content=safe_content,
         note_html=note_html,
         prev_link=prev_link,
         next_link=next_link
