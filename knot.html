@@ -190,9 +190,8 @@ a.home:hover{ opacity:1; }
 
     <!-- 开篇：鸭的话，藏在六个结里 -->
     <div id="knotSeq">
-      
-      <div class="knot-block"><div class="knot" data-lines="有天，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
       <div class="knot-hint">轻触绳结解开</div>
+      <div class="knot-block"><div class="knot" data-lines="有天，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
       <div class="reveal"></div>
 
       <div class="knot-block"><div class="knot" data-lines="鸡同鸭讲，"><svg viewBox="0 0 44 30"><path d="M22 15 C22 15 16 4 8 8 C2 11 2 19 8 22 C16 26 22 15 22 15"/><path d="M22 15 C22 15 28 4 36 8 C42 11 42 19 36 22 C28 26 22 15 22 15"/><circle cx="22" cy="15" r="2.2"/></svg></div></div>
@@ -242,14 +241,15 @@ a.home:hover{ opacity:1; }
 </div>
 
 <script>
+const groupHint = document.querySelector('.knot-hint');
+
 document.querySelectorAll('.knot').forEach(knot => {
   knot.addEventListener('click', () => {
     if (knot.classList.contains('open')) return;
     knot.classList.add('open');
 
-    const hint = knot.closest('.knot-block').nextElementSibling;
-    const reveal = hint.nextElementSibling;
-    hint.classList.add('hidden');
+    const reveal = knot.closest('.knot-block').nextElementSibling;
+    if (groupHint) groupHint.classList.add('hidden');
 
     const strike = knot.getAttribute('data-strike');
     const lines = knot.getAttribute('data-lines');
