@@ -97,61 +97,64 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ========== 下滑到底：先露出一句话，继续滑才会带你走 ========== */
+  /* ========== 到底之后：不是滑多远，是"再推几次" ========== */
   const SCROLL_PAGES = ['', 'index.html', 'about.html', 'toc.html'];
   const filename = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
 
   if (SCROLL_PAGES.includes(filename)) {
-    const zone = document.createElement('div');
-    zone.className = 'shadow-end-zone';
-    zone.innerHTML = `
-      <div class="shadow-end-text">已经到底啦！</div>
-      <div class="shadow-end-sentinel"></div>
-    `;
-    document.body.appendChild(zone);
+    const PUSHES_NEEDED = 5;
+    let atBottom = false;
+    let pushCount = 0;
+    let bottomMessageShown = false;
+    let redirected = false;
 
-    const zoneStyle = document.createElement('style');
-    zoneStyle.textContent = `
-      .shadow-end-zone{
-        height:75vh;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-      }
-      .shadow-end-text{
-        margin-top:12vh;
-        font-family:'Noto Serif SC', serif;
-        font-size:.85rem;
-        color:var(--text-muted, #85786e);
-        letter-spacing:.3em;
-        opacity:0;
-        transition:opacity 1s ease;
-      }
-      .shadow-end-text.show{ opacity:.55; }
-      .shadow-end-sentinel{ height:1px; margin-top:60vh; }
-    `;
-    document.head.appendChild(zoneStyle);
-
-    const textEl = zone.querySelector('.shadow-end-text');
-    const sentinel = zone.querySelector('.shadow-end-sentinel');
-
-    if ('IntersectionObserver' in window) {
-      const textObserver = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) textEl.classList.add('show'); });
-      }, { threshold: 0.6 });
-      textObserver.observe(textEl);
-
-      let redirected = false;
-      const endObserver = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting && !redirected) {
-            redirected = true;
-            setTimeout(() => { window.location.href = 'knot.html'; }, 400);
-          }
-        });
-      }, { threshold: 0 });
-      endObserver.observe(sentinel);
+    function isAtBottom() {
+      return (window.scrollY + window.innerHeight) >= (document.documentElement.scrollHeight - 4);
     }
+
+    function checkBottom() {
+      const nowAtBottom = isAtBottom();
+      if (nowAtBottom && !atBottom) {
+        atBottom = true;
+        pushCount = 0;
+        if (!bottomMessageShown) {
+          bottomMessageShown = true;
+          shadowWhisper('已经到底啦！');
+        }
+      } else if (!nowAtBottom && atBottom) {
+        // 离开了底部，重新计数，下次到底会再提示一次
+        atBottom = false;
+        pushCount = 0;
+        bottomMessageShown = false;
+      }
+    }
+    window.addEventListener('scroll', checkBottom, { passive: true });
+
+    function registerPush() {
+      if (!atBottom || redirected) return;
+      pushCount++;
+      if (pushCount >= PUSHES_NEEDED) {
+        redirected = true;
+        setTimeout(() => { window.location.href = 'knot.html'; }, 300);
+      }
+    }
+
+    // 桌面：已经到底后，鼠标滚轮还在继续往下滚
+    window.addEventListener('wheel', (e) => {
+      if (atBottom && e.deltaY > 0) registerPush();
+    }, { passive: true });
+
+    // 移动端：已经到底后，手指还在继续往上划
+    let touchStartY = null;
+    window.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', (e) => {
+      if (touchStartY === null) return;
+      const endY = e.changedTouches[0].clientY;
+      if (touchStartY - endY > 25) registerPush();
+      touchStartY = null;
+    }, { passive: true });
   }
 
 });
