@@ -25,19 +25,29 @@
       text-align:right;
     }
     .shadow-whisper.show{ opacity:.75; }
+
+    .shadow-whisper-center{
+      right:auto; bottom:auto;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      text-align:center;
+      max-width:280px;
+      font-size:.9rem;
+      letter-spacing:.3em;
+    }
   `;
   document.head.appendChild(style);
 })();
 
 /* ---------- 说一句悄悄话，过一会儿自己消失 ---------- */
-function shadowWhisper(text, duration = 3000) {
+function shadowWhisper(text, duration = 3000, position = 'corner') {
   let el = document.getElementById('shadowWhisper');
   if (!el) {
     el = document.createElement('div');
     el.id = 'shadowWhisper';
-    el.className = 'shadow-whisper';
     document.body.appendChild(el);
   }
+  el.className = 'shadow-whisper' + (position === 'center' ? ' shadow-whisper-center' : '');
   el.textContent = text;
   requestAnimationFrame(() => el.classList.add('show'));
   clearTimeout(el._timer);
@@ -119,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pushCount = 0;
         if (!bottomMessageShown) {
           bottomMessageShown = true;
-          shadowWhisper('已经到底啦！');
+          shadowWhisper('已经到底啦！', 3000, 'center');
         }
       } else if (!nowAtBottom && atBottom) {
         // 离开了底部，重新计数，下次到底会再提示一次
