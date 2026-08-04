@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         transition:opacity 1s ease;
       }
       .shadow-end-text.show{ opacity:.55; }
-      .shadow-end-sentinel{ height:1px; margin-top:40vh; }
+      .shadow-end-sentinel{ height:1px; margin-top:60vh; }
     `;
     document.head.appendChild(zoneStyle);
 
