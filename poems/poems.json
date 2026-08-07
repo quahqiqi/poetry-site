@@ -1,5 +1,14 @@
 [
  {
+  "file": "poem66.html",
+  "title": "铁罐",
+  "img": "images/poem66.jpg",
+  "tags": ["见物", "咏物", "追忆"],
+  "preview": "妈妈买了一盒饼干，铁盖打不开时，她就拿起汤匙……",
+  "content": "妈妈买了一盒饼干，\n铁盖打不开时，\n她就拿起汤匙\n沿着边缘一撬。\n\n饼干吃完以后，\n妈妈拿来装零钱。\n后来装针线。\n后来装照片。",
+  "date": "2026年8月7号"
+ },
+ {
   "file": "poem65.html",
   "title": "停摆",
   "img": "images/poem65.jpg",
