@@ -506,3 +506,79 @@ for i, poem in enumerate(poems):
         f.write(html_content)
 
 print(f"✅ 成功生成 {len(poems)} 首诗歌页面！分享按钮已注入专属的水彩光晕色彩。") 
+
+# ============================================================
+# ✨ 自动同步首页静态内容（SEO 兜底）✨
+# poems.json 第 0 条被当作"最新一首"，用来生成首页 heroPoem；
+# 紧接着 10 条用来生成 poemsGrid。写死进 index.html 里，
+# 这样 Google 抓取首页时，哪怕 JS 还没执行完，也能看到真实、
+# 最新的内容和链接，不用等前端渲染。
+# JS 运行起来之后依然会照常用同样的数据重新渲染一次，
+# 用户端交互（分页/搜索/标签筛选）不受任何影响。
+# ============================================================
+import re
+
+INDEX_FILE = "index.html"
+
+def build_hero_html(poem):
+    title = html.escape(poem['title'])
+    preview = html.escape(poem.get('preview', '').replace('\n', ''))
+    return f'''<a href="poems/{poem['file']}" class="hero-card">
+                    <div class="hero-img-wrap">
+                        <span class="hero-badge">新卷</span>
+                        <img class="hero-img" src="{poem['img']}" onerror="this.src='assets/img/logo.png'">
+                    </div>
+                    <div class="hero-body">
+                        <h2 class="hero-title">{title}</h2>
+                        <p class="hero-preview">{preview}</p>
+                    </div>
+                </a>'''
+
+def build_grid_html(poem_list):
+    cards = []
+    for p in poem_list:
+        title = html.escape(p['title'])
+        preview = html.escape(p.get('preview', '').replace('\n', ''))
+        cards.append(f'''<div class="poem-card">
+                <a href="poems/{p['file']}">
+                    <img class="poem-cover" src="{p['img']}" loading="lazy" decoding="async" onerror="this.src='assets/img/logo.png'">
+                </a>
+                <div class="poem-body">
+                    <h3><a href="poems/{p['file']}">{title}</a></h3>
+                    <p>{preview}</p>
+                </div>
+            </div>''')
+    return '\n            '.join(cards)
+
+def replace_between_markers(text, start_marker, end_marker, new_inner):
+    pattern = re.compile(re.escape(start_marker) + r'.*?' + re.escape(end_marker), re.S)
+    replacement = start_marker + new_inner + end_marker
+    new_text, n = pattern.subn(replacement, text, count=1)
+    if n == 0:
+        print(f"⚠️ 未找到标记 {start_marker} ... {end_marker}，跳过首页更新，请检查 index.html 是否还保留这两个注释标记。")
+        return text
+    return new_text
+
+if os.path.exists(INDEX_FILE) and poems:
+    with open(INDEX_FILE, 'r', encoding='utf-8') as f:
+        index_html = f.read()
+
+    hero_poem = poems[0]
+    grid_poems = poems[1:11]
+
+    index_html = replace_between_markers(
+        index_html, "<!--AUTO-HERO-START-->", "<!--AUTO-HERO-END-->", build_hero_html(hero_poem)
+    )
+    index_html = replace_between_markers(
+        index_html, "<!--AUTO-GRID-START-->", "<!--AUTO-GRID-END-->", "\n            " + build_grid_html(grid_poems) + "\n        "
+    )
+    index_html = replace_between_markers(
+        index_html, "<!--AUTO-COUNT-START-->", "<!--AUTO-COUNT-END-->", f"共 {len(poems)} 篇"
+    )
+
+    with open(INDEX_FILE, 'w', encoding='utf-8') as f:
+        f.write(index_html)
+
+    print(f"✅ 首页静态内容已自动同步：hero = 《{hero_poem['title']}》，往期展示 {len(grid_poems)} 篇。")
+else:
+    print("⚠️ 未找到 index.html，跳过首页静态内容同步。")
